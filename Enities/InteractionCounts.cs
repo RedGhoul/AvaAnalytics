@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SharpCounter.Enities
 {
-    public class HitCounts
+    public class InteractionCounts
     {
         public WebSites Website { get; set; }
         public int Id { get; set; }

@@ -29,7 +29,7 @@ namespace SharpCounter.Data
                 .WithOne(e => e.Owner);
 
             modelBuilder.Entity<WebSites>()
-                .Property(c => c.Type)
+                .Property(c => c.)
                 .HasConversion<string>();
             base.OnModelCreating(modelBuilder);
         }
