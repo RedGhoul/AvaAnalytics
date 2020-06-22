@@ -1,0 +1,7 @@
+appsettings.json
+bin
+obj
+wwwroot/lib
+SharpCounter.csproj.user
+.vs/SharpCounter/DesignTimeBuild/.dtbcache.v2
+.vs/SharpCounter/v16/.suo
