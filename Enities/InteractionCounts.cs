@@ -7,7 +7,7 @@ namespace SharpCounter.Enities
 {
     public class InteractionCounts
     {
-        public WebSites Website { get; set; }
+        public WebSites WebSite { get; set; }
         public int Id { get; set; }
         public string Path { get; set; }
         public string Title { get; set; }

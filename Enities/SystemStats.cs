@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace SharpCounter.Enities
 {
-    public class InteractionStats
+    public class SystemStats
     {
         public int Id { get; set; }
-        public int InteractionStatsId { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime Day { get; set; }
+        public string Version { get; set; }
+        public int Count { get; set; }
+        public int CountUnique { get; set; }
         public WebSites WebSite { get; set; }
-        public string Title { get; set; }
-
     }
 }

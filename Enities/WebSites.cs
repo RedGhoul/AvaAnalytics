@@ -23,5 +23,7 @@ namespace SharpCounter.Enities
         public ICollection<InteractionCounts> InteractionCounts { get; set; }
         public ICollection<BrowserStats> BrowserStats { get; set; }
         public ICollection<LocationStats> LocationStats { get; set; }
+        public ICollection<SystemStats> SystemStats { get; set; }
+
     }
 }

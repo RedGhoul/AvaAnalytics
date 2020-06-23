@@ -7,7 +7,8 @@ namespace SharpCounter.Enities
 {
     public class LocationStats
     {
-        public WebSites Website { get; set; }
+        public int Id { get; set; }
+        public WebSites WebSite { get; set; }
         public DateTime Date { get; set; }
         public string Location { get; set; }
         public int Count { get; set; }

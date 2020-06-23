@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SharpCounter.Enities;
 
@@ -24,14 +21,44 @@ namespace SharpCounter.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(c => c.Websites)
                 .WithOne(e => e.Owner);
 
             modelBuilder.Entity<WebSites>()
-                .Property(c => c.)
-                .HasConversion<string>();
-            base.OnModelCreating(modelBuilder);
+                .HasMany(w => w.BrowserStats)
+                .WithOne(b =>b.WebSite);
+
+            modelBuilder.Entity<WebSites>()
+                .HasMany(w => w.Interactions)
+                .WithOne(b => b.WebSite);
+
+            modelBuilder.Entity<WebSites>()
+                .HasMany(w => w.InteractionCounts)
+                .WithOne(b => b.WebSite);
+
+            modelBuilder.Entity<WebSites>()
+                .HasMany(w => w.InteractionStats)
+                .WithOne(b => b.WebSite);
+
+            modelBuilder.Entity<WebSites>()
+                .HasMany(w => w.LocationStats)
+                .WithOne(b => b.WebSite);
+
+            modelBuilder.Entity<WebSites>()
+                .HasMany(w => w.Sessions)
+                .WithOne(b => b.WebSite);
+
+            modelBuilder.Entity<WebSites>()
+                .HasMany(w => w.SystemStats)
+                .WithOne(b => b.WebSite);
+
+            modelBuilder.Entity<Session>()
+                .HasMany(w => w.Interactions)
+                .WithOne(b => b.Session);
+
         }
 
     }

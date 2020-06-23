@@ -12,7 +12,7 @@ namespace SharpCounter.Enities
             this.CreatedAt = DateTime.UtcNow;
         }
         public int Id { get; set; }
-        public WebSites Website { get; set; }
+        public WebSites WebSite { get; set; }
         public Session Session { get; set; }
         public string Path { get; set; }
         public string Title { get; set; }
