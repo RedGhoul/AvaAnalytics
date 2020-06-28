@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SharpCounter.Data;
@@ -9,9 +10,10 @@ using SharpCounter.Data;
 namespace SharpCounter.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200626234436_removedValuesFromInterCounts")]
+    partial class removedValuesFromInterCounts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -249,10 +251,6 @@ namespace SharpCounter.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Browser");
-
-                    b.HasIndex("Date");
-
                     b.HasIndex("WebSiteId");
 
                     b.ToTable("BrowserStats");
@@ -297,14 +295,6 @@ namespace SharpCounter.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Browser");
-
-                    b.HasIndex("CreatedAt");
-
-                    b.HasIndex("FirstVisit");
-
-                    b.HasIndex("Path");
-
                     b.HasIndex("SessionId");
 
                     b.HasIndex("WebSiteId");
@@ -332,10 +322,6 @@ namespace SharpCounter.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Hour");
-
-                    b.HasIndex("Path");
 
                     b.HasIndex("WebSiteId");
 
@@ -415,12 +401,6 @@ namespace SharpCounter.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedAt");
-
-                    b.HasIndex("LastSeen");
-
-                    b.HasIndex("SessionUId");
-
                     b.HasIndex("WebSiteId");
 
                     b.ToTable("Sessions");
@@ -452,10 +432,6 @@ namespace SharpCounter.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Day");
-
-                    b.HasIndex("Platform");
 
                     b.HasIndex("WebSiteId");
 

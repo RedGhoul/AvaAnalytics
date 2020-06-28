@@ -3,8 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Npgsql;
+using SharpCounter.Data;
+using SharpCounter.Enities;
 using SharpCounter.ViewModels;
 
 namespace SharpCounter.Controllers
@@ -12,9 +17,10 @@ namespace SharpCounter.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly ApplicationDbContext _ctx;
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
+            _ctx = context;
             _logger = logger;
         }
 

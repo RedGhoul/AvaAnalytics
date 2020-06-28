@@ -22,42 +22,97 @@ namespace SharpCounter.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            
+            modelBuilder.Entity<WebSites>()
+                .HasIndex(b => b.APIKey)
+                .IsUnique();
+
 
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(c => c.Websites)
                 .WithOne(e => e.Owner);
 
-            modelBuilder.Entity<WebSites>()
-                .HasMany(w => w.BrowserStats)
-                .WithOne(b =>b.WebSite);
+            modelBuilder.Entity<BrowserStats>()
+                .HasOne(w => w.WebSite)
+                .WithMany(w => w.BrowserStats)
+                .HasForeignKey(w => w.WebSiteId)
+                .IsRequired();
 
-            modelBuilder.Entity<WebSites>()
-                .HasMany(w => w.Interactions)
-                .WithOne(b => b.WebSite);
+            modelBuilder.Entity<BrowserStats>()
+                .HasIndex(x => x.Browser);
 
-            modelBuilder.Entity<WebSites>()
-                .HasMany(w => w.InteractionCounts)
-                .WithOne(b => b.WebSite);
+            modelBuilder.Entity<BrowserStats>()
+                .HasIndex(x => x.Date);
 
-            modelBuilder.Entity<WebSites>()
-                .HasMany(w => w.InteractionStats)
-                .WithOne(b => b.WebSite);
+            modelBuilder.Entity<Interaction>()
+                .HasOne(w => w.WebSite)
+                .WithMany(w => w.Interactions)
+                .HasForeignKey(w => w.WebSiteId)
+                .IsRequired();
 
-            modelBuilder.Entity<WebSites>()
-                .HasMany(w => w.LocationStats)
-                .WithOne(b => b.WebSite);
+            modelBuilder.Entity<Interaction>()
+                .HasIndex(b => b.CreatedAt);
 
-            modelBuilder.Entity<WebSites>()
-                .HasMany(w => w.Sessions)
-                .WithOne(b => b.WebSite);
+            modelBuilder.Entity<Interaction>()
+                .HasIndex(b => b.FirstVisit);
 
-            modelBuilder.Entity<WebSites>()
-                .HasMany(w => w.SystemStats)
-                .WithOne(b => b.WebSite);
+            modelBuilder.Entity<Interaction>()
+                .HasIndex(b => b.Browser);
+
+            modelBuilder.Entity<Interaction>()
+                .HasIndex(b => b.Path);
+
+            modelBuilder.Entity<InteractionCounts>()
+                .HasOne(w => w.WebSite)
+                .WithMany(w => w.InteractionCounts)
+                .HasForeignKey(w => w.WebSiteId)
+                .IsRequired();
+
+            modelBuilder.Entity<InteractionCounts>()
+                .HasIndex(x => x.Path);
+
+            modelBuilder.Entity<InteractionCounts>()
+                .HasIndex(x => x.Hour);
+
+
+            modelBuilder.Entity<InteractionStats>()
+                .HasOne(w => w.WebSite)
+                .WithMany(w => w.InteractionStats)
+                .HasForeignKey(w => w.WebSiteId)
+                .IsRequired();
+
+            modelBuilder.Entity<LocationStats>()
+                .HasOne(w => w.WebSite)
+                .WithMany(w => w.LocationStats)
+                .HasForeignKey(w => w.WebSiteId)
+                .IsRequired();
 
             modelBuilder.Entity<Session>()
-                .HasMany(w => w.Interactions)
-                .WithOne(b => b.Session);
+                .HasOne(w => w.WebSite)
+                .WithMany(w => w.Sessions)
+                .HasForeignKey(w => w.WebSiteId)
+                .IsRequired();
+
+            modelBuilder.Entity<Session>()
+                .HasIndex(x => x.CreatedAt);
+
+            modelBuilder.Entity<Session>()
+                .HasIndex(x => x.LastSeen);
+
+            modelBuilder.Entity<Session>()
+                .HasIndex(x => x.SessionUId);
+
+            modelBuilder.Entity<SystemStats>()
+                .HasOne(w => w.WebSite)
+                .WithMany(w => w.SystemStats)
+                .HasForeignKey(w => w.WebSiteId)
+                .IsRequired();
+
+            modelBuilder.Entity<SystemStats>()
+                .HasIndex(x => x.Platform);
+
+            modelBuilder.Entity<SystemStats>()
+                .HasIndex(x => x.Day);
 
         }
 

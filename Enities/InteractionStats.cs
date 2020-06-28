@@ -8,8 +8,8 @@ namespace SharpCounter.Enities
     public class InteractionStats
     {
         public int Id { get; set; }
-        public int InteractionStatsId { get; set; }
         public DateTime Date { get; set; }
+        public int WebSiteId { get; set; }
         public WebSites WebSite { get; set; }
         public string Title { get; set; }
 

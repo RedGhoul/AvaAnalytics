@@ -13,6 +13,7 @@ namespace SharpCounter.Enities
         public string Version { get; set; }
         public int Count { get; set; }
         public int CountUnique { get; set; }
+        public int WebSiteId { get; set; }
         public WebSites WebSite { get; set; }
 
     }
