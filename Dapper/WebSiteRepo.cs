@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SharpCounter.Dapper
 {
-    public class WebSiteRepo : IRepository<WebSites>
+    public class WebSiteRepo
     {
         private readonly string connectionString;
         public WebSiteRepo(IConfiguration configuration)

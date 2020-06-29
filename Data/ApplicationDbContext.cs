@@ -28,9 +28,11 @@ namespace SharpCounter.Data
                 .IsUnique();
 
 
-            modelBuilder.Entity<ApplicationUser>()
-                .HasMany(c => c.Websites)
-                .WithOne(e => e.Owner);
+            modelBuilder.Entity<WebSites>()
+                .HasOne(w => w.Owner)
+                .WithMany(w => w.Websites)
+                .HasForeignKey(w => w.OwnerId)
+                .IsRequired();
 
             modelBuilder.Entity<BrowserStats>()
                 .HasOne(w => w.WebSite)
@@ -69,10 +71,16 @@ namespace SharpCounter.Data
                 .IsRequired();
 
             modelBuilder.Entity<InteractionCounts>()
+                .HasOne(w => w.InteractionStats)
+                .WithMany(w => w.InteractionCounts)
+                .HasForeignKey(w => w.InteractionStatsId)
+                .IsRequired();
+
+            modelBuilder.Entity<InteractionCounts>()
                 .HasIndex(x => x.Path);
 
             modelBuilder.Entity<InteractionCounts>()
-                .HasIndex(x => x.Hour);
+                .HasIndex(x => x.Date);
 
 
             modelBuilder.Entity<InteractionStats>()
@@ -80,6 +88,9 @@ namespace SharpCounter.Data
                 .WithMany(w => w.InteractionStats)
                 .HasForeignKey(w => w.WebSiteId)
                 .IsRequired();
+
+            modelBuilder.Entity<InteractionStats>()
+                .HasIndex(x => x.Date);
 
             modelBuilder.Entity<LocationStats>()
                 .HasOne(w => w.WebSite)
@@ -116,5 +127,13 @@ namespace SharpCounter.Data
 
         }
 
+        //If all of your tables are in a single schema, this approach could work(below code assumes that the name of your schema is public)
+
+        //DROP SCHEMA public CASCADE;
+        //CREATE SCHEMA public;
+        //If you are using PostgreSQL 9.3 or greater, you may also need to restore the default grants.
+
+        //GRANT ALL ON SCHEMA public TO postgres;
+        //    GRANT ALL ON SCHEMA public TO public;
     }
 }

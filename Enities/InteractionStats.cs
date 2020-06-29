@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SharpCounter.Enities
 {
@@ -11,7 +9,8 @@ namespace SharpCounter.Enities
         public DateTime Date { get; set; }
         public int WebSiteId { get; set; }
         public WebSites WebSite { get; set; }
-        public string Title { get; set; }
+        public ICollection<InteractionCounts> InteractionCounts { get; set; }
+        public int TotalRoutes { get; set; }
 
     }
 }

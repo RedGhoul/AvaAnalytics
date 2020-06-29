@@ -63,7 +63,7 @@ namespace SharpCounter
             services.AddSingleton<WebSiteRepo, WebSiteRepo>();
             services.AddSingleton<InteractionRepo, InteractionRepo>();
             services.AddSingleton<SessionRepo, SessionRepo>();
-            services.AddSingleton<BrowserStatsRepo, BrowserStatsRepo>();
+            services.AddSingleton<StatsRepo, StatsRepo>();
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddResponseCompression();

@@ -16,11 +16,11 @@ using UAParser;
 
 namespace SharpCounter.HangFire
 {
-    public class InteractionCountsJob : IMyJob
+    public class InteractionStatsJob : IMyJob
     {
         private readonly ApplicationDbContext _ctx;
 
-        public InteractionCountsJob(ApplicationDbContext ctx)
+        public InteractionStatsJob(ApplicationDbContext ctx)
         {
             _ctx = ctx;
         }
@@ -49,18 +49,28 @@ namespace SharpCounter.HangFire
                         Total = d.Count()
                     }).ToListAsync();
 
+                InteractionStats interactionStats = new InteractionStats();
+                interactionStats.Date = DateTime.UtcNow;
+                interactionStats.WebSiteId = allSites[websiteIndex];
+                interactionStats.TotalRoutes = pathCount.Count;
+                _ctx.Add(interactionStats);
+                await _ctx.SaveChangesAsync();
+
                 for (int pathCountIndex = 0; pathCountIndex < pathCount.Count; pathCountIndex++)
                 {
                     InteractionCounts InteractionCounts = new InteractionCounts
                     {
                         WebSiteId = allSites[websiteIndex],
                         Path = pathCount[pathCountIndex].Path,
-                        Hour = DateTime.UtcNow,
-                        Total = pathCount[pathCountIndex].Total
+                        Date = DateTime.UtcNow,
+                        Total = pathCount[pathCountIndex].Total,
+                        InteractionStatsId = interactionStats.Id
                     };
                     _ctx.Add(InteractionCounts);
                     await _ctx.SaveChangesAsync();
                 }
+
+
             }
 
         }

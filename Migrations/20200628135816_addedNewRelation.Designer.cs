@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SharpCounter.Data;
@@ -9,9 +10,10 @@ using SharpCounter.Data;
 namespace SharpCounter.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200628135816_addedNewRelation")]
+    partial class addedNewRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -319,7 +321,7 @@ namespace SharpCounter.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("Hour")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("InteractionStatsId")
@@ -336,7 +338,7 @@ namespace SharpCounter.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Date");
+                    b.HasIndex("Hour");
 
                     b.HasIndex("InteractionStatsId");
 
@@ -357,8 +359,8 @@ namespace SharpCounter.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("TotalRoutes")
-                        .HasColumnType("integer");
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
 
                     b.Property<int>("WebSiteId")
                         .HasColumnType("integer");
@@ -482,14 +484,10 @@ namespace SharpCounter.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("HomePageLink")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("LinkDomain")
                         .HasColumnType("text");
 
                     b.Property<string>("OwnerId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -635,9 +633,7 @@ namespace SharpCounter.Migrations
                 {
                     b.HasOne("SharpCounter.Enities.ApplicationUser", "Owner")
                         .WithMany("Websites")
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OwnerId");
                 });
 #pragma warning restore 612, 618
         }

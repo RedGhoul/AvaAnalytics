@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpCounter.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,9 +14,11 @@ namespace SharpCounter.Enities
         }
         public int Id { get; set; }
         public string APIKey { get; set; }
-        public string LinkDomain { get; set; }
+        public string HomePageLink { get; set; }
+        public string Name { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public string OwnerId { get; set; }
         public ApplicationUser Owner { get; set; }
         public ICollection<Interaction> Interactions { get; set; }
         public ICollection<Session> Sessions { get; set; }

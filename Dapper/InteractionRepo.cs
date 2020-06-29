@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SharpCounter.Dapper
 {
-    public class InteractionRepo : IRepository<Interaction>
+    public class InteractionRepo
     {
         private readonly string connectionString;
         public InteractionRepo(IConfiguration configuration)
@@ -37,31 +37,6 @@ namespace SharpCounter.Dapper
                 VALUES
                 (@WebSiteId, @SessionId, @Path, @Title, @Browser, @Location,
                  @Language, @FirstVisit, @Referrer, @CreatedAt)", item);
-        }
-
-        public void AddAsync(Interaction item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Interaction>> FindAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Interaction FindByID(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Remove(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(Interaction item)
-        {
-            throw new NotImplementedException();
         }
     }
 }

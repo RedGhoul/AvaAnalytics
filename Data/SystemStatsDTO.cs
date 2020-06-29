@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace SharpCounter.Data
 {
-    public class BrowserStatDTO
+    public class SystemStatsDTO
     {
-        public string Browser { get; set; }
+        public string Platform { get; set; }
         public string Version { get; set; }
         public int Count { get; set; }
     }

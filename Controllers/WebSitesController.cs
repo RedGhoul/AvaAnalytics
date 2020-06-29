@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,15 +13,18 @@ using SharpCounter.Enities;
 
 namespace SharpCounter.Controllers
 {
+    [Authorize]
     public class WebSitesController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly WebSiteRepo _websiteRepo;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public WebSitesController(WebSiteRepo WebsiteRepo,ApplicationDbContext context)
+        public WebSitesController(UserManager<ApplicationUser> UserManage, WebSiteRepo WebsiteRepo, ApplicationDbContext context)
         {
             _context = context;
             _websiteRepo = WebsiteRepo;
+            _userManager = UserManage;
         }
 
         // GET: WebSites
@@ -55,13 +60,17 @@ namespace SharpCounter.Controllers
         // POST: WebSites/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,LinkDomain,CreatedAt,UpdatedAt")] WebSites webSites)
+        public async Task<IActionResult> Create([Bind("Id,HomePageLink,Name")] WebSites webSites)
         {
             if (ModelState.IsValid)
             {
                 webSites.APIKey = Guid.NewGuid().ToString();
+                webSites.HomePageLink = webSites.HomePageLink;
+                webSites.Name = webSites.Name;
                 webSites.UpdatedAt = DateTime.UtcNow;
                 webSites.CreatedAt = DateTime.UtcNow;
+                var curUser = await _userManager.GetUserAsync(HttpContext.User);
+                webSites.OwnerId = curUser.Id;
                 _context.Add(webSites);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -86,37 +95,18 @@ namespace SharpCounter.Controllers
         }
 
         // POST: WebSites/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,APIKey,LinkDomain,CreatedAt,UpdatedAt")] WebSites webSites)
+        public async Task<IActionResult> Edit(int id, [Bind("HomePageLink,Name")] WebSites webSites)
         {
-            if (id != webSites.Id)
+            var modWebsite = await _context.WebSites.FirstOrDefaultAsync(x => x.Id == id);
+            if (modWebsite == null)
             {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(webSites);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!WebSitesExists(webSites.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
                 return RedirectToAction(nameof(Index));
             }
+            modWebsite.HomePageLink = webSites.HomePageLink;
+            modWebsite.Name = webSites.Name;
+            await _context.SaveChangesAsync();
             return View(webSites);
         }
 

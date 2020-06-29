@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SharpCounter.Dapper
 {
-    public class SessionRepo : IRepository<Session>
+    public class SessionRepo 
     {
         private readonly string connectionString;
         public SessionRepo(IConfiguration configuration)
@@ -35,6 +35,15 @@ namespace SharpCounter.Dapper
                 (""SessionUId"", ""LastSeen"", ""CreatedAt"", ""WebSiteId"") VALUES
                 (@SessionUId, @LastSeen, @CreatedAt, @WebSiteId)", item);
         }
+        public async Task<Session> FindBySessionHash(string sessionHash)
+        {
+            using IDbConnection dbConnection = Connection;
+            dbConnection.Open();
+            return await dbConnection.QueryFirstOrDefaultAsync<Session>(
+                    @"SELECT * FROM ""Sessions"" where ""SessionUId"" = @sessionHash",
+                     new { sessionHash });
+
+        }
 
         public Task<IEnumerable<Session>> FindAll()
         {
@@ -47,24 +56,10 @@ namespace SharpCounter.Dapper
             throw new NotImplementedException();
         }
 
-        public async Task<Session> FindBySessionHash(string sessionHash)
-        {
-            using IDbConnection dbConnection = Connection;
-            dbConnection.Open();
-            return await dbConnection.QueryFirstOrDefaultAsync<Session>(
-                    @"SELECT * FROM ""Sessions"" where ""SessionUId"" = @sessionHash",
-                     new { sessionHash });
-            
-        }
-
         public void Remove(int id)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(Session item)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

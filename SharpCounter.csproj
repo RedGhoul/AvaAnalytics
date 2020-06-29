@@ -9,6 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200628135532_addedNewRelation.cs" />
+    <Compile Remove="Migrations\20200628135532_addedNewRelation.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Dapper.Extensions.PostgreSql" Version="3.1.4" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.11" />

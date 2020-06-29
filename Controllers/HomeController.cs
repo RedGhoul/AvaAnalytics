@@ -16,12 +16,8 @@ namespace SharpCounter.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationDbContext _ctx;
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+        public HomeController()
         {
-            _ctx = context;
-            _logger = logger;
         }
 
         public IActionResult Index()
