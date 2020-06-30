@@ -95,6 +95,17 @@ namespace SharpCounter.Controllers
                         }));
                 }
 
+                string[] screenProps = s.Split(",");
+                float ScreenWidth = 0;
+                float ScreenHeight = 0;
+                float DevicePixelRatio = 0;
+                if (screenProps.Length == 3)
+                {
+                    ScreenWidth = float.Parse(screenProps[0]);
+                    ScreenHeight = float.Parse(screenProps[1]);
+                    DevicePixelRatio = float.Parse(screenProps[2]);
+                }
+
                 Interaction interaction = new Interaction
                 {
                     WebSiteId = curSite.Id,
@@ -105,7 +116,10 @@ namespace SharpCounter.Controllers
                     Browser = Request.Headers["User-Agent"],
                     Language = Request.Headers["Accept-Language"],
                     FirstVisit = isFirst,
-                    Referrer = r,
+                    Referrer = Request.Headers["Referer"].ToString(),
+                    ScreenWidth = ScreenWidth,
+                    ScreenHeight = ScreenHeight,
+                    DevicePixelRatio = DevicePixelRatio,
                     CreatedAt = DateTime.UtcNow
                 };
                
