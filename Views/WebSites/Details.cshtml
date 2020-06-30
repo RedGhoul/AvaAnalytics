@@ -1,87 +1,110 @@
 ﻿@model SharpCounter.Enities.WebSites
+<h3>@Model.Name</h3>
+<div class="row">
+    <div class="col-4 col-md-2">
+        APIKey
+    </div>
+    <div class="col-8 col-md-4">
+        @Html.DisplayFor(model => model.APIKey)
+    </div>
+    <div class="col-0 col-md-4">
 
-@{
-    ViewData["Title"] = "Details";
-}
+    </div>
+</div>
+<div class="row">
+    <div class="col-4 col-md-2">
+        Home Page Link
+    </div>
+    <div class="col-8 col-md-4">
+        @Html.DisplayFor(model => model.HomePageLink)
+    </div>
+    <div class="col-0 col-md-4">
 
-<div class="row">
-    <h3>@Model.Name</h3>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.APIKey)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.APIKey)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.HomePageLink)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.HomePageLink)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UpdatedAt)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UpdatedAt)
-        </dd>
-    </dl>
-</div>
-<div class="row">
-    <h4>Statistics For The Last 30 Mins</h4>
-</div>
-<div class="row">
-    <div class="col-12">
-        <canvas id="bar-chart-BrowserStats" width="130" height="30"></canvas>
     </div>
 </div>
 <div class="row">
-    <div class="col-12">
-        <canvas id="bar-chart-InteractionStats" width="130" height="30"></canvas>
+    <div class="col-4 col-md-2">
+        Create at
+    </div>
+    <div class="col-8 col-md-4">
+        @Html.DisplayFor(model => model.CreatedAt)
+    </div>
+    <div class="col-0 col-md-4">
+
     </div>
 </div>
 <div class="row">
-    <div class="col-12">
-        <canvas id="bar-chart-SystemStats" width="130" height="30"></canvas>
+    <div class="col-4 col-md-2">
+        Updated At
+    </div>
+    <div class="col-8 col-md-4">
+        @Html.DisplayFor(model => model.UpdatedAt)
+    </div>
+    <div class="col-0 col-md-4">
+
     </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div class="row align-items-center">
+    <div class="col-3 col-md-5"></div>
+    <div class="col-5 col-md-4">
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+            <a class="btn btn-secondary" asp-action="Index">Back to List</a>
+        </div>
+    </div>
+    <div class="col-4 col-md-4"></div>
 </div>
+<div class="spacer">
+
+</div>
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-5">
+        <h4>Statistics For The Last 30 Mins</h4>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+<div class="spacer">
+
+</div>
+<div class="row">
+    <div class="col-12">
+        <canvas id="bar-chart-InteractionStats" width="130" height="50"></canvas>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 col-md-6">
+        <canvas id="bar-chart-BrowserStats" width="100" height="50"></canvas>
+    </div>
+    <div class="col-12 col-md-6">
+        <canvas id="bar-chart-SystemStats" width="100" height="50"></canvas>
+    </div>
+</div>
+
 @section Scripts{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"
             integrity="sha256-T/f7Sju1ZfNNfBh7skWn0idlCBcI3RwdLSS4/I7NQKQ=" crossorigin="anonymous"></script>
     <script>
-        let Blabels = [];
-        let Bdata = [];
+        const ISChart = document.getElementById("bar-chart-InteractionStats");
+        const BSChart = document.getElementById("bar-chart-BrowserStats");
+        const SSChart = document.getElementById("bar-chart-SystemStats");
+        console.log(getDeviceType())
+        if (getDeviceType() === 'mobile') {
+            ISChart.height = 80;
+            BSChart.height = 40;
+            SSChart.height = 40;
+        }
         axios.get('/api/Stats/BrowserStats/@Model.Id')
             .then(function (response) {
                 let data = response.data;
+                let Blabels = []
+                let Bdata = []
                 data.forEach(stat => {
                     Blabels.push(stat.browser + " " + stat.version);
                     Bdata.push(stat.count);
                 });
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
-            .then(function () {
-                new Chart(document.getElementById("bar-chart-BrowserStats"), {
+                new Chart(BSChart, {
                     type: 'horizontalBar',
                     data: {
                         labels: Blabels,
@@ -106,26 +129,24 @@
                         }
                     }
                 });
-            });
-
-    </script>
-    <script>
-        let Ilabels = [];
-        let Idata = [];
-        axios.get('/api/Stats/InteractionStats/@Model.Id')
-            .then(function (response) {
-                let data = response.data;
-                console.log(data)
-                data.forEach(stat => {
-                    Ilabels.push(stat.path);
-                    Idata.push(stat.total);
-                });
             })
             .catch(function (error) {
                 console.log(error);
             })
             .then(function () {
-                new Chart(document.getElementById("bar-chart-InteractionStats"), {
+                
+            });
+
+        axios.get('/api/Stats/InteractionStats/@Model.Id')
+            .then(function (response) {
+                let data = response.data;
+                let Ilabels = [];
+                let Idata = [];
+                data.forEach(stat => {
+                    Ilabels.push(stat.path);
+                    Idata.push(stat.total);
+                });
+                new Chart(ISChart, {
                     type: 'horizontalBar',
                     data: {
                         labels: Ilabels,
@@ -150,26 +171,22 @@
                         }
                     }
                 });
-            });
-
-    </script>
-    <script>
-        let Slabels = [];
-        let Sdata = [];
-        axios.get('/api/Stats/SystemStats/@Model.Id')
-            .then(function (response) {
-                let data = response.data;
-                console.log(data)
-                data.forEach(stat => {
-                    Slabels.push(stat.platform + " " + stat.version);
-                    Sdata.push(stat.count);
-                });
             })
             .catch(function (error) {
                 console.log(error);
             })
-            .then(function () {
-                new Chart(document.getElementById("bar-chart-SystemStats"), {
+
+       
+        axios.get('/api/Stats/SystemStats/@Model.Id')
+            .then(function (response) {
+                let data = response.data;
+                let Slabels = [];
+                let Sdata = [];
+                data.forEach(stat => {
+                    Slabels.push(stat.platform + " " + stat.version);
+                    Sdata.push(stat.count);
+                });
+                new Chart(SSChart, {
                     type: 'horizontalBar',
                     data: {
                         labels: Slabels,
@@ -194,7 +211,10 @@
                         }
                     }
                 });
-            });
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
 
     </script>
 }
