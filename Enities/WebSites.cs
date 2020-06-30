@@ -28,5 +28,7 @@ namespace SharpCounter.Enities
         public ICollection<LocationStats> LocationStats { get; set; }
         public ICollection<SystemStats> SystemStats { get; set; }
 
+        public ICollection<ScreenSizeStats> ScreenSizeStats { get; set; }
+
     }
 }

@@ -16,6 +16,7 @@ namespace SharpCounter.Data
         public DbSet<InteractionCounts> InteractionCounts { get; set; }
         public DbSet<InteractionStats> InteractionStats { get; set; }
         public DbSet<LocationStats> LocationStats { get; set; }
+        public DbSet<ScreenSizeStats> ScreenSizeStats { get; set; }
         public DbSet<Session> Sessions { get; set; }
         public DbSet<WebSites> WebSites { get; set; }
 
@@ -63,6 +64,15 @@ namespace SharpCounter.Data
 
             modelBuilder.Entity<Interaction>()
                 .HasIndex(b => b.Path);
+
+            modelBuilder.Entity<Interaction>()
+                .HasIndex(b => b.ScreenHeight);
+
+            modelBuilder.Entity<Interaction>()
+                .HasIndex(b => b.ScreenWidth);
+
+            modelBuilder.Entity<Interaction>()
+                .HasIndex(b => b.DevicePixelRatio);
 
             modelBuilder.Entity<InteractionCounts>()
                 .HasOne(w => w.WebSite)
@@ -124,6 +134,16 @@ namespace SharpCounter.Data
 
             modelBuilder.Entity<SystemStats>()
                 .HasIndex(x => x.Day);
+
+            modelBuilder.Entity<ScreenSizeStats>()
+                .HasOne(w => w.WebSite)
+                .WithMany(w => w.ScreenSizeStats)
+                .HasForeignKey(w => w.WebSiteId)
+                .IsRequired();
+
+            modelBuilder.Entity<ScreenSizeStats>()
+                .HasIndex(x => x.Date);
+
 
         }
 
