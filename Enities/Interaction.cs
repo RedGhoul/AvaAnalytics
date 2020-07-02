@@ -23,9 +23,9 @@ namespace SharpCounter.Enities
         public string Language { get; set; }
         public bool FirstVisit { get; set; }
         public string Referrer { get; set; }
-        public float ScreenWidth { get; set; }
-        public float ScreenHeight { get; set; }
-        public float DevicePixelRatio { get; set; }
+        public double ScreenWidth { get; set; }
+        public double ScreenHeight { get; set; }
+        public double DevicePixelRatio { get; set; }
         public DateTime CreatedAt { get; set; }
 
     }

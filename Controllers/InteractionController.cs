@@ -10,10 +10,12 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using MaxMind.GeoIP2;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Npgsql;
 using SharpCounter.Dapper;
@@ -30,13 +32,17 @@ namespace SharpCounter.Controllers
         private readonly WebSiteRepo _websiteRepo;
         private readonly SessionRepo _sessionRepo;
         private readonly InteractionRepo _interactionRepo;
+        private readonly ILogger<InteractionController> _Logger;
 
-        public InteractionController(InteractionRepo interactionRepo, SessionRepo SessionRepo, WebSiteRepo WebsiteRepo, IDistributedCache cache)
+        public InteractionController(ILogger<InteractionController> logger,
+            InteractionRepo interactionRepo, SessionRepo SessionRepo, 
+            WebSiteRepo WebsiteRepo, IDistributedCache cache)
         {
             _cache = cache;
             _websiteRepo = WebsiteRepo;
             _sessionRepo = SessionRepo;
             _interactionRepo = interactionRepo;
+            _Logger = logger;
         }
 
 
@@ -96,15 +102,30 @@ namespace SharpCounter.Controllers
                 }
 
                 string[] screenProps = s.Split(",");
-                float ScreenWidth = 0;
-                float ScreenHeight = 0;
-                float DevicePixelRatio = 0;
+                double ScreenWidth = 0;
+                double ScreenHeight = 0;
+                double DevicePixelRatio = 0;
                 if (screenProps.Length == 3)
                 {
-                    ScreenWidth = float.Parse(screenProps[0]);
-                    ScreenHeight = float.Parse(screenProps[1]);
-                    DevicePixelRatio = float.Parse(screenProps[2]);
+                    ScreenWidth = double.Parse(screenProps[0]);
+                    ScreenHeight = double.Parse(screenProps[1]);
+                    DevicePixelRatio = double.Parse(String.Format("{0:0.##}", screenProps[2]));
                 }
+                
+                string Country = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+                try
+                {
+                    using var reader = new DatabaseReader("GeoLite2-Country.mmdb");
+                    var result = reader.Country(Request.HttpContext
+                        .Connection.RemoteIpAddress.ToString());
+                    Country = result.Country.Name;
+                }
+                catch (Exception ex)
+                {
+                    _Logger.LogError(ex.Message);
+                    _Logger.LogError(ex.StackTrace);
+                }
+
 
                 Interaction interaction = new Interaction
                 {
@@ -112,7 +133,7 @@ namespace SharpCounter.Controllers
                     SessionId = curSession.Id,
                     Path = p,
                     Title = t,
-                    Location = Request.HttpContext.Connection.RemoteIpAddress.ToString(),
+                    Location = Country,
                     Browser = Request.Headers["User-Agent"],
                     Language = Request.Headers["Accept-Language"],
                     FirstVisit = isFirst,

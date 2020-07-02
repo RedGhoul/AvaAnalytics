@@ -12,6 +12,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200628135532_addedNewRelation.cs" />
     <Compile Remove="Migrations\20200628135532_addedNewRelation.Designer.cs" />
+    <Compile Remove="Migrations\20200702172051_changedToIntsInteractions.cs" />
+    <Compile Remove="Migrations\20200702172051_changedToIntsInteractions.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +22,7 @@
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.11" />
     <PackageReference Include="HangFire.Core" Version="1.7.11" />
     <PackageReference Include="Hangfire.PostgreSql" Version="1.7.0" />
+    <PackageReference Include="MaxMind.GeoIP2" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.5" />
