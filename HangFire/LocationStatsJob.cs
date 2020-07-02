@@ -36,7 +36,7 @@ namespace SharpCounter.HangFire
             var allSites = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
             for (int websiteIndex = 0; websiteIndex < allSites.Count; websiteIndex++)
             {
-                var pathCount = await _ctx.Interactions.Where(
+                var locationCount = await _ctx.Interactions.Where(
                     x => x.WebSiteId == allSites[websiteIndex] &&
                     x.CreatedAt <= noww &&
                     x.CreatedAt > oneHourAgo)
@@ -47,14 +47,14 @@ namespace SharpCounter.HangFire
                         Count = d.Count()
                     }).ToListAsync();
 
-                for (int pathCountIndex = 0; pathCountIndex < pathCount.Count; pathCountIndex++)
+                for (int locCountIndex = 0; locCountIndex < locationCount.Count; locCountIndex++)
                 {
                     LocationStats InteractionCounts = new LocationStats
                     {
                         WebSiteId = allSites[websiteIndex],
-                        Location = pathCount[pathCountIndex].Location,
+                        Location = locationCount[locCountIndex].Location,
                         Date = DateTime.UtcNow,
-                        Count = pathCount[pathCountIndex].Count
+                        Count = locationCount[locCountIndex].Count
                     };
                     _ctx.Add(InteractionCounts);
                     await _ctx.SaveChangesAsync();

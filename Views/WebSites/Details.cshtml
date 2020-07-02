@@ -69,6 +69,7 @@
 </div>
 <div class="row">
     <div class="col-12">
+        <div id="InteractionStats-text"></div>
         <canvas id="bar-chart-InteractionStats" width="130" height="50"></canvas>
     </div>
 </div>
@@ -77,9 +78,11 @@
 </div>
 <div class="row">
     <div class="col-12 col-md-6">
+        <div id="BrowserStats-text"></div>
         <canvas id="bar-chart-BrowserStats" width="100" height="50"></canvas>
     </div>
     <div class="col-12 col-md-6">
+        <div id="SystemStats-text"></div>
         <canvas id="bar-chart-SystemStats" width="100" height="50"></canvas>
     </div>
 </div>
@@ -88,9 +91,11 @@
 </div>
 <div class="row">
     <div class="col-12 col-md-6">
+        <div id="ScreenStats-text"></div>
         <canvas id="bar-chart-ScreenStats" width="100" height="50"></canvas>
     </div>
     <div class="col-12 col-md-6">
+        <div id="LocationStats-text"></div>
         <canvas id="bar-chart-LocationStats" width="100" height="50"></canvas>
     </div>
 </div>
@@ -118,79 +123,108 @@
         axios.get('/api/Stats/BrowserStats/@Model.Id')
             .then(function (response) {
                 let data = response.data;
-                let Blabels = []
-                let Bdata = []
-                data.forEach(stat => {
-                    Blabels.push(stat.browser + " " + stat.version);
-                    Bdata.push(stat.count);
-                });
-                new Chart(BSChart, {
-                    type: 'horizontalBar',
-                    data: {
-                        labels: Blabels,
-                        datasets: [
-                            {
-                                label: "Counts",
-                                backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
-                                data: Bdata
-                            }
-                        ]
-                    },
-                    options: {
-                        legend: { display: false },
-                        title: {
-                            fontSize: 14,
-                            display: true,
-                            text: 'Browser Stats'
+                if (data.length === 0) {
+                    BSChart.hidden = true;
+                    document.getElementById("BrowserStats-text").innerHTML =
+                        `<div style="padding-left: 200px">
+                            <h3>Nothing Here Yet</h3>
+                            <h5>Browser Stats</h5>
+                        </div>`
+                } else {
+                    let Blabels = []
+                    let Bdata = []
+                    data.forEach(stat => {
+                        Blabels.push(stat.browser + " " + stat.version);
+                        Bdata.push(stat.count);
+                    });
+                    new Chart(BSChart, {
+                        type: 'horizontalBar',
+                        data: {
+                            labels: Blabels,
+                            datasets: [
+                                {
+                                    label: "Counts",
+                                    backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
+                                    data: Bdata
+                                }
+                            ]
                         },
-                        scales: {
-                            yAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500' } }],
-                            xAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500' } }]
+                        options: {
+                            legend: { display: false },
+                            title: {
+                                fontSize: 14,
+                                display: true,
+                                text: 'Browser Stats'
+                            },
+                            scales: {
+                                yAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500' } }],
+                                xAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
+                                        stepSize: 10,
+                                        fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500'
+                                    }
+                                }]
+                            }
                         }
-                    }
-                });
+                    });
+                }
+                
             })
             .catch(function (error) {
                 console.log(error);
             })
-            .then(function () {
-
-            });
 
         axios.get('/api/Stats/InteractionStats/@Model.Id')
             .then(function (response) {
                 let data = response.data;
-                let Ilabels = [];
-                let Idata = [];
-                data.forEach(stat => {
-                    Ilabels.push(stat.path);
-                    Idata.push(stat.total);
-                });
-                new Chart(ISChart, {
-                    type: 'horizontalBar',
-                    data: {
-                        labels: Ilabels,
-                        datasets: [
-                            {
-                                label: "Counts",
-                                backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
-                                data: Idata
-                            }
-                        ]
-                    },
-                    options: {
-                        legend: { display: false },
-                        title: {
-                            fontSize: 14,
-                            display: true,
-                            text: 'Page Interactions'
+                if (data.length === 0) {
+                    BSChart.hidden = true;
+                    document.getElementById("InteractionStats-text").innerHTML =
+                        `<div style="padding-left: 450px">
+                            <h3>Nothing Here Yet</h3>
+                            <h5>Interaction Stats</h5>
+                        </div>`
+                } else {
+                    let Ilabels = [];
+                    let Idata = [];
+                    data.forEach(stat => {
+                        Ilabels.push(stat.path);
+                        Idata.push(stat.total);
+                    });
+                    new Chart(ISChart, {
+                        type: 'horizontalBar',
+                        data: {
+                            labels: Ilabels,
+                            datasets: [
+                                {
+                                    label: "Counts",
+                                    backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
+                                    data: Idata
+                                }
+                            ]
                         },
-                        scales: {
-                            yAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500' } }],
-                            xAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500' } }]
+                        options: {
+                            legend: { display: false },
+                            title: {
+                                fontSize: 14,
+                                display: true,
+                                text: 'Page Interactions'
+                            },
+                            scales: {
+                                yAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500' } }],
+                                xAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
+                                        stepSize: 10,
+                                        fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500'
+                                    }
+                                }]
+                            }
                         }
-                    }
-                });
+                    });
+                }
+               
             })
             .catch(function (error) {
                 console.log(error);
@@ -200,37 +234,53 @@
         axios.get('/api/Stats/SystemStats/@Model.Id')
             .then(function (response) {
                 let data = response.data;
-                let Slabels = [];
-                let Sdata = [];
-                data.forEach(stat => {
-                    Slabels.push(stat.platform + " " + stat.version);
-                    Sdata.push(stat.count);
-                });
-                new Chart(SysSChart, {
-                    type: 'horizontalBar',
-                    data: {
-                        labels: Slabels,
-                        datasets: [
-                            {
-                                label: "Counts",
-                                backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
-                                data: Sdata
-                            }
-                        ]
-                    },
-                    options: {
-                        legend: { display: false },
-                        title: {
-                            fontSize: 14,
-                            display: true,
-                            text: 'System Stats'
+                if (data.length === 0) {
+                    BSChart.hidden = true;
+                    document.getElementById("SystemStats-text").innerHTML =
+                        `<div style="padding-left: 200px">
+                            <h3>Nothing Here Yet</h3>
+                            <h5>System Stats</h5>
+                        </div>`
+                } else {
+                    let Slabels = [];
+                    let Sdata = [];
+                    data.forEach(stat => {
+                        Slabels.push(stat.platform + " " + stat.version);
+                        Sdata.push(stat.count);
+                    });
+                    new Chart(SysSChart, {
+                        type: 'horizontalBar',
+                        data: {
+                            labels: Slabels,
+                            datasets: [
+                                {
+                                    label: "Counts",
+                                    backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
+                                    data: Sdata
+                                }
+                            ]
                         },
-                        scales: {
-                            yAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500' } }],
-                            xAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500' } }]
+                        options: {
+                            legend: { display: false },
+                            title: {
+                                fontSize: 14,
+                                display: true,
+                                text: 'System Stats'
+                            },
+                            scales: {
+                                yAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500' } }],
+                                xAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
+                                        stepSize: 10,
+                                        fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500'
+                                    }
+                                }]
+                            }
                         }
-                    }
-                });
+                    });
+                }
+                
             })
             .catch(function (error) {
                 console.log(error);
@@ -238,42 +288,62 @@
         axios.get('/api/Stats/ScreenSizeStats/@Model.Id')
             .then(function (response) {
                 let data = response.data;
-                let Blabels = [
-                    'Phones',
-                    'Large Phones',
-                    'Tables',
-                    'Desktops',
-                    'Monitors 4K Plus'
-                ]
-                let Bdata = []
-                for (const key of Object.keys(data[0])) {
-                    Bdata.push(data[0][key]);
-                }
-                new Chart(ScreenSChart, {
-                    type: 'horizontalBar',
-                    data: {
-                        labels: Blabels,
-                        datasets: [
-                            {
-                                label: "Counts",
-                                backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
-                                data: Bdata
-                            }
-                        ]
-                    },
-                    options: {
-                        legend: { display: false },
-                        title: {
-                            fontSize: 14,
-                            display: true,
-                            text: 'Screen Size Stats'
-                        },
-                        scales: {
-                            yAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500' } }],
-                            xAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500' } }]
-                        }
+
+                if (data.length === 0) {
+                    BSChart.hidden = true;
+                    document.getElementById("ScreenStats-text").innerHTML =
+                        `<div style="padding-left: 200px">
+                            <h3>Nothing Here Yet</h3>
+                            <h5>Screen Stats</h5>
+                        </div>`
+                } else {
+                    let Blabels = [
+                        'Phones',
+                        'Large Phones',
+                        'Tables',
+                        'Desktops',
+                        'Monitors 4K Plus'
+                    ]
+                    let Bdata = []
+                    for (const key of Object.keys(data[0])) {
+                        Bdata.push(data[0][key]);
                     }
-                });
+                    new Chart(ScreenSChart, {
+                        type: 'horizontalBar',
+                        data: {
+                            labels: Blabels,
+                            datasets: [
+                                {
+                                    label: "Counts",
+                                    backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
+                                    data: Bdata
+                                }
+                            ]
+                        },
+                        options: {
+                            legend: { display: false },
+                            title: {
+                                fontSize: 14,
+                                display: true,
+                                text: 'Screen Size Stats'
+                            },
+                            scales: {
+                                yAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500' } }],
+                                xAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
+                                        stepSize: 10,
+                                        fontSize: 14,
+                                        fontFamily: "'Roboto', sans-serif",
+                                        fontColor: '#000',
+                                        fontStyle: '500'
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                }
+                
             })
             .catch(function (error) {
                 console.log(error);
@@ -282,47 +352,60 @@
 
             });
 
-          axios.get('/api/Stats/BrowserStats/@Model.Id')
+        axios.get('/api/Stats/LocationStats/@Model.Id')
             .then(function (response) {
                 let data = response.data;
-                let Blabels = []
-                let Bdata = []
-                data.forEach(stat => {
-                    Blabels.push(stat.browser + " " + stat.version);
-                    Bdata.push(stat.count);
-                });
-                new Chart(LocationSChart, {
-                    type: 'horizontalBar',
-                    data: {
-                        labels: Blabels,
-                        datasets: [
-                            {
-                                label: "Counts",
-                                backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
-                                data: Bdata
-                            }
-                        ]
-                    },
-                    options: {
-                        legend: { display: false },
-                        title: {
-                            fontSize: 14,
-                            display: true,
-                            text: 'Location Stats'
+
+                if (data.length === 0) {
+                    BSChart.hidden = true;
+                    document.getElementById("LocationStats-text").innerHTML =
+                        `<div style="padding-left: 200px">
+                            <h3>Nothing Here Yet</h3>
+                            <h5>Location Stats</h5>
+                        </div>`
+                } else {
+                    let Blabels = []
+                    let Bdata = []
+                    data.forEach(stat => {
+                        Blabels.push(stat.location);
+                        Bdata.push(stat.count);
+                    });
+                    new Chart(LocationSChart, {
+                        type: 'horizontalBar',
+                        data: {
+                            labels: Blabels,
+                            datasets: [
+                                {
+                                    label: "Counts",
+                                    backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
+                                    data: Bdata
+                                }
+                            ]
                         },
-                        scales: {
-                            yAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500' } }],
-                            xAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500' } }]
+                        options: {
+                            legend: { display: false },
+                            title: {
+                                fontSize: 14,
+                                display: true,
+                                text: 'Location Stats'
+                            },
+                            scales: {
+                                yAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500' } }],
+                                xAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
+                                        stepSize: 10,
+                                        fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500'
+                                    }
+                                }]
+                            }
                         }
-                    }
-                });
+                    });
+                }
             })
             .catch(function (error) {
                 console.log(error);
             })
-            .then(function () {
-
-            });
 
     </script>
 }

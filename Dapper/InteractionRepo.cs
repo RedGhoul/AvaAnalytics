@@ -33,10 +33,12 @@ namespace SharpCounter.Dapper
             await dbConnection.ExecuteAsync(
                  @"Insert into ""Interactions""
                 (""WebSiteId"", ""SessionId"", ""Path"", ""Title"",""Browser"",
-                 ""Location"", ""Language"", ""FirstVisit"", ""Referrer"", ""CreatedAt"") 
+                 ""Location"", ""Language"", ""FirstVisit"", ""Referrer"", ""CreatedAt"",
+                 ""ScreenWidth"", ""ScreenHeight"",""DevicePixelRatio"") 
                 VALUES
                 (@WebSiteId, @SessionId, @Path, @Title, @Browser, @Location,
-                 @Language, @FirstVisit, @Referrer, @CreatedAt)", item);
+                 @Language, @FirstVisit, @Referrer, @CreatedAt, @ScreenWidth,
+                 @ScreenHeight,@DevicePixelRatio)", item);
         }
     }
 }
