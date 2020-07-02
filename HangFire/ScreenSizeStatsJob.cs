@@ -32,29 +32,49 @@ namespace SharpCounter.HangFire
             var allSites = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
             for (int websiteIndex = 0; websiteIndex < allSites.Count; websiteIndex++)
             {
-                var pathCount = await _ctx.Interactions.Where(
+                var sizePhones = _ctx.Interactions.Where(
                     x => x.WebSiteId == allSites[websiteIndex] &&
-                    x.CreatedAt <= noww &&
-                    x.CreatedAt > oneHourAgo)
-                    .GroupBy(x => x.Location)
-                    .Select(d => new LocationStats
-                    {
-                        Location = d.Key,
-                        Count = d.Count()
-                    }).ToListAsync();
+                    x.CreatedAt <= noww && x.CreatedAt > oneHourAgo &&
+                    x.ScreenWidth != 0 && x.ScreenWidth <= 384).Count();
 
-                for (int pathCountIndex = 0; pathCountIndex < pathCount.Count; pathCountIndex++)
+                var sizeLargePhones = _ctx.Interactions.Where(
+                    x => x.WebSiteId == allSites[websiteIndex] &&
+                    x.CreatedAt <= noww && x.CreatedAt > oneHourAgo &&
+                    x.ScreenWidth != 0 && x.ScreenWidth <= 1024 && x.ScreenWidth > 384)
+                    .Count();
+
+                var sizeTablets = _ctx.Interactions.Where(
+                    x => x.WebSiteId == allSites[websiteIndex] &&
+                    x.CreatedAt <= noww && x.CreatedAt > oneHourAgo &&
+                    x.ScreenWidth != 0 && x.ScreenWidth <= 1440 && x.ScreenWidth > 1024)
+                    .Count();
+
+                var sizeDesktop = _ctx.Interactions.Where(
+                    x => x.WebSiteId == allSites[websiteIndex] &&
+                    x.CreatedAt <= noww && x.CreatedAt > oneHourAgo &&
+                    x.ScreenWidth != 0 && x.ScreenWidth <= 1920 && x.ScreenWidth > 1440)
+                    .Count();
+
+                var sizeDesktopHD = _ctx.Interactions.Where(
+                    x => x.WebSiteId == allSites[websiteIndex] &&
+                    x.CreatedAt <= noww && x.CreatedAt > oneHourAgo &&
+                    x.ScreenWidth != 0 && x.ScreenWidth > 1920)
+                    .Count();
+
+
+                ScreenSizeStats screenSizeStats = new ScreenSizeStats
                 {
-                    LocationStats InteractionCounts = new LocationStats
-                    {
-                        WebSiteId = allSites[websiteIndex],
-                        Location = pathCount[pathCountIndex].Location,
-                        Date = DateTime.UtcNow,
-                        Count = pathCount[pathCountIndex].Count
-                    };
-                    _ctx.Add(InteractionCounts);
-                    await _ctx.SaveChangesAsync();
-                }
+                    NumberOfPhones = sizePhones,
+                    LargePhonesSmallTablets = sizeLargePhones,
+                    TabletsSmallLaptops = sizeTablets,
+                    ComputerMonitors = sizeDesktop,
+                    ComputerMonitors4K = sizeDesktopHD,
+                    WebSiteId = allSites[websiteIndex],
+                    Date = noww
+                };
+
+                _ctx.Add(screenSizeStats);
+                await _ctx.SaveChangesAsync();
             }
 
         }

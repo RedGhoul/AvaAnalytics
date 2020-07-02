@@ -235,15 +235,20 @@
             .catch(function (error) {
                 console.log(error);
             })
-        axios.get('/api/Stats/BrowserStats/@Model.Id')
+        axios.get('/api/Stats/ScreenSizeStats/@Model.Id')
             .then(function (response) {
                 let data = response.data;
-                let Blabels = []
+                let Blabels = [
+                    'Phones',
+                    'Large Phones',
+                    'Tables',
+                    'Desktops',
+                    'Monitors 4K Plus'
+                ]
                 let Bdata = []
-                data.forEach(stat => {
-                    Blabels.push(stat.browser + " " + stat.version);
-                    Bdata.push(stat.count);
-                });
+                for (const key of Object.keys(data[0])) {
+                    Bdata.push(data[0][key]);
+                }
                 new Chart(ScreenSChart, {
                     type: 'horizontalBar',
                     data: {
@@ -277,7 +282,7 @@
 
             });
 
-                axios.get('/api/Stats/BrowserStats/@Model.Id')
+          axios.get('/api/Stats/BrowserStats/@Model.Id')
             .then(function (response) {
                 let data = response.data;
                 let Blabels = []

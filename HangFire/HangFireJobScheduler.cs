@@ -1,4 +1,5 @@
 ﻿using Hangfire;
+using SharpCounter.Enities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,17 +20,22 @@ namespace SharpCounter.HangFire
             RecurringJob.RemoveIfExists(nameof(SystemStatsJob));
             RecurringJob.AddOrUpdate<SystemStatsJob>(nameof(SystemStatsJob),
                 job => job.Run(JobCancellationToken.Null),
-                "*/35 * * * *", TimeZoneInfo.Local);
+                "*/31 * * * *", TimeZoneInfo.Local);
 
             RecurringJob.RemoveIfExists(nameof(InteractionStatsJob));
             RecurringJob.AddOrUpdate<InteractionStatsJob>(nameof(InteractionStatsJob),
                 job => job.Run(JobCancellationToken.Null),
-                "*/40 * * * *", TimeZoneInfo.Local);
+                "*/32 * * * *", TimeZoneInfo.Local);
 
             RecurringJob.RemoveIfExists(nameof(LocationStatsJob));
             RecurringJob.AddOrUpdate<LocationStatsJob>(nameof(LocationStatsJob),
                 job => job.Run(JobCancellationToken.Null),
-                "*/45 * * * *", TimeZoneInfo.Local);
+                "*/33 * * * *", TimeZoneInfo.Local);
+
+            RecurringJob.RemoveIfExists(nameof(ScreenSizeStatsJob));
+            RecurringJob.AddOrUpdate<ScreenSizeStatsJob>(nameof(ScreenSizeStatsJob),
+                job => job.Run(JobCancellationToken.Null),
+                "*/34 * * * *", TimeZoneInfo.Local);
         }
     }
 }

@@ -60,15 +60,15 @@ namespace SharpCounter.Dapper
                 new { curTime, oldTime, Id = webSiteId });
         }
 
-        public async Task<IEnumerable<SystemStatsDTO>> GetScreenSizeStats(DateTime curTime, DateTime oldTime, int webSiteId)
+        public async Task<IEnumerable<ScreenSizeStatsDTO>> GetScreenSizeStats(DateTime curTime, DateTime oldTime, int webSiteId)
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
-            return await dbConnection.QueryAsync<SystemStatsDTO>(
-                @"SELECT ""Platform"", ""Version"", SUM(""Count"") as ""Count"" 
-                FROM ""SystemStats"" where ""Day"" <= @curTime and 
-                ""Day"" >= @oldTime and ""WebSiteId"" = @Id 
-                GROUP By ""Platform"", ""Version""",
+            return await dbConnection.QueryAsync<ScreenSizeStatsDTO>(
+                @"SELECT ""NumberOfPhones"", ""LargePhonesSmallTablets"",
+                ""TabletsSmallLaptops"",""ComputerMonitors"",""ComputerMonitors4K""
+                FROM ""ScreenSizeStats"" where ""Date"" <= @curTime and 
+                ""Date"" >= @oldTime and ""WebSiteId"" = @Id",
                 new { curTime, oldTime, Id = webSiteId });
         }
     }
