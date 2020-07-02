@@ -47,7 +47,7 @@
 <div class="row align-items-center">
     <div class="col-3 col-md-5"></div>
     <div class="col-5 col-md-4">
-        <div class="btn-group" role="group" aria-label="Basic example">
+        <div class="btn-group" role="group">
             <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
             <a class="btn btn-secondary" asp-action="Index">Back to List</a>
         </div>
@@ -72,12 +72,26 @@
         <canvas id="bar-chart-InteractionStats" width="130" height="50"></canvas>
     </div>
 </div>
+<div class="spacer">
+
+</div>
 <div class="row">
     <div class="col-12 col-md-6">
         <canvas id="bar-chart-BrowserStats" width="100" height="50"></canvas>
     </div>
     <div class="col-12 col-md-6">
         <canvas id="bar-chart-SystemStats" width="100" height="50"></canvas>
+    </div>
+</div>
+<div class="spacer">
+
+</div>
+<div class="row">
+    <div class="col-12 col-md-6">
+        <canvas id="bar-chart-ScreenStats" width="100" height="50"></canvas>
+    </div>
+    <div class="col-12 col-md-6">
+        <canvas id="bar-chart-LocationStats" width="100" height="50"></canvas>
     </div>
 </div>
 
@@ -88,12 +102,18 @@
     <script>
         const ISChart = document.getElementById("bar-chart-InteractionStats");
         const BSChart = document.getElementById("bar-chart-BrowserStats");
-        const SSChart = document.getElementById("bar-chart-SystemStats");
+        const SysSChart = document.getElementById("bar-chart-SystemStats");
+
+        const ScreenSChart = document.getElementById("bar-chart-ScreenStats");
+        const LocationSChart = document.getElementById("bar-chart-LocationStats");
+
         console.log(getDeviceType())
         if (getDeviceType() === 'mobile') {
             ISChart.height = 80;
             BSChart.height = 40;
-            SSChart.height = 40;
+            SysSChart.height = 40;
+            ScreenSChart.height = 40;
+            LocationSChart.height = 40;
         }
         axios.get('/api/Stats/BrowserStats/@Model.Id')
             .then(function (response) {
@@ -134,7 +154,7 @@
                 console.log(error);
             })
             .then(function () {
-                
+
             });
 
         axios.get('/api/Stats/InteractionStats/@Model.Id')
@@ -176,7 +196,7 @@
                 console.log(error);
             })
 
-       
+
         axios.get('/api/Stats/SystemStats/@Model.Id')
             .then(function (response) {
                 let data = response.data;
@@ -186,7 +206,7 @@
                     Slabels.push(stat.platform + " " + stat.version);
                     Sdata.push(stat.count);
                 });
-                new Chart(SSChart, {
+                new Chart(SysSChart, {
                     type: 'horizontalBar',
                     data: {
                         labels: Slabels,
@@ -215,6 +235,94 @@
             .catch(function (error) {
                 console.log(error);
             })
+        axios.get('/api/Stats/ScreenSizeStats/@Model.Id')
+            .then(function (response) {
+                let data = response.data;
+                let Blabels = [
+                    'Phones',
+                    'Large Phones',
+                    'Tables',
+                    'Desktops',
+                    'Monitors 4K Plus'
+                ]
+                let Bdata = []
+                for (const key of Object.keys(data[0])) {
+                    Bdata.push(data[0][key]);
+                }
+                new Chart(ScreenSChart, {
+                    type: 'horizontalBar',
+                    data: {
+                        labels: Blabels,
+                        datasets: [
+                            {
+                                label: "Counts",
+                                backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
+                                data: Bdata
+                            }
+                        ]
+                    },
+                    options: {
+                        legend: { display: false },
+                        title: {
+                            fontSize: 14,
+                            display: true,
+                            text: 'Screen Size Stats'
+                        },
+                        scales: {
+                            yAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500' } }],
+                            xAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500' } }]
+                        }
+                    }
+                });
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+            .then(function () {
+
+            });
+
+          axios.get('/api/Stats/BrowserStats/@Model.Id')
+            .then(function (response) {
+                let data = response.data;
+                let Blabels = []
+                let Bdata = []
+                data.forEach(stat => {
+                    Blabels.push(stat.browser + " " + stat.version);
+                    Bdata.push(stat.count);
+                });
+                new Chart(LocationSChart, {
+                    type: 'horizontalBar',
+                    data: {
+                        labels: Blabels,
+                        datasets: [
+                            {
+                                label: "Counts",
+                                backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
+                                data: Bdata
+                            }
+                        ]
+                    },
+                    options: {
+                        legend: { display: false },
+                        title: {
+                            fontSize: 14,
+                            display: true,
+                            text: 'Location Stats'
+                        },
+                        scales: {
+                            yAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500' } }],
+                            xAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: '#000', fontStyle: '500' } }]
+                        }
+                    }
+                });
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+            .then(function () {
+
+            });
 
     </script>
 }

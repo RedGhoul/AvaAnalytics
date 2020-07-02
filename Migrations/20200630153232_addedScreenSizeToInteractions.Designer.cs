@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SharpCounter.Data;
@@ -9,9 +10,10 @@ using SharpCounter.Data;
 namespace SharpCounter.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200630153232_addedScreenSizeToInteractions")]
+    partial class addedScreenSizeToInteractions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -310,15 +312,9 @@ namespace SharpCounter.Migrations
 
                     b.HasIndex("CreatedAt");
 
-                    b.HasIndex("DevicePixelRatio");
-
                     b.HasIndex("FirstVisit");
 
                     b.HasIndex("Path");
-
-                    b.HasIndex("ScreenHeight");
-
-                    b.HasIndex("ScreenWidth");
 
                     b.HasIndex("SessionId");
 
@@ -414,43 +410,6 @@ namespace SharpCounter.Migrations
                     b.HasIndex("WebSiteId");
 
                     b.ToTable("LocationStats");
-                });
-
-            modelBuilder.Entity("SharpCounter.Enities.ScreenSizeStats", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<int>("ComputerMonitors")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ComputerMonitors4K")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<int>("LargePhonesSmallTablets")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("NumberOfPhones")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TabletsSmallLaptops")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("WebSiteId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Date");
-
-                    b.HasIndex("WebSiteId");
-
-                    b.ToTable("ScreenSizeStats");
                 });
 
             modelBuilder.Entity("SharpCounter.Enities.Session", b =>
@@ -660,15 +619,6 @@ namespace SharpCounter.Migrations
                 {
                     b.HasOne("SharpCounter.Enities.WebSites", "WebSite")
                         .WithMany("LocationStats")
-                        .HasForeignKey("WebSiteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("SharpCounter.Enities.ScreenSizeStats", b =>
-                {
-                    b.HasOne("SharpCounter.Enities.WebSites", "WebSite")
-                        .WithMany("ScreenSizeStats")
                         .HasForeignKey("WebSiteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

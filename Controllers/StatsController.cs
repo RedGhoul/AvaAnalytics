@@ -49,5 +49,15 @@ namespace SharpCounter.Controllers
             return data.ToList();
         }
 
+        // GET: api/Stats/ScreenSizeStats/5
+        [HttpGet("ScreenSizeStats/{id}")]
+        public async Task<ActionResult<IEnumerable<ScreenSizeStatsDTO>>> GetScreenSizeStats(int id)
+        {
+            var curTime = DateTime.UtcNow;
+            var oldTime = curTime.Subtract(TimeSpan.FromMinutes(30));
+            var data = await _statsRepo.GetScreenSizeStats(curTime, oldTime, id);
+            return data.ToList();
+        }
+
     }
 }
