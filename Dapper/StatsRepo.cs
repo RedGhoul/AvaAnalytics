@@ -71,5 +71,16 @@ namespace SharpCounter.Dapper
                 ""Date"" >= @oldTime and ""WebSiteId"" = @Id",
                 new { curTime, oldTime, Id = webSiteId });
         }
+
+        public async Task<IEnumerable<LocationStatsDTO>> GetLocationStats(DateTime curTime, DateTime oldTime, int webSiteId)
+        {
+            using IDbConnection dbConnection = Connection;
+            dbConnection.Open();
+            return await dbConnection.QueryAsync<LocationStatsDTO>(
+                @"SELECT ""Date"", ""Location"", ""Count""
+                FROM ""LocationStats"" where ""Date"" <= @curTime and 
+                ""Date"" >= @oldTime and ""WebSiteId"" = @Id",
+                new { curTime, oldTime, Id = webSiteId });
+        }
     }
 }

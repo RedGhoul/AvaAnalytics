@@ -59,5 +59,13 @@ namespace SharpCounter.Controllers
             return data.ToList();
         }
 
+        [HttpGet("LocationStats/{id}")]
+        public async Task<ActionResult<IEnumerable<LocationStatsDTO>>> GetLocationStats(int id)
+        {
+            var curTime = DateTime.UtcNow;
+            var oldTime = curTime.Subtract(TimeSpan.FromDays(2));
+            var data = await _statsRepo.GetLocationStats(curTime, oldTime, id);
+            return data.ToList();
+        }
     }
 }
