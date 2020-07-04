@@ -4,10 +4,10 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import {
     VictoryBar, VictoryChart, VictoryAxis,
-    VictoryTheme
+    VictoryTheme, VictoryLabel
 } from 'victory';
 import MaterialTable from "material-table";
-
+import { DateTimePicker } from "@material-ui/pickers";
 const data = [
     { quarter: 1, earnings: 13000 },
     { quarter: 2, earnings: 16500 },
@@ -26,42 +26,79 @@ const rows = [
     createData('Gingerbread', 356),
 ];
 class Metrics extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            StartDate: new Date(),
+            EndDate: new Date(),
+        };
+    }
+    onChangeStartDate = (e) => {
+
+        this.setState({ StartDate: e });
+    };
+    onChangeEndDate = (e) => {
+
+        this.setState({ EndDate: e });
+    };
     render() {
         return (
             <div>
-                <h1>Metrics</h1>
                 <Grid container spacing={3}>
+
+                    <Grid item xs={2}></Grid>
+                    <Grid item xs>
+                        <h1>Metrics for Sharp Counter</h1>
+                    </Grid>
+                    <Grid item xs>
+                        <h2>Start Time</h2>
+                        <DateTimePicker
+                            variant="inline"
+                            value={this.state.StartDate}
+                            onChange={this.onChangeStartDate}
+                            onError={console.log}
+                        />
+
+                    </Grid>
+                    <Grid item xs>
+                        <h2>End Time</h2>
+
+                        <DateTimePicker
+                            variant="inline"
+                            value={this.state.EndDate}
+                            onChange={this.onChangeEndDate}
+                            onError={console.log}
+                        />
+
+                    </Grid>
+                </Grid>
+                <Grid container spacing={3}>
+
                     <Grid item xs={12}>
                         <Grid container spacing={3}>
                             <Grid item xs={1}></Grid>
                             <Grid item xs={10}>
                                 <MaterialTable
-                                    title="One Detail Panel Preview"
+                                    title="Page Views"
                                     columns={[
                                         { title: 'URL', field: 'name' },
                                         { title: 'Count', field: 'count' },
                                     ]}
                                     data={rows}
-                                // detailPanel={rowData => {
-                                //     return (
-                                //         <iframe
-                                //             width="100%"
-                                //             height="315"
-                                //             src="https://www.youtube.com/embed/C0DPdy98e4c"
-                                //             frameborder="0"
-                                //             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                //             allowfullscreen
-                                //         />
-                                //     )
-                                // }}
+                                    detailPanel={rowData => {
+                                        return (
+                                            <h2>sdf</h2>
+                                        )
+                                    }}
                                 /></Grid>
                             <Grid item xs={1}></Grid>
                         </Grid>
-
-
                     </Grid>
                     <Grid item xs={6}>
-                        <VictoryChart responsive padding={{ left: 120, top: 30, bottom: 30, right: 20 }} height={200} width={500} theme={VictoryTheme.material} domainPadding={20}>
+                        <VictoryChart title="Browser Stats" responsive
+                            padding={{ left: 120, top: 30, bottom: 30, right: 20 }}
+                            height={170} width={480} theme={VictoryTheme.material} domainPadding={10}>
+                            <VictoryLabel text="Browser Stats" x={250} y={20} textAnchor="middle" />
                             <VictoryAxis
                                 // tickValues specifies both the number of ticks and where
                                 // they are placed on the axis
@@ -83,7 +120,10 @@ class Metrics extends Component {
                     </Grid>
                     <Grid item xs={6}>
 
-                        <VictoryChart padding={{ left: 120, top: 30, bottom: 30, right: 20 }} responsive height={200} width={500} theme={VictoryTheme.material} domainPadding={20}>
+                        <VictoryChart padding={{ left: 120, top: 30, bottom: 30, right: 20 }}
+                            responsive height={170} width={480}
+                            theme={VictoryTheme.material} domainPadding={20}>
+                            <VictoryLabel text="System Stats" x={250} y={20} textAnchor="middle" />
                             <VictoryAxis
                                 // tickValues specifies both the number of ticks and where
                                 // they are placed on the axis
@@ -103,7 +143,11 @@ class Metrics extends Component {
                         </VictoryChart>
                     </Grid>
                     <Grid item xs={6}>
-                        <VictoryChart padding={{ left: 120, top: 30, bottom: 30, right: 20 }} responsive height={200} width={500} theme={VictoryTheme.material} domainPadding={20}>
+                        <VictoryChart screen="Screen Stats" padding={{ left: 120, top: 30, bottom: 30, right: 20 }}
+                            responsive height={170} width={480}
+                            theme={VictoryTheme.material} domainPadding={20}>
+                            <VictoryLabel text="Screen Stats" x={250} y={30} textAnchor="middle" />
+
                             <VictoryAxis
                                 // tickValues specifies both the number of ticks and where
                                 // they are placed on the axis
@@ -123,7 +167,11 @@ class Metrics extends Component {
                         </VictoryChart>
                     </Grid>
                     <Grid item xs={6}>
-                        <VictoryChart padding={{ left: 120, top: 30, bottom: 30, right: 20 }} responsive height={200} width={500} theme={VictoryTheme.material} domainPadding={20}>
+                        <VictoryChart title="Location Stats" padding={{ left: 120, top: 30, bottom: 30, right: 20 }}
+                            responsive height={170} width={480}
+                            theme={VictoryTheme.material} domainPadding={20}>
+                            <VictoryLabel text="Location Stats" x={250} y={30} textAnchor="middle" />
+
                             <VictoryAxis
                                 // tickValues specifies both the number of ticks and where
                                 // they are placed on the axis
