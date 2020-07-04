@@ -18,11 +18,11 @@ class App extends Component {
       <Router>
         <div className="App">
           <NavBar></NavBar>
-          <Container style={{ paddingTop: "20px" }}>
+          <div style={{ paddingTop: "20px" }}>
             <Grid container spacing={1}>
-              <Grid item xs={1}>
-              </Grid>
-              <Grid item xs={10}>
+              {/* <Grid item xs={1}>
+              </Grid> */}
+              <Grid item xs={12}>
                 <Switch>
                   <Route path="/about">
                     <About />
@@ -39,11 +39,11 @@ class App extends Component {
                   </Route>
                 </Switch>
               </Grid>
-              <Grid item xs={1}>
+              {/* <Grid item xs={1}>
 
-              </Grid>
+              </Grid> */}
             </Grid>
-          </Container>
+          </div>
         </div>
       </Router >
     )
