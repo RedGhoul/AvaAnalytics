@@ -3,23 +3,6 @@ import { view } from '@risingstack/react-easy-state';
 import AuthProvider from '../Stores/AuthProvider';
 import WebsiteProvider from '../Stores/WebsiteProvider';
 import MaterialTable from "material-table";
-import Button from '@material-ui/core/Button';
-const actions = [
-    {
-        icon: 'edit',
-        tooltip: 'Edit Index',
-        onClick: (event, rowData) => {
-            this.onEditClick(null, rowData._id);
-        }
-    },
-    {
-        icon: 'delete',
-        tooltip: 'Delete Index',
-        onClick: (event, rowData) => {
-            this.onDeleteClick(null, rowData._id);
-        }
-    },
-];
 class Websites extends Component {
 
     constructor(props) {
@@ -38,9 +21,9 @@ class Websites extends Component {
         } else {
             return (
                 <div style={{ maxWidth: "100%" }}>
-                    {this.state.canViewMetric == true ? <Button>
+                    {/* {this.state.canViewMetric == true ? <Button>
                         View Metrics
-                    </Button> : null}
+                    </Button> : null} */}
 
                     <MaterialTable
                         //actions={actions}
@@ -54,8 +37,8 @@ class Websites extends Component {
                                 lookup: { 34: "İstanbul", 63: "Şanlıurfa" },
                             },
                             {
-                                title: "Actions",
-                                field: "actions",
+                                title: "Metrics",
+                                field: "metrics",
                                 //editable: 'never'
                             }
                         ]}
@@ -67,12 +50,12 @@ class Websites extends Component {
                         }}
                         onSelectionChange={(rows) => {
                             console.log(rows)
-                            if (rows.length === 0) {
-                                this.setState({ canViewMetric: false });
-                            } else {
-                                this.setState({ canViewMetric: true });
+                            // if (rows.length === 0) {
+                            //     this.setState({ canViewMetric: false });
+                            // } else {
+                            //     this.setState({ canViewMetric: true });
 
-                            }
+                            // }
                         }}
                         editable={{
                             onRowAdd: newData =>

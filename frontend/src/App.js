@@ -8,6 +8,7 @@ import { view } from '@risingstack/react-easy-state';
 import NavBar from './Components/NavBar';
 import About from './Pages/About';
 import Home from './Pages/Home';
+import Metrics from './Pages/Metrics';
 import WebSites from './Pages/Websites';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
@@ -20,7 +21,6 @@ class App extends Component {
           <Container style={{ paddingTop: "20px" }}>
             <Grid container spacing={1}>
               <Grid item xs={1}>
-
               </Grid>
               <Grid item xs={10}>
                 <Switch>
@@ -29,6 +29,10 @@ class App extends Component {
                   </Route>
                   <Route path="/websites">
                     <WebSites />
+                  </Route>
+
+                  <Route path="/metrics">
+                    <Metrics />
                   </Route>
                   <Route path="/">
                     <Home />

@@ -1,31 +1,39 @@
 import React, { Component } from "react";
 import AuthProvider from '../Stores/AuthProvider';
 import { view } from '@risingstack/react-easy-state';
-import { AppBar, Tabs, Tab } from '@material-ui/core';
-import { Switch, Route, Redirect, Link } from "react-router-dom";
-import Badge from '@material-ui/core/Badge';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 import { withRouter } from "react-router-dom";
+import { Link } from 'react-router-dom';
 class NavBar extends Component {
     handleChange = (event, value) => {
         this.props.history.push(value);
     };
     render() {
-        const classes = this.props.classes;
-        let route = '/' + this.props.history.location.pathname.split('/')[1];
+
         return (
-            <AppBar position="static" color="default" title="Sharp Counter">
-                <Tabs
-                    value={route}
-                    onChange={this.handleChange}
-                    indicatorColor="primary"
-                    textColor="primary"
-                >
-                    <Tab label="About" value="/about" />
-                    <Tab label="Websites" value="/websites" />
-                    {AuthProvider.isLoggedIn ?
-                        <Tab label="Logout" onClick={AuthProvider.ToggleIsLoggedIn} /> :
-                        <Tab label="Login" onClick={AuthProvider.ToggleIsLoggedIn} />}
-                </Tabs>
+            <AppBar position="static" color="default">
+                <Toolbar>
+                    <Typography style={{ flexGrow: 1 }} variant="h6" >
+                        Sharp Counter
+                    </Typography>
+                    <Button component={Link}
+                        to="/About"
+                        label="signal"
+                        value="signal" color="inherit">About</Button>
+                    <Button component={Link}
+                        to="/Websites"
+                        label="signal"
+                        value="signal" color="inherit">Websites</Button>
+                    <Button onClick={AuthProvider.ToggleIsLoggedIn}
+                        label="signal"
+                        value="signal" color="inherit">Login</Button>
+                </Toolbar>
+
             </AppBar >
         )
     }
