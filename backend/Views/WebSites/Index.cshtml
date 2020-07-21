@@ -1,70 +1,79 @@
-﻿@model IEnumerable<SharpCounter.Enities.WebSites>
+﻿@model List<SharpCounter.Enities.WebSites>
 
-@{
-    ViewData["Title"] = "Index";
-}
-<link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
-<link href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
-<h1>Index</h1>
+<link href="https://unpkg.com/jquery-resizable-columns@0.2.3/dist/jquery.resizableColumns.css" rel="stylesheet">
+<link href="https://unpkg.com/bootstrap-table@1.17.1/dist/bootstrap-table.min.css" rel="stylesheet">
+<div class="row btabletitle">
+    <div class="col-md-4">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<style>
-    .select,
-    #locale {
-        width: 100%;
-    }
+    </div>
+    <div class="col-md-4 text-center">
+        <h1>Your Websites</h1>
+    </div>
+    <div class="col-md-4">
+    </div>
 
-    .like {
-        margin-right: 10px;
-    }
-</style>
-<div id="toolbar">
-    <button id="remove" class="btn btn-danger" disabled>
-        <i class="glyphicon glyphicon-remove"></i> Delete
-    </button>
 </div>
-<table id="table"
-       data-toolbar="#toolbar"
-       data-search="true"
-       data-show-refresh="true"
-       data-show-toggle="true"
-       data-show-fullscreen="true"
-       data-show-columns="true"
-       data-show-columns-toggle-all="true"
-       data-detail-view="true"
-       data-show-export="true"
-       data-click-to-select="true"
-       data-detail-formatter="detailFormatter"
-       data-minimum-count-columns="2"
-       data-show-pagination-switch="true"
-       data-pagination="true"
-       data-id-field="id"
-       data-page-list="[10, 25, 50, 100, all]"
-       data-show-footer="true"
-       data-side-pagination="server"
-       data-response-handler="responseHandler">
-    <thead>
-        <tr>
-            <th data-field="Id">ID</th>
-            <th data-field="Name">Name</th>
-            <th data-field="APIKey">API Key</th>
-            <th data-field="HomePageLink">Home Page Link</th>
-            <th data-field="UpdatedAt">Updated At</th>
-            <th data-field="CreatedAt">Created At</th>
-        </tr>
-    </thead>
-</table>
+<div class="row btablespace">
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4 text-center">
+        <a class="btn btn-secondary btn-sm" asp-action="Create">Create</a>
+    </div>
+    <div class="col-md-4">
+    </div>
+
+</div>
+<div class="row btable">
+    <div class="col-md-12">
+        <table id="table"
+               data-search="true"
+               data-pagination="true">
+            <thead>
+                <tr>
+                    <th data-field="Name" data-sortable="true">
+                        Name
+                    </th>
+                    <th data-field="APIKey" data-sortable="true">
+                        APIKey
+                    </th>
+                    <th data-field="HomePageLink" data-sortable="true">
+                        HomePageLink
+                    </th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Count(); i++)
+                {
+                    <tr id="tr-id-@i" class="tr-class-@i" data-title="bootstrap table" data-object='{"key": "value"}'>
+
+                        <td id="td-id-@i" class="td-class-@i" data-title="bootstrap table">
+                            @Html.DisplayFor(modelItem => Model[i].Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model[i].APIKey)
+                        </td>
+                        <td>
+                            <a href="@Model[i].HomePageLink">@Model[i].HomePageLink</a>
+                        </td>
+                        <td>
+                            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model[i].Id">Edit</a> |
+                            <a class="btn btn-info" asp-action="Details" asp-route-id="@Model[i].Id">Details</a> |
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model[i].Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
 @section Scripts{
 
-    <script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/extensions/export/bootstrap-table-export.min.js"></script>
-    <script>
-        var $table = $('#table')
-        var data =@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ToList()) as String)
-        $table.bootstrapTable({ data: data })
-    </script>
+    <script src="https://unpkg.com/jquery-resizable-columns@0.2.3/dist/jquery.resizableColumns.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.17.1/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.17.1/dist/extensions/resizable/bootstrap-table-resizable.min.js"></script>
+
+    <script src="~/js/table.js"></script>
 }

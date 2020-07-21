@@ -27,11 +27,12 @@ namespace SharpCounter.Dapper
         }
 
 
-        public async Task<IEnumerable<WebSites>> FindAll()
+        public async Task<ICollection<WebSites>> FindAll()
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
-            return await dbConnection.QueryAsync<WebSites>(@"SELECT * FROM ""WebSites""");
+            var result = await dbConnection.QueryAsync<WebSites>(@"SELECT * FROM ""WebSites""");
+            return result.ToList();
         }
 
         public WebSites FindByID(int id)

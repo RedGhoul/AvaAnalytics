@@ -1,6 +1,21 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
+﻿@charset "UTF-8";
 
+.btn.btn-secondary.dropdown-toggle {
+    padding: 12px 15px;
+}
+
+.btablespace {
+    padding-top: 30px;
+}
+
+.btabletitle {
+    padding-top: 60px;
+}
+
+.btable {
+    padding-top: 20px;
+    height: 760px;
+}
 a.navbar-brand {
   white-space: normal;
   text-align: center;
