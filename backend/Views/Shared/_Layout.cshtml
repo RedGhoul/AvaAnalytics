@@ -11,7 +11,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SharpCounter</a>
+                <a class="navbar-brand h5" asp-area="" asp-controller="Home" asp-action="Index">SharpCounter</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -20,13 +20,7 @@
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="WebSites" asp-action="Index">Websites</a>
+                            <a class="nav-link text-dark h5" asp-area="" asp-controller="WebSites" asp-action="Index">Your Websites</a>
                         </li>
                     </ul>
                 </div>
@@ -38,12 +32,37 @@
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2020 - SharpCounter - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+    <div class="container">
+        <footer class="pt-4 my-md-5 pt-md-5 border-top">
+            <div class="row">
+                <div class="col-12 col-md">
+                    <small class="d-block mb-3 text-muted">SharpCounter © 2020</small>
+                </div>
+                <div class="col-6 col-md">
+                    <h5>Privacy</h5>
+                    <ul class="list-unstyled text-small">
+                        <li><a class="text-muted" href="#">What we collect</a></li>
+                        <li><a class="text-muted" href="#">We don't track you</a></li>
+                        <li><a class="text-muted" href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md">
+                    <h5>Product</h5>
+                    <ul class="list-unstyled text-small">
+                        <li><a class="text-muted" href="#">Status</a></li>
+                        
+                    </ul>
+                </div>
+                <div class="col-6 col-md">
+                    <h5>Learn</h5>
+                    <ul class="list-unstyled text-small">
+                        <li><a class="text-muted" href="#">Documentation</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
