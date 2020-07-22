@@ -121,7 +121,7 @@ namespace SharpCounter.Controllers
                     Country = result.Country.Name;
                 }
                 catch (Exception ex)
-                {
+                { 
                     _Logger.LogError(ex.Message);
                     _Logger.LogError(ex.StackTrace);
                 }

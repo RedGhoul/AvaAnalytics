@@ -1,4 +1,14 @@
 ﻿@charset "UTF-8";
+.fa-times-circle {
+    color:#ff4136;
+}
+.fa-chart-line {
+    color: #1b6ec2;
+}
+.fa-exclamation-circle {
+    color: #ff7702;
+}
+
 .btn.btn-secondary.dropdown-toggle {
     padding: 12px 15px;
 }
