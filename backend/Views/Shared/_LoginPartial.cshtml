@@ -7,15 +7,18 @@
         @if (SignInManager.IsSignedIn(User))
         {
             <li class="nav-item">
+                <a class="nav-link text-dark h5" asp-area="" asp-controller="WebSites" asp-action="Index">Your Websites</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link text-dark h5" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
             </li>
             <li class="nav-item">
-                <form id="logout_form"class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <form id="logout_form" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                     <a href="javascript:{}" onclick="document.getElementById('logout_form').submit(); return false;" class="nav-link text-dark h5">Logout</a>
                 </form>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark h5" href="/hangfire" >View HangFire</a>
+                <a class="nav-link text-dark h5" href="/hangfire">View HangFire</a>
             </li>
         }
         else
