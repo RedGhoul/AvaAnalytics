@@ -105,6 +105,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"
             integrity="sha256-T/f7Sju1ZfNNfBh7skWn0idlCBcI3RwdLSS4/I7NQKQ=" crossorigin="anonymous"></script>
     <script>
+        function getDeviceType() {
+            const ua = navigator.userAgent;
+            if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+                return "tablet";
+            }
+            if (
+                /Mobile|iP(hone|od|ad)|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(
+                    ua
+                )
+            ) {
+                return "mobile";
+            }
+            return "desktop";
+        };
         const ISChart = document.getElementById("bar-chart-InteractionStats");
         const BSChart = document.getElementById("bar-chart-BrowserStats");
         const SysSChart = document.getElementById("bar-chart-SystemStats");
@@ -112,7 +126,6 @@
         const ScreenSChart = document.getElementById("bar-chart-ScreenStats");
         const LocationSChart = document.getElementById("bar-chart-LocationStats");
 
-        console.log(getDeviceType())
         if (getDeviceType() === 'mobile') {
             ISChart.height = 80;
             BSChart.height = 40;
@@ -137,7 +150,9 @@
                         Blabels.push(stat.browser + " " + stat.version);
                         Bdata.push(stat.count);
                     });
-                    new Chart(BSChart, {
+                    console.log(Blabels)
+                    console.log(Bdata)
+                    let newBSChart = new Chart(BSChart, {
                         type: 'horizontalBar',
                         data: {
                             labels: Blabels,
@@ -285,6 +300,7 @@
             .catch(function (error) {
                 console.log(error);
             })
+
         axios.get('/api/Stats/ScreenSizeStats/@Model.Id')
             .then(function (response) {
                 let data = response.data;
@@ -348,9 +364,6 @@
             .catch(function (error) {
                 console.log(error);
             })
-            .then(function () {
-
-            });
 
         axios.get('/api/Stats/LocationStats/@Model.Id')
             .then(function (response) {
