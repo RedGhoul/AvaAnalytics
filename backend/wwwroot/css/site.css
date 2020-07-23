@@ -1,4 +1,11 @@
 ﻿@charset "UTF-8";
+/*body {
+    background: #475d62;
+    color: white;
+}*/
+.navbar {
+    border-width: 0 0px 0px 0px;
+}
 .fa-times-circle {
     color:#ff4136;
 }
