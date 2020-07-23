@@ -23,50 +23,49 @@ namespace SharpCounter.Controllers
 
         // GET: api/Stats/BrowserStats/5
         [HttpGet("BrowserStats/{id}")]
-        public async Task<ActionResult<IEnumerable<BrowserStatsDTO>>> GetBrowserStats(int id)
+        public async Task<List<BrowserStatsDTO>> GetBrowserStats(int id)
         {
             var curTime = DateTime.UtcNow;
             var oldTime = curTime.Subtract(TimeSpan.FromMinutes(30));
             var data = await _statsRepo.GetBrowserStats(curTime, oldTime, id);
-            return data.ToList();
+            return data;
         }
 
         // GET: api/InteractionStats/5
         [HttpGet("InteractionStats/{id}")]
-        public async Task<ActionResult<IEnumerable<InteractionCountsDTO>>> GetInteractionStats(int id)
+        public async Task<List<InteractionCountsDTO>> GetInteractionStats(int id)
         {
             var data = await _statsRepo.GetInteractionStats(id);
-            return data.ToList();
+            return data;
         }
 
         // GET: api/Stats/SystemStats/5
         [HttpGet("SystemStats/{id}")]
-        public async Task<ActionResult<IEnumerable<SystemStatsDTO>>> GetSystemStats(int id)
+        public async Task<List<SystemStatsDTO>> GetSystemStats(int id)
         {
             var curTime = DateTime.UtcNow;
             var oldTime = curTime.Subtract(TimeSpan.FromMinutes(30));
             var data = await _statsRepo.GetSystemStats(curTime, oldTime, id);
-            return data.ToList();
+            return data;
         }
 
         // GET: api/Stats/ScreenSizeStats/5
         [HttpGet("ScreenSizeStats/{id}")]
-        public async Task<ActionResult<IEnumerable<ScreenSizeStatsDTO>>> GetScreenSizeStats(int id)
+        public async Task<List<ScreenSizeStatsDTO>> GetScreenSizeStats(int id)
         {
             var curTime = DateTime.UtcNow;
             var oldTime = curTime.Subtract(TimeSpan.FromMinutes(30));
             var data = await _statsRepo.GetScreenSizeStats(curTime, oldTime, id);
-            return data.ToList();
+            return data;
         }
 
         [HttpGet("LocationStats/{id}")]
-        public async Task<ActionResult<IEnumerable<LocationStatsDTO>>> GetLocationStats(int id)
+        public async Task<List<LocationStatsDTO>> GetLocationStats(int id)
         {
             var curTime = DateTime.UtcNow;
             var oldTime = curTime.Subtract(TimeSpan.FromDays(2));
             var data = await _statsRepo.GetLocationStats(curTime, oldTime, id);
-            // this is giving an addtional new location every time the location aggregation is run
-            return data.ToList();
+            return data;
         }
     }
 }

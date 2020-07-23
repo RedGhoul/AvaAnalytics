@@ -1,48 +1,19 @@
 ﻿@model SharpCounter.Enities.WebSites
-<h3>@Model.Name</h3>
 <div class="row">
-    <div class="col-4 col-md-2">
-        APIKey
+    <div class="col-md-2">
+
     </div>
-    <div class="col-8 col-md-4">
-        @Html.DisplayFor(model => model.APIKey)
+    <div class="col-md-8">
+        <div class="text-center">
+            <h5 class="display-4">@Model.Name</h5>
+        </div>
     </div>
-    <div class="col-0 col-md-4">
+    <div class="col-md-2">
 
     </div>
 </div>
-<div class="row">
-    <div class="col-4 col-md-2">
-        Home Page Link
-    </div>
-    <div class="col-8 col-md-4">
-        @Html.DisplayFor(model => model.HomePageLink)
-    </div>
-    <div class="col-0 col-md-4">
+<div class="spacer">
 
-    </div>
-</div>
-<div class="row">
-    <div class="col-4 col-md-2">
-        Create at
-    </div>
-    <div class="col-8 col-md-4">
-        @Html.DisplayFor(model => model.CreatedAt)
-    </div>
-    <div class="col-0 col-md-4">
-
-    </div>
-</div>
-<div class="row">
-    <div class="col-4 col-md-2">
-        Updated At
-    </div>
-    <div class="col-8 col-md-4">
-        @Html.DisplayFor(model => model.UpdatedAt)
-    </div>
-    <div class="col-0 col-md-4">
-
-    </div>
 </div>
 <div class="row align-items-center">
     <div class="col-3 col-md-5"></div>
@@ -58,11 +29,17 @@
 
 </div>
 <div class="row">
-    <div class="col-md-4"></div>
-    <div class="col-md-5">
-        <h4>Statistics For The Last 30 Mins</h4>
+    <div class="col-md-2">
+
     </div>
-    <div class="col-md-4"></div>
+    <div class="col-md-8">
+        <div class="text-center">
+            <h1>Statistics For The Last 30 Mins</h1>
+        </div>
+    </div>
+    <div class="col-md-2">
+
+    </div>
 </div>
 <div class="spacer">
 
@@ -136,14 +113,6 @@
         axios.get('/api/Stats/BrowserStats/@Model.Id')
             .then(function (response) {
                 let data = response.data;
-                if (data.length === 0) {
-                    BSChart.hidden = true;
-                    document.getElementById("BrowserStats-text").innerHTML =
-                        `<div style="padding-left: 200px">
-                            <h3>Nothing Here Yet</h3>
-                            <h5>Browser Stats</h5>
-                        </div>`
-                } else {
                     let Blabels = []
                     let Bdata = []
                     data.forEach(stat => {
@@ -183,8 +152,7 @@
                             }
                         }
                     });
-                }
-                
+
             })
             .catch(function (error) {
                 console.log(error);
@@ -193,14 +161,6 @@
         axios.get('/api/Stats/InteractionStats/@Model.Id')
             .then(function (response) {
                 let data = response.data;
-                if (data.length === 0) {
-                    ISChart.hidden = true;
-                    document.getElementById("InteractionStats-text").innerHTML =
-                        `<div style="padding-left: 450px">
-                            <h3>Nothing Here Yet</h3>
-                            <h5>Interaction Stats</h5>
-                        </div>`
-                } else {
                     let Ilabels = [];
                     let Idata = [];
                     data.forEach(stat => {
@@ -238,8 +198,6 @@
                             }
                         }
                     });
-                }
-               
             })
             .catch(function (error) {
                 console.log(error);
@@ -249,14 +207,6 @@
         axios.get('/api/Stats/SystemStats/@Model.Id')
             .then(function (response) {
                 let data = response.data;
-                if (data.length === 0) {
-                    BSChart.hidden = true;
-                    document.getElementById("SystemStats-text").innerHTML =
-                        `<div style="padding-left: 200px">
-                            <h3>Nothing Here Yet</h3>
-                            <h5>System Stats</h5>
-                        </div>`
-                } else {
                     let Slabels = [];
                     let Sdata = [];
                     data.forEach(stat => {
@@ -294,8 +244,7 @@
                             }
                         }
                     });
-                }
-                
+
             })
             .catch(function (error) {
                 console.log(error);
@@ -359,7 +308,7 @@
                         }
                     });
                 }
-                
+
             })
             .catch(function (error) {
                 console.log(error);
@@ -368,15 +317,6 @@
         axios.get('/api/Stats/LocationStats/@Model.Id')
             .then(function (response) {
                 let data = response.data;
-
-                if (data.length === 0) {
-                    BSChart.hidden = true;
-                    document.getElementById("LocationStats-text").innerHTML =
-                        `<div style="padding-left: 200px">
-                            <h3>Nothing Here Yet</h3>
-                            <h5>Location Stats</h5>
-                        </div>`
-                } else {
                     let Blabels = []
                     let Bdata = []
                     data.forEach(stat => {
@@ -414,7 +354,6 @@
                             }
                         }
                     });
-                }
             })
             .catch(function (error) {
                 console.log(error);
