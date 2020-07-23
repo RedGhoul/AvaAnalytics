@@ -65,6 +65,7 @@ namespace SharpCounter.Controllers
             var curTime = DateTime.UtcNow;
             var oldTime = curTime.Subtract(TimeSpan.FromDays(2));
             var data = await _statsRepo.GetLocationStats(curTime, oldTime, id);
+            // this is giving an addtional new location every time the location aggregation is run
             return data.ToList();
         }
     }

@@ -29,11 +29,11 @@ namespace SharpCounter.HangFire
         {
             var noww = DateTime.UtcNow;
             var oneHourAgo = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(30));
-            var allSites = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
-            for (int i = 0; i < allSites.Count; i++)
+            var allSiteIds = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
+            for (int SiteIdIndex = 0; SiteIdIndex < allSiteIds.Count; SiteIdIndex++)
             {
-                var getFirstTime = await _ctx.Interactions.Where(
-                    x => x.WebSiteId == allSites[i] &&
+                var browserInfoFromInteractionArgs = await _ctx.Interactions.Where(
+                    x => x.WebSiteId == allSiteIds[SiteIdIndex] &&
                     x.CreatedAt <= noww &&
                     x.CreatedAt > oneHourAgo)
                     .GroupBy(x => x.Browser)
@@ -43,17 +43,17 @@ namespace SharpCounter.HangFire
                         Count = d.Count()
                     }).ToListAsync();
 
-                for (int j = 0; j < getFirstTime.Count; j++)
+                for (int ArgsIndex = 0; ArgsIndex < browserInfoFromInteractionArgs.Count; ArgsIndex++)
                 {
                     var uaParser = Parser.GetDefault();
-                    ClientInfo c = uaParser.Parse(getFirstTime[i].Version);
+                    ClientInfo c = uaParser.Parse(browserInfoFromInteractionArgs[ArgsIndex].Version);
                     SystemStats SystemStats = new SystemStats
                     {
                         Platform = c.OS.Family,
                         Version = c.OS.Major,
-                        Count = getFirstTime[i].Count,
+                        Count = browserInfoFromInteractionArgs[ArgsIndex].Count,
                         Day = DateTime.UtcNow,
-                        WebSiteId = allSites[i]
+                        WebSiteId = allSiteIds[SiteIdIndex]
                     };
                     _ctx.Add(SystemStats);
                     await _ctx.SaveChangesAsync();

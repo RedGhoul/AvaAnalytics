@@ -43,8 +43,9 @@ namespace SharpCounter.Dapper
             dbConnection.Open();
             return await dbConnection.QueryAsync<InteractionCountsDTO>(
                 @"SELECT ""Path"", ""Date"", ""Total"" FROM ""InteractionCounts"" where ""InteractionStatsId"" = (
-                  SELECT ""Id"" FROM ""InteractionStats"" WHERE ""Date"" = (
-                  SELECT MAX(""Date"") FROM  ""InteractionStats"")) and ""WebSiteId"" = @Id",
+                SELECT IDDATE.""Id"" from(SELECT ""Id"", ""Date"" FROM ""InteractionStats"" WHERE ""WebSiteId"" = 2)
+                as IDDATE where IDDATE.""Date"" = (SELECT MAX(IDDATE2.""Date"") FROM(SELECT ""Id"", ""Date"" FROM 
+                ""InteractionStats"" WHERE ""WebSiteId"" = 2) as IDDATE2)) and ""WebSiteId"" = 2;",
                   new { Id = webSiteId });
         }
 
@@ -65,9 +66,9 @@ namespace SharpCounter.Dapper
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
             return await dbConnection.QueryAsync<ScreenSizeStatsDTO>(
-                @"SELECT ""NumberOfPhones"", ""LargePhonesSmallTablets"",
-                ""TabletsSmallLaptops"",""ComputerMonitors"",""ComputerMonitors4K""
-                FROM ""ScreenSizeStats"" where ""Date"" <= @curTime and 
+                @"SELECT SUM(""NumberOfPhones"") as ""NumberOfPhones"", SUM(""LargePhonesSmallTablets"") as ""LargePhonesSmallTablets"",
+                SUM(""TabletsSmallLaptops"") as ""TabletsSmallLaptops"",SUM(""ComputerMonitors"") ""ComputerMonitors"",
+                SUM(""ComputerMonitors4K"") as ""ComputerMonitors4K"" FROM ""ScreenSizeStats"" where ""Date"" <= @curTime and 
                 ""Date"" >= @oldTime and ""WebSiteId"" = @Id",
                 new { curTime, oldTime, Id = webSiteId });
         }

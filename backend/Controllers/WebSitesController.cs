@@ -49,18 +49,18 @@ namespace SharpCounter.Controllers
                 return NotFound();
             }
             
-            var curTime = DateTime.UtcNow;
-            var oldTime = curTime.Subtract(TimeSpan.FromMinutes(30));
+            //var curTime = DateTime.UtcNow;
+            //var oldTime = curTime.Subtract(TimeSpan.FromMinutes(30));
             
-            var browserStats = await _statsRepo.GetBrowserStats(curTime, oldTime, webSites.Id);
+            //var browserStats = await _statsRepo.GetBrowserStats(curTime, oldTime, webSites.Id);
 
-            var interactionStats = await _statsRepo.GetInteractionStats(webSites.Id);
+            //var interactionStats = await _statsRepo.GetInteractionStats(webSites.Id);
 
-            var systemStats = await _statsRepo.GetSystemStats(curTime, oldTime, webSites.Id);
+            //var systemStats = await _statsRepo.GetSystemStats(curTime, oldTime, webSites.Id);
 
-            var screenSizeStats = await _statsRepo.GetScreenSizeStats(curTime, oldTime, webSites.Id);
+            //var screenSizeStats = await _statsRepo.GetScreenSizeStats(curTime, oldTime, webSites.Id);
 
-            var locationStats = await _statsRepo.GetLocationStats(curTime, oldTime, webSites.Id);
+            //var locationStats = await _statsRepo.GetLocationStats(curTime, oldTime, webSites.Id);
 
 
             return View(webSites);
