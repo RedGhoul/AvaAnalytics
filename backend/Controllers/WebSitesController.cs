@@ -19,12 +19,13 @@ namespace SharpCounter.Controllers
         private readonly ApplicationDbContext _context;
         private readonly WebSiteRepo _websiteRepo;
         private readonly UserManager<ApplicationUser> _userManager;
-
-        public WebSitesController(UserManager<ApplicationUser> UserManage, WebSiteRepo WebsiteRepo, ApplicationDbContext context)
+        private readonly StatsRepo _statsRepo;
+        public WebSitesController(StatsRepo statsRepo,UserManager<ApplicationUser> UserManage, WebSiteRepo WebsiteRepo, ApplicationDbContext context)
         {
             _context = context;
             _websiteRepo = WebsiteRepo;
             _userManager = UserManage;
+            _statsRepo = statsRepo;
         }
 
         // GET: WebSites
@@ -47,6 +48,20 @@ namespace SharpCounter.Controllers
             {
                 return NotFound();
             }
+            
+            //var curTime = DateTime.UtcNow;
+            //var oldTime = curTime.Subtract(TimeSpan.FromMinutes(30));
+            
+            //var browserStats = await _statsRepo.GetBrowserStats(curTime, oldTime, webSites.Id);
+
+            //var interactionStats = await _statsRepo.GetInteractionStats(webSites.Id);
+
+            //var systemStats = await _statsRepo.GetSystemStats(curTime, oldTime, webSites.Id);
+
+            //var screenSizeStats = await _statsRepo.GetScreenSizeStats(curTime, oldTime, webSites.Id);
+
+            //var locationStats = await _statsRepo.GetLocationStats(curTime, oldTime, webSites.Id);
+
 
             return View(webSites);
         }

@@ -1,4 +1,44 @@
 ﻿@charset "UTF-8";
+.row.btable {
+    font-size: medium;
+}
+.global-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-signup-form {
+    padding-top: 10px;
+    font-size: 14px;
+    margin-top: 30px;
+}
+
+.login-form {
+    width: 330px;
+    margin: 20px;
+}
+
+.sign-up {
+    text-align: center;
+    padding: 20px 0 0;
+}
+.text-white {
+    color: white;
+}
+.navbar {
+    border-width: 0 0px 0px 0px;
+}
+.fa-times-circle {
+    color:#ff4136;
+}
+.fa-chart-line {
+    color: #1b6ec2;
+}
+.fa-exclamation-circle {
+    color: #ff7702;
+}
 
 .btn.btn-secondary.dropdown-toggle {
     padding: 12px 15px;

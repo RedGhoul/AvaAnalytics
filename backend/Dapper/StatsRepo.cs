@@ -27,60 +27,66 @@ namespace SharpCounter.Dapper
             }
         }
 
-        public async Task<IEnumerable<BrowserStatsDTO>> GetBrowserStats(DateTime curTime, DateTime oldTime, int webSiteId)
+        public async Task<List<BrowserStatsDTO>> GetBrowserStats(DateTime curTime, DateTime oldTime, int webSiteId)
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
-            return await dbConnection.QueryAsync<BrowserStatsDTO>(
+            var data = await dbConnection.QueryAsync<BrowserStatsDTO>(
                 @"SELECT ""Browser"", ""Version"", SUM(""Count"") as ""Count"" FROM ""BrowserStats"" where  
                 ""Date"" <= @curTime and ""Date"" >= @oldTime and ""WebSiteId"" = @Id GROUP By ""Browser"", ""Version""",
                 new { curTime, oldTime , Id = webSiteId });
+            return data.ToList();
         }
 
-        public async Task<IEnumerable<InteractionCountsDTO>> GetInteractionStats(int webSiteId)
+        public async Task<List<InteractionCountsDTO>> GetInteractionStats(int webSiteId)
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
-            return await dbConnection.QueryAsync<InteractionCountsDTO>(
+            var data = await dbConnection.QueryAsync<InteractionCountsDTO>(
                 @"SELECT ""Path"", ""Date"", ""Total"" FROM ""InteractionCounts"" where ""InteractionStatsId"" = (
-                  SELECT ""Id"" FROM ""InteractionStats"" WHERE ""Date"" = (
-                  SELECT MAX(""Date"") FROM  ""InteractionStats"")) and ""WebSiteId"" = @Id",
+                SELECT IDDATE.""Id"" from(SELECT ""Id"", ""Date"" FROM ""InteractionStats"" WHERE ""WebSiteId"" = @Id)
+                as IDDATE where IDDATE.""Date"" = (SELECT MAX(IDDATE2.""Date"") FROM(SELECT ""Id"", ""Date"" FROM 
+                ""InteractionStats"" WHERE ""WebSiteId"" = @Id) as IDDATE2)) and ""WebSiteId"" = @Id;",
                   new { Id = webSiteId });
+            return data.ToList();
         }
 
-        public async Task<IEnumerable<SystemStatsDTO>> GetSystemStats(DateTime curTime, DateTime oldTime, int webSiteId)
+        public async Task<List<SystemStatsDTO>> GetSystemStats(DateTime curTime, DateTime oldTime, int webSiteId)
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
-            return await dbConnection.QueryAsync<SystemStatsDTO>(
+            var data = await dbConnection.QueryAsync<SystemStatsDTO>(
                 @"SELECT ""Platform"", ""Version"", SUM(""Count"") as ""Count"" 
                 FROM ""SystemStats"" where ""Day"" <= @curTime and 
                 ""Day"" >= @oldTime and ""WebSiteId"" = @Id 
                 GROUP By ""Platform"", ""Version""",
                 new { curTime, oldTime, Id = webSiteId });
+            return data.ToList();
         }
 
-        public async Task<IEnumerable<ScreenSizeStatsDTO>> GetScreenSizeStats(DateTime curTime, DateTime oldTime, int webSiteId)
+        public async Task<List<ScreenSizeStatsDTO>> GetScreenSizeStats(DateTime curTime, DateTime oldTime, int webSiteId)
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
-            return await dbConnection.QueryAsync<ScreenSizeStatsDTO>(
-                @"SELECT ""NumberOfPhones"", ""LargePhonesSmallTablets"",
-                ""TabletsSmallLaptops"",""ComputerMonitors"",""ComputerMonitors4K""
-                FROM ""ScreenSizeStats"" where ""Date"" <= @curTime and 
+            var data = await dbConnection.QueryAsync<ScreenSizeStatsDTO>(
+                @"SELECT SUM(""NumberOfPhones"") as ""NumberOfPhones"", SUM(""LargePhonesSmallTablets"") as ""LargePhonesSmallTablets"",
+                SUM(""TabletsSmallLaptops"") as ""TabletsSmallLaptops"",SUM(""ComputerMonitors"") ""ComputerMonitors"",
+                SUM(""ComputerMonitors4K"") as ""ComputerMonitors4K"" FROM ""ScreenSizeStats"" where ""Date"" <= @curTime and 
                 ""Date"" >= @oldTime and ""WebSiteId"" = @Id",
                 new { curTime, oldTime, Id = webSiteId });
+            return data.ToList();
         }
 
-        public async Task<IEnumerable<LocationStatsDTO>> GetLocationStats(DateTime curTime, DateTime oldTime, int webSiteId)
+        public async Task<List<LocationStatsDTO>> GetLocationStats(DateTime curTime, DateTime oldTime, int webSiteId)
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
-            return await dbConnection.QueryAsync<LocationStatsDTO>(
-                @"SELECT ""Date"", ""Location"", ""Count""
+            var data = await dbConnection.QueryAsync<LocationStatsDTO>(
+                @"SELECT ""Location"", SUM(""Count"")
                 FROM ""LocationStats"" where ""Date"" <= @curTime and 
-                ""Date"" >= @oldTime and ""WebSiteId"" = @Id",
+                ""Date"" >= @oldTime and ""WebSiteId"" = @Id group by ""Location""",
                 new { curTime, oldTime, Id = webSiteId });
+            return data.ToList();
         }
     }
 }
