@@ -1,7 +1,7 @@
 ﻿$(function () {
-    let webSiteId = document.querySelector('script[data-website-id]').getAttribute("data-website-id");;
+    var webSiteId = document.querySelector('script[data-website-id]').getAttribute("data-website-id");;
     function getDeviceType() {
-        const ua = navigator.userAgent;
+        var ua = navigator.userAgent;
         if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
             return "tablet";
         }
@@ -14,22 +14,25 @@
         }
         return "desktop";
     };
-    const ISChart = document.getElementById("bar-chart-InteractionStats");
-    const BSChart = document.getElementById("bar-chart-BrowserStats");
-    const SysSChart = document.getElementById("bar-chart-SystemStats");
-    const ScreenSChart = document.getElementById("bar-chart-ScreenStats");
-    const LocationSChart = document.getElementById("bar-chart-LocationStats");
-    const startGradColor = '#CC2936';
-    const endGradColor = '#08415C';
-    const newGradArr = [startGradColor, endGradColor];
-    const scaleOptions = {
+    var ISChart = document.getElementById("bar-chart-InteractionStats");
+    var BSChart = document.getElementById("bar-chart-BrowserStats");
+    var SysSChart = document.getElementById("bar-chart-SystemStats");
+    var ScreenSChart = document.getElementById("bar-chart-ScreenStats");
+    var LocationSChart = document.getElementById("bar-chart-LocationStats");
+    var startGradColor = '#CC2936';
+    var endGradColor = '#08415C';
+    var newGradArr = [startGradColor, endGradColor];
+    var scaleOptions = {
         yAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: 'black', fontStyle: '500' } }],
-        xAxes: [{ ticks: {
+        xAxes: [{
+            ticks: {
                 beginAtZero: true,
                 stepSize: 10,
-                fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: 'black', fontStyle: '500'} }]
+                fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: 'black', fontStyle: '500'
+            }
+        }]
     }
-    const titleOptions = {
+    var titleOptions = {
         fontSize: 14,
         fontColor: 'black',
         display: true,
@@ -44,10 +47,10 @@
 
     axios.get('/api/Stats/InteractionStats/' + webSiteId)
         .then(function (response) {
-            let data = response.data;
-            let Ilabels = [];
-            let Idata = [];
-            data.forEach(stat => {
+            var data = response.data;
+            var Ilabels = [];
+            var Idata = [];
+            data.forEach(function (stat) {
                 Ilabels.push(stat.path);
                 Idata.push(stat.total);
             });
@@ -81,14 +84,14 @@
 
     axios.get('/api/Stats/BrowserStats/' + webSiteId)
         .then(function (response) {
-            let data = response.data;
-            let Blabels = []
-            let Bdata = []
-            data.forEach(stat => {
+            var data = response.data;
+            var Blabels = []
+            var Bdata = []
+            data.forEach(function (stat) {
                 Blabels.push(stat.browser + " " + stat.version);
                 Bdata.push(stat.count);
             });
-            let newBSChart = new Chart(BSChart, {
+            new Chart(BSChart, {
                 type: 'horizontalBar',
                 data: {
                     labels: Blabels,
@@ -117,15 +120,15 @@
             console.log(error);
         })
 
-    
+
 
 
     axios.get('/api/Stats/SystemStats/' + webSiteId)
         .then(function (response) {
-            let data = response.data;
-            let Slabels = [];
-            let Sdata = [];
-            data.forEach(stat => {
+            var data = response.data;
+            var Slabels = [];
+            var Sdata = [];
+            data.forEach(function (stat) {
                 Slabels.push(stat.platform + " " + stat.version);
                 Sdata.push(stat.count);
             });
@@ -160,52 +163,44 @@
 
     axios.get('/api/Stats/ScreenSizeStats/' + webSiteId)
         .then(function (response) {
-            let data = response.data;
-
-            if (data.length === 0) {
-                BSChart.hidden = true;
-                document.getElementById("ScreenStats-text").innerHTML =
-                    `<div style="padding-left: 200px">
-                            <h3>Nothing Here Yet</h3>
-                            <h5>Screen Stats</h5>
-                        </div>`
-            } else {
-                let Blabels = [
-                    'Phones',
-                    'Large Phones',
-                    'Tables',
-                    'Desktops',
-                    'Monitors 4K Plus'
-                ]
-                let Bdata = []
-                for (const key of Object.keys(data[0])) {
+            var data = response.data;
+            var Blabels = [
+                'Phones',
+                'Large Phones',
+                'Tables',
+                'Desktops',
+                'Monitors 4K Plus'
+            ];
+            var Bdata = [];
+            for (var key in Blabels) {
+                if (data[0].hasOwnProperty(key)) {
                     Bdata.push(data[0][key]);
                 }
-                new Chart(ScreenSChart, {
-                    type: 'horizontalBar',
-                    data: {
-                        labels: Blabels,
-                        datasets: [
-                            {
-                                label: "Counts",
-                                backgroundColor: chroma.scale(newGradArr).mode('lch').colors(Bdata.length),
-                                data: Bdata
-                            }
-                        ]
-                    },
-                    options: {
-                        legend: { display: false },
-                        title: {
-                            fontSize: titleOptions.fontSize,
-                            fontColor: titleOptions.fontColor,
-                            display: titleOptions.display,
-                            text: 'Screen Size Stats'
-                        },
-                        scales: scaleOptions
-                    }
-                });
             }
 
+            new Chart(ScreenSChart, {
+                type: 'horizontalBar',
+                data: {
+                    labels: Blabels,
+                    datasets: [
+                        {
+                            label: "Counts",
+                            backgroundColor: chroma.scale(newGradArr).mode('lch').colors(Bdata.length),
+                            data: Bdata
+                        }
+                    ]
+                },
+                options: {
+                    legend: { display: false },
+                    title: {
+                        fontSize: titleOptions.fontSize,
+                        fontColor: titleOptions.fontColor,
+                        display: titleOptions.display,
+                        text: 'Screen Size Stats'
+                    },
+                    scales: scaleOptions
+                }
+            });
         })
         .catch(function (error) {
             console.log(error);
@@ -213,10 +208,10 @@
 
     axios.get('/api/Stats/LocationStats/' + webSiteId)
         .then(function (response) {
-            let data = response.data;
-            let Blabels = []
-            let Bdata = []
-            data.forEach(stat => {
+            var data = response.data;
+            var Blabels = []
+            var Bdata = []
+            data.forEach(function (stat) {
                 Blabels.push(stat.location);
                 Bdata.push(stat.count);
             });

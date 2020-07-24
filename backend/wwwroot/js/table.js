@@ -1,3 +1,4 @@
 ﻿$(function () {
+    ///sdfasdf
     $('#table').bootstrapTable()
 })

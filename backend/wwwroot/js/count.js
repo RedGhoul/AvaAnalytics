@@ -24,7 +24,6 @@
         if (typeof (data.r) === 'function') rcb = data.r
         if (typeof (data.t) === 'function') tcb = data.t
         if (typeof (data.p) === 'function') pcb = data.p
-
         if (is_empty(data.r)) data.r = document.referrer
         if (is_empty(data.t)) data.t = document.title
         if (is_empty(data.p)) {
@@ -70,7 +69,6 @@
 
     var get_endpoint = function () {
         var s = document.querySelector('script[data-sharpcounter]');
-        console.log(s)
         if (s && s.dataset.sharpcounter)
             return s.dataset.sharpcounter
         return (sharpcounter.endpoint || window.counter)
@@ -119,6 +117,7 @@
                 console.warn('sharpcounter: not counting because path callback returned null')
             return
         }
+        //sf
         var apiKey = document.querySelector('script[data-sharpcounter-apikey]');
         apiKey = apiKey.getAttribute("data-sharpcounter-apikey");
         var img = document.createElement('img')
