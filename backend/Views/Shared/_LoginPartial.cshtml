@@ -7,20 +7,20 @@
         @if (SignInManager.IsSignedIn(User))
         {
             <li class="nav-item">
-                <a class="nav-link text-dark h5" asp-area="" asp-controller="WebSites" asp-action="Index">Websites</a>
+                <a class="nav-link h5" asp-area="" asp-controller="WebSites" asp-action="Index">Websites</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark h5" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Account</a>
+                <a class="nav-link h5" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Account</a>
             </li>
             @if (User.IsInRole("Admin") == true)
             {
                 <li class="nav-item">
-                    <a class="nav-link text-dark h5" href="/hangfire">Aggregation Status</a>
+                    <a class="nav-link h5" href="/hangfire">Aggregation Status</a>
                 </li>
             }
             <li class="nav-item">
                 <form id="logout_form" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                    <a href="javascript:{}" onclick="document.getElementById('logout_form').submit(); return false;" class="nav-link text-dark h5">Logout</a>
+                    <a class="nav-link h5" href="javascript:{}" onclick="document.getElementById('logout_form').submit(); return false;">Logout</a>
                 </form>
             </li>
 
@@ -28,10 +28,10 @@
         else
         {
             <li class="nav-item">
-                <a class="nav-link text-dark h5" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                <a class="nav-link h5" asp-area="Identity" asp-page="/Account/Register">Register</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark h5" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                <a class="nav-link h5" asp-area="Identity" asp-page="/Account/Login">Login</a>
             </li>
         }
     </ul>

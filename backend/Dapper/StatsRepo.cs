@@ -44,9 +44,9 @@ namespace SharpCounter.Dapper
             dbConnection.Open();
             var data = await dbConnection.QueryAsync<InteractionCountsDTO>(
                 @"SELECT ""Path"", ""Date"", ""Total"" FROM ""InteractionCounts"" where ""InteractionStatsId"" = (
-                SELECT IDDATE.""Id"" from(SELECT ""Id"", ""Date"" FROM ""InteractionStats"" WHERE ""WebSiteId"" = 2)
+                SELECT IDDATE.""Id"" from(SELECT ""Id"", ""Date"" FROM ""InteractionStats"" WHERE ""WebSiteId"" = @Id)
                 as IDDATE where IDDATE.""Date"" = (SELECT MAX(IDDATE2.""Date"") FROM(SELECT ""Id"", ""Date"" FROM 
-                ""InteractionStats"" WHERE ""WebSiteId"" = 2) as IDDATE2)) and ""WebSiteId"" = 2;",
+                ""InteractionStats"" WHERE ""WebSiteId"" = @Id) as IDDATE2)) and ""WebSiteId"" = @Id;",
                   new { Id = webSiteId });
             return data.ToList();
         }

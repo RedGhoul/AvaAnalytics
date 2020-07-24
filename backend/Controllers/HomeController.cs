@@ -23,11 +23,24 @@ namespace SharpCounter.Controllers
 
         public IActionResult Index()
         {
-            
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult WhatWeCollect()
+        {
+            return View();
+        }
+
+        public IActionResult PrivacyPolicy()
+        {
+            return View();
+        }
+        public IActionResult StatusPage()
+        {
+            return View();
+        }
+
+        public IActionResult Documentation()
         {
             return View();
         }
