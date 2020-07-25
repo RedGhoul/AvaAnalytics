@@ -14,17 +14,56 @@
         }
         return "desktop";
     };
-    var PVCChart = document.getElementById("bar-chart-PageViewCounts");
-    var ISChart = document.getElementById("bar-chart-InteractionStats");
-    var BSChart = document.getElementById("bar-chart-BrowserStats");
-    var SysSChart = document.getElementById("bar-chart-SystemStats");
-    var ScreenSChart = document.getElementById("bar-chart-ScreenStats");
-    var LocationSChart = document.getElementById("bar-chart-LocationStats");
-    var startGradColor = '#CC2936';
-    var endGradColor = '#08415C';
-    var newGradArr = [startGradColor, endGradColor];
+    var state = {
+        PageViewCountChartNode: document.getElementById("bar-chart-PageViewCounts"),
+        URLRoutesVisitedChartNode: document.getElementById("bar-chart-InteractionStats"),
+        BrowserTypeStatsChartNode: document.getElementById("bar-chart-BrowserStats"),
+        SystemStatsChartNode: document.getElementById("bar-chart-SystemStats"),
+        ScreenSizeStatsChartNode: document.getElementById("bar-chart-ScreenStats"),
+        LocationOfVisitorsStatsChartNode: document.getElementById("bar-chart-LocationStats"),
+        newGradArr: ['#CC2936', '#08415C'],
+        InteractionStats_NotFoundText: document.getElementById("InteractionStats-NotFoundText"),
+        BrowserStats_NotFoundText: document.getElementById("BrowserStats-NotFoundText"),
+        SystemStats_NotFoundText: document.getElementById("SystemStats-NotFoundText"),
+        ScreenStats_NotFoundText: document.getElementById("ScreenStats-NotFoundText"),
+        LocationStats_NotFoundText: document.getElementById("LocationStats-NotFoundText"),
+        Error_Message: 'Nothing Found Just Yet',
+        Hid_NotFoundText: function () {
+            state.InteractionStats_NotFoundText.hidden = true;
+            state.BrowserStats_NotFoundText.hidden = true;
+            state.SystemStats_NotFoundText.hidden = true;
+            state.ScreenStats_NotFoundText.hidden = true;
+            state.LocationStats_NotFoundText.hidden = true;
+        },
+        DisplayMessage: function (Data, Element, Error_Msg) {
+            if (Data === null || Data.length === 0) {
+                Element.innerHTML = Error_Msg;
+                Element.hidden = false;
+            }
+            sum = 0;
+            for (var i = 0; i < Data.length; i++) {
+                sum = sum + Data[i];
+            }
+            console.log(sum)
+            if (sum === 0) {
+                Element.innerHTML = Error_Msg;
+                Element.hidden = false;
+            }
+        }
+    }
+
+    state.Hid_NotFoundText();
+
     var scaleOptions = {
-        yAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: 'black', fontStyle: '500' } }],
+        yAxes: [{
+            ticks: {
+                beginAtZero: true,
+                fontSize: 14,
+                fontFamily: "'Roboto', sans-serif",
+                fontColor: 'black',
+                fontStyle: '500'
+            }
+        }],
         xAxes: [{
             ticks: {
                 beginAtZero: true,
@@ -34,7 +73,16 @@
         }]
     }
     var scaleOptionsCountViews = {
-        yAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: 'black', fontStyle: '500' } }],
+        yAxes: [{
+            ticks:
+            {
+                beginAtZero: true,
+                fontSize: 14,
+                fontFamily: "'Roboto', sans-serif",
+                fontColor: 'black',
+                fontStyle: '500'
+            }
+        }],
         xAxes: [{
             ticks: {
                 beginAtZero: true,
@@ -70,7 +118,7 @@
                 Ilabels.push(new Date(stat.createdAt).toString().substring(0, 33));
                 Idata.push(stat.count);
             });
-            new Chart(PVCChart, {
+            new Chart(state.PageViewCountChartNode, {
                 type: 'line',
                 data: {
                     labels: Ilabels,
@@ -104,18 +152,19 @@
             var data = response.data;
             var Ilabels = [];
             var Idata = [];
+            state.DisplayMessage(data, state.InteractionStats_NotFoundText, state.Error_Message)
             data.forEach(function (stat) {
                 Ilabels.push(stat.path);
                 Idata.push(stat.total);
             });
-            new Chart(ISChart, {
+            new Chart(state.URLRoutesVisitedChartNode, {
                 type: 'horizontalBar',
                 data: {
                     labels: Ilabels,
                     datasets: [
                         {
                             label: "Counts",
-                            backgroundColor: chroma.scale(newGradArr).mode('lch').colors(Idata.length),
+                            backgroundColor: chroma.scale(state.newGradArr).mode('lch').colors(Idata.length),
                             data: Idata
                         }
                     ]
@@ -139,20 +188,21 @@
     axios.get('/api/Stats/BrowserStats/' + webSiteId)
         .then(function (response) {
             var data = response.data;
+            state.DisplayMessage(data, state.BrowserStats_NotFoundText, state.Error_Message)
             var Blabels = []
             var Bdata = []
             data.forEach(function (stat) {
                 Blabels.push(stat.browser + " " + stat.version);
                 Bdata.push(stat.count);
             });
-            new Chart(BSChart, {
+            new Chart(state.BrowserTypeStatsChartNode, {
                 type: 'horizontalBar',
                 data: {
                     labels: Blabels,
                     datasets: [
                         {
                             label: "Counts",
-                            backgroundColor: chroma.scale(newGradArr).mode('lch').colors(Bdata.length),
+                            backgroundColor: chroma.scale(state.newGradArr).mode('lch').colors(Bdata.length),
                             data: Bdata
                         }
                     ]
@@ -174,26 +224,24 @@
             console.log(error);
         })
 
-
-
-
     axios.get('/api/Stats/SystemStats/' + webSiteId)
         .then(function (response) {
             var data = response.data;
+            state.DisplayMessage(data, state.SystemStats_NotFoundText, state.Error_Message)
             var Slabels = [];
             var Sdata = [];
             data.forEach(function (stat) {
                 Slabels.push(stat.platform + " " + stat.version);
                 Sdata.push(stat.count);
             });
-            new Chart(SysSChart, {
+            new Chart(state.SystemStatsChartNode, {
                 type: 'horizontalBar',
                 data: {
                     labels: Slabels,
                     datasets: [
                         {
                             label: "Counts",
-                            backgroundColor: chroma.scale(newGradArr).mode('lch').colors(Sdata.length),
+                            backgroundColor: chroma.scale(state.newGradArr).mode('lch').colors(Sdata.length),
                             data: Sdata
                         }
                     ]
@@ -218,7 +266,6 @@
     axios.get('/api/Stats/ScreenSizeStats/' + webSiteId)
         .then(function (response) {
             var data = response.data;
-            console.log(data)
             var Blabels = [
                 'Phones',
                 'Large Phones',
@@ -236,22 +283,22 @@
             var Bdata = [];
             for (var key in data[0]) {
                 for (var label in Blabels) {
-                    console.log(hashName[key])
-                    console.log(Blabels[label])
                     if (hashName[key] === Blabels[label]){
                         Bdata.push(data[0][key])
                     }
                 }
             }
             console.log(Bdata)
-            new Chart(ScreenSChart, {
+            state.DisplayMessage(Bdata, state.ScreenStats_NotFoundText, state.Error_Message)
+
+            new Chart(state.ScreenSizeStatsChartNode, {
                 type: 'horizontalBar',
                 data: {
                     labels: Blabels,
                     datasets: [
                         {
                             label: "Counts",
-                            backgroundColor: chroma.scale(newGradArr).mode('lch').colors(Bdata.length),
+                            backgroundColor: chroma.scale(state.newGradArr).mode('lch').colors(Bdata.length),
                             data: Bdata
                         }
                     ]
@@ -275,20 +322,21 @@
     axios.get('/api/Stats/LocationStats/' + webSiteId)
         .then(function (response) {
             var data = response.data;
+            state.DisplayMessage(data, state.LocationStats_NotFoundText, state.Error_Message)
             var Blabels = []
             var Bdata = []
             data.forEach(function (stat) {
                 Blabels.push(stat.location);
                 Bdata.push(stat.count);
             });
-            new Chart(LocationSChart, {
+            new Chart(state.LocationOfVisitorsStatsChartNode, {
                 type: 'horizontalBar',
                 data: {
                     labels: Blabels,
                     datasets: [
                         {
                             label: "Counts",
-                            backgroundColor: chroma.scale(newGradArr).mode('lch').colors(Bdata.length),
+                            backgroundColor: chroma.scale(state.newGradArr).mode('lch').colors(Bdata.length),
                             data: Bdata
                         }
                     ]
