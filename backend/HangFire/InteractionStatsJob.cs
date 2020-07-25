@@ -28,19 +28,18 @@ namespace SharpCounter.HangFire
         public async Task Run(IJobCancellationToken token)
         {
             token.ThrowIfCancellationRequested();
-            await RunAtTimeOf(DateTime.Now);
+            await RunAtTimeOf(DateTime.UtcNow);
         }
 
         public async Task RunAtTimeOf(DateTime now)
         {
-            var noww = DateTime.UtcNow;
             var oneHourAgo = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(30));
             var allSites = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
             for (int websiteIndex = 0; websiteIndex < allSites.Count; websiteIndex++)
             {
                 var pathCount = await _ctx.Interactions.Where(
                     x => x.WebSiteId == allSites[websiteIndex] &&
-                    x.CreatedAt <= noww &&
+                    x.CreatedAt <= now &&
                     x.CreatedAt > oneHourAgo)
                     .GroupBy(x => x.Path)
                     .Select(d => new InteractionCounts
@@ -49,10 +48,12 @@ namespace SharpCounter.HangFire
                         Total = d.Count()
                     }).ToListAsync();
 
-                InteractionStats interactionStats = new InteractionStats();
-                interactionStats.Date = DateTime.UtcNow;
-                interactionStats.WebSiteId = allSites[websiteIndex];
-                interactionStats.TotalRoutes = pathCount.Count;
+                InteractionStats interactionStats = new InteractionStats
+                {
+                    Date = DateTime.UtcNow,
+                    WebSiteId = allSites[websiteIndex],
+                    TotalRoutes = pathCount.Count
+                };
                 _ctx.Add(interactionStats);
                 await _ctx.SaveChangesAsync();
 

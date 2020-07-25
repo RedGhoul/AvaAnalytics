@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using SharpCounter.Enities;
 
@@ -17,6 +18,7 @@ namespace SharpCounter.Data
         public DbSet<InteractionStats> InteractionStats { get; set; }
         public DbSet<LocationStats> LocationStats { get; set; }
         public DbSet<ScreenSizeStats> ScreenSizeStats { get; set; }
+        public DbSet<PageViewStats> PageViewStats { get; set; }
         public DbSet<Session> Sessions { get; set; }
         public DbSet<WebSites> WebSites { get; set; }
 
@@ -27,7 +29,6 @@ namespace SharpCounter.Data
             modelBuilder.Entity<WebSites>()
                 .HasIndex(b => b.APIKey)
                 .IsUnique();
-
 
             modelBuilder.Entity<WebSites>()
                 .HasOne(w => w.Owner)
@@ -144,6 +145,14 @@ namespace SharpCounter.Data
             modelBuilder.Entity<ScreenSizeStats>()
                 .HasIndex(x => x.Date);
 
+            modelBuilder.Entity<PageViewStats>()
+                .HasOne(w => w.WebSite)
+                .WithMany(w => w.PageViewStats)
+                .HasForeignKey(w => w.WebSiteId)
+                .IsRequired();
+
+            modelBuilder.Entity<PageViewStats>()
+                .HasIndex(x => x.CreatedAt);
 
         }
 

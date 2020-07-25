@@ -20,6 +20,7 @@ namespace SharpCounter.Enities
         public DateTime UpdatedAt { get; set; }
         public string OwnerId { get; set; }
         public ApplicationUser Owner { get; set; }
+        public ICollection<PageViewStats> PageViewStats { get; set; }
         public ICollection<Interaction> Interactions { get; set; }
         public ICollection<Session> Sessions { get; set; }
         public ICollection<InteractionStats> InteractionStats { get; set; }
@@ -27,7 +28,6 @@ namespace SharpCounter.Enities
         public ICollection<BrowserStats> BrowserStats { get; set; }
         public ICollection<LocationStats> LocationStats { get; set; }
         public ICollection<SystemStats> SystemStats { get; set; }
-
         public ICollection<ScreenSizeStats> ScreenSizeStats { get; set; }
 
     }

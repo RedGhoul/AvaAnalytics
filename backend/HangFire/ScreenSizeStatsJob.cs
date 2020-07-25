@@ -22,42 +22,41 @@ namespace SharpCounter.HangFire
         public async Task Run(IJobCancellationToken token)
         {
             token.ThrowIfCancellationRequested();
-            await RunAtTimeOf(DateTime.Now);
+            await RunAtTimeOf(DateTime.UtcNow);
         }
 
         public async Task RunAtTimeOf(DateTime now)
         {
-            var noww = DateTime.UtcNow;
-            var oneHourAgo = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(30));
+            var oneHourAgo = now.Subtract(TimeSpan.FromMinutes(30));
             var allSites = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
             for (int websiteIndex = 0; websiteIndex < allSites.Count; websiteIndex++)
             {
                 var sizePhones = _ctx.Interactions.Where(
                     x => x.WebSiteId == allSites[websiteIndex] &&
-                    x.CreatedAt <= noww && x.CreatedAt > oneHourAgo &&
+                    x.CreatedAt <= now && x.CreatedAt > oneHourAgo &&
                     x.ScreenWidth != 0 && x.ScreenWidth <= 384).Count();
 
                 var sizeLargePhones = _ctx.Interactions.Where(
                     x => x.WebSiteId == allSites[websiteIndex] &&
-                    x.CreatedAt <= noww && x.CreatedAt > oneHourAgo &&
+                    x.CreatedAt <= now && x.CreatedAt > oneHourAgo &&
                     x.ScreenWidth != 0 && x.ScreenWidth <= 1024 && x.ScreenWidth > 384)
                     .Count();
 
                 var sizeTablets = _ctx.Interactions.Where(
                     x => x.WebSiteId == allSites[websiteIndex] &&
-                    x.CreatedAt <= noww && x.CreatedAt > oneHourAgo &&
+                    x.CreatedAt <= now && x.CreatedAt > oneHourAgo &&
                     x.ScreenWidth != 0 && x.ScreenWidth <= 1440 && x.ScreenWidth > 1024)
                     .Count();
 
                 var sizeDesktop = _ctx.Interactions.Where(
                     x => x.WebSiteId == allSites[websiteIndex] &&
-                    x.CreatedAt <= noww && x.CreatedAt > oneHourAgo &&
+                    x.CreatedAt <= now && x.CreatedAt > oneHourAgo &&
                     x.ScreenWidth != 0 && x.ScreenWidth <= 1920 && x.ScreenWidth > 1440)
                     .Count();
 
                 var sizeDesktopHD = _ctx.Interactions.Where(
                     x => x.WebSiteId == allSites[websiteIndex] &&
-                    x.CreatedAt <= noww && x.CreatedAt > oneHourAgo &&
+                    x.CreatedAt <= now && x.CreatedAt > oneHourAgo &&
                     x.ScreenWidth != 0 && x.ScreenWidth > 1920)
                     .Count();
 
@@ -70,7 +69,7 @@ namespace SharpCounter.HangFire
                     ComputerMonitors = sizeDesktop,
                     ComputerMonitors4K = sizeDesktopHD,
                     WebSiteId = allSites[websiteIndex],
-                    Date = noww
+                    Date = now
                 };
 
                 _ctx.Add(screenSizeStats);

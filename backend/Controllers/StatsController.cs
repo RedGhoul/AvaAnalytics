@@ -63,8 +63,17 @@ namespace SharpCounter.Controllers
         public async Task<List<LocationStatsDTO>> GetLocationStats(int id)
         {
             var curTime = DateTime.UtcNow;
-            var oldTime = curTime.Subtract(TimeSpan.FromDays(2));
+            var oldTime = curTime.Subtract(TimeSpan.FromMinutes(30));
             var data = await _statsRepo.GetLocationStats(curTime, oldTime, id);
+            return data;
+        }
+
+        [HttpGet("PageViewCountStats/{id}")]
+        public async Task<List<PageViewStatsDTO>> GetPageViewCountStats(int id)
+        {
+            var curTime = DateTime.UtcNow;
+            var oldTime = curTime.Subtract(TimeSpan.FromDays(2));
+            var data = await _statsRepo.GetPageViewCountStats(curTime, oldTime, id);
             return data;
         }
     }

@@ -55,5 +55,5 @@
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.registerTask("all", ['clean', 'concat', 'uglify']);
+    grunt.registerTask("all", ['clean', 'cssmin', 'uglify']);
 }

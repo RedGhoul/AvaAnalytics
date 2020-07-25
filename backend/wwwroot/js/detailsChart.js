@@ -14,6 +14,7 @@
         }
         return "desktop";
     };
+    var PVCChart = document.getElementById("bar-chart-PageViewCounts");
     var ISChart = document.getElementById("bar-chart-InteractionStats");
     var BSChart = document.getElementById("bar-chart-BrowserStats");
     var SysSChart = document.getElementById("bar-chart-SystemStats");
@@ -32,6 +33,22 @@
             }
         }]
     }
+    var scaleOptionsCountViews = {
+        yAxes: [{ ticks: { fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: 'black', fontStyle: '500' } }],
+        xAxes: [{
+            ticks: {
+                beginAtZero: true,
+                stepSize: 10,
+                fontSize: 12,
+                fontFamily: "'Roboto', sans-serif",
+                fontColor: 'black',
+                fontStyle: '500',
+                autoSkip: false,
+                maxRotation: 90,
+                minRotation: 90
+            }
+        }]
+    }
     var titleOptions = {
         fontSize: 14,
         fontColor: 'black',
@@ -44,6 +61,43 @@
         ScreenSChart.height = 40;
         LocationSChart.height = 40;
     }
+    axios.get('/api/Stats/PageViewCountStats/' + webSiteId)
+        .then(function (response) {
+            var data = response.data;
+            var Ilabels = [];
+            var Idata = [];
+            data.forEach(function (stat) {
+                Ilabels.push(new Date(stat.createdAt).toString().substring(0, 33));
+                Idata.push(stat.count);
+            });
+            new Chart(PVCChart, {
+                type: 'line',
+                data: {
+                    labels: Ilabels,
+                    datasets: [
+                        {
+                            borderColor: 'rgb(255, 99, 132)',
+                            label: "Counts",
+                            data: Idata
+                        }
+                    ],
+                    fill: false
+                },
+                options: {
+                    legend: { display: false },
+                    title: {
+                        fontSize: 18,
+                        fontColor: titleOptions.fontColor,
+                        display: titleOptions.display,
+                        text: 'Page View Counts'
+                    },
+                    scales: scaleOptionsCountViews
+                }
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
 
     axios.get('/api/Stats/InteractionStats/' + webSiteId)
         .then(function (response) {
@@ -164,6 +218,7 @@
     axios.get('/api/Stats/ScreenSizeStats/' + webSiteId)
         .then(function (response) {
             var data = response.data;
+            console.log(data)
             var Blabels = [
                 'Phones',
                 'Large Phones',
@@ -171,13 +226,24 @@
                 'Desktops',
                 'Monitors 4K Plus'
             ];
+            var hashName = {
+                'numberOfPhones': 'Phones',
+                'largePhonesSmallTablets': 'Large Phones',
+                'tabletsSmallLaptops': 'Tables',
+                'computerMonitors': 'Desktops',
+                'computerMonitors4K': 'Monitors 4K Plus'
+            }
             var Bdata = [];
-            for (var key in Blabels) {
-                if (data[0].hasOwnProperty(key)) {
-                    Bdata.push(data[0][key]);
+            for (var key in data[0]) {
+                for (var label in Blabels) {
+                    console.log(hashName[key])
+                    console.log(Blabels[label])
+                    if (hashName[key] === Blabels[label]){
+                        Bdata.push(data[0][key])
+                    }
                 }
             }
-
+            console.log(Bdata)
             new Chart(ScreenSChart, {
                 type: 'horizontalBar',
                 data: {

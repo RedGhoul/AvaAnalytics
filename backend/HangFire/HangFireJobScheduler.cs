@@ -20,22 +20,27 @@ namespace SharpCounter.HangFire
             RecurringJob.RemoveIfExists(nameof(SystemStatsJob));
             RecurringJob.AddOrUpdate<SystemStatsJob>(nameof(SystemStatsJob),
                 job => job.Run(JobCancellationToken.Null),
-                "*/31 * * * *", TimeZoneInfo.Local);
+                "*/32 * * * *", TimeZoneInfo.Local);
 
             RecurringJob.RemoveIfExists(nameof(InteractionStatsJob));
             RecurringJob.AddOrUpdate<InteractionStatsJob>(nameof(InteractionStatsJob),
                 job => job.Run(JobCancellationToken.Null),
-                "*/32 * * * *", TimeZoneInfo.Local);
+                "*/34 * * * *", TimeZoneInfo.Local);
 
             RecurringJob.RemoveIfExists(nameof(LocationStatsJob));
             RecurringJob.AddOrUpdate<LocationStatsJob>(nameof(LocationStatsJob),
                 job => job.Run(JobCancellationToken.Null),
-                "*/33 * * * *", TimeZoneInfo.Local);
+                "*/36 * * * *", TimeZoneInfo.Local);
 
             RecurringJob.RemoveIfExists(nameof(ScreenSizeStatsJob));
             RecurringJob.AddOrUpdate<ScreenSizeStatsJob>(nameof(ScreenSizeStatsJob),
                 job => job.Run(JobCancellationToken.Null),
-                "*/34 * * * *", TimeZoneInfo.Local);
+                "*/38 * * * *", TimeZoneInfo.Local);
+
+            RecurringJob.RemoveIfExists(nameof(PageViewStatsJob));
+            RecurringJob.AddOrUpdate<PageViewStatsJob>(nameof(PageViewStatsJob),
+                job => job.Run(JobCancellationToken.Null),
+                "*/40 * * * *", TimeZoneInfo.Local);
         }
     }
 }
