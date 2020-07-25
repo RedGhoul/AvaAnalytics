@@ -1,18 +1,5 @@
 ﻿$(function () {
-    function getDeviceType() {
-        var ua = navigator.userAgent;
-        if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
-            return "tablet";
-        }
-        if (
-            /Mobile|iP(hone|od|ad)|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(
-                ua
-            )
-        ) {
-            return "mobile";
-        }
-        return "desktop";
-    };
+
     var state = {
         webSiteId = document.querySelector('script[data-website-id]').getAttribute("data-website-id"),
         PageViewCountChartNode: document.getElementById("bar-chart-PageViewCounts"),
@@ -49,6 +36,20 @@
                 Element.innerHTML = Error_Msg;
                 Element.hidden = false;
             }
+        },
+        GetDeviceType: function () {
+            var ua = navigator.userAgent;
+            if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+                return "tablet";
+            }
+            if (
+                /Mobile|iP(hone|od|ad)|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(
+                    ua
+                )
+            ) {
+                return "mobile";
+            }
+            return "desktop";
         }
     }
 
@@ -102,13 +103,14 @@
         fontColor: 'black',
         display: true,
     }
-    if (getDeviceType() === 'mobile') {
+    if (state.GetDeviceType() === 'mobile') {
         ISChart.height = 80;
         BSChart.height = 40;
         SysSChart.height = 40;
         ScreenSChart.height = 40;
         LocationSChart.height = 40;
     }
+
     axios.get('/api/Stats/PageViewCountStats/' + state.webSiteId)
         .then(function (response) {
             var data = response.data;
@@ -283,7 +285,7 @@
             var Bdata = [];
             for (var key in data[0]) {
                 for (var label in Blabels) {
-                    if (hashName[key] === Blabels[label]){
+                    if (hashName[key] === Blabels[label]) {
                         Bdata.push(data[0][key])
                     }
                 }
