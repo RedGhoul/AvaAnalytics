@@ -1,5 +1,4 @@
 ﻿$(function () {
-    var webSiteId = document.querySelector('script[data-website-id]').getAttribute("data-website-id");;
     function getDeviceType() {
         var ua = navigator.userAgent;
         if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
@@ -15,6 +14,7 @@
         return "desktop";
     };
     var state = {
+        webSiteId = document.querySelector('script[data-website-id]').getAttribute("data-website-id"),
         PageViewCountChartNode: document.getElementById("bar-chart-PageViewCounts"),
         URLRoutesVisitedChartNode: document.getElementById("bar-chart-InteractionStats"),
         BrowserTypeStatsChartNode: document.getElementById("bar-chart-BrowserStats"),
@@ -109,7 +109,7 @@
         ScreenSChart.height = 40;
         LocationSChart.height = 40;
     }
-    axios.get('/api/Stats/PageViewCountStats/' + webSiteId)
+    axios.get('/api/Stats/PageViewCountStats/' + state.webSiteId)
         .then(function (response) {
             var data = response.data;
             var Ilabels = [];
@@ -147,7 +147,7 @@
             console.log(error);
         })
 
-    axios.get('/api/Stats/InteractionStats/' + webSiteId)
+    axios.get('/api/Stats/InteractionStats/' + state.webSiteId)
         .then(function (response) {
             var data = response.data;
             var Ilabels = [];
@@ -185,7 +185,7 @@
             console.log(error);
         })
 
-    axios.get('/api/Stats/BrowserStats/' + webSiteId)
+    axios.get('/api/Stats/BrowserStats/' + state.webSiteId)
         .then(function (response) {
             var data = response.data;
             state.DisplayMessage(data, state.BrowserStats_NotFoundText, state.Error_Message)
@@ -224,7 +224,7 @@
             console.log(error);
         })
 
-    axios.get('/api/Stats/SystemStats/' + webSiteId)
+    axios.get('/api/Stats/SystemStats/' + state.webSiteId)
         .then(function (response) {
             var data = response.data;
             state.DisplayMessage(data, state.SystemStats_NotFoundText, state.Error_Message)
@@ -263,7 +263,7 @@
             console.log(error);
         })
 
-    axios.get('/api/Stats/ScreenSizeStats/' + webSiteId)
+    axios.get('/api/Stats/ScreenSizeStats/' + state.webSiteId)
         .then(function (response) {
             var data = response.data;
             var Blabels = [
@@ -319,7 +319,7 @@
             console.log(error);
         })
 
-    axios.get('/api/Stats/LocationStats/' + webSiteId)
+    axios.get('/api/Stats/LocationStats/' + state.webSiteId)
         .then(function (response) {
             var data = response.data;
             state.DisplayMessage(data, state.LocationStats_NotFoundText, state.Error_Message)
