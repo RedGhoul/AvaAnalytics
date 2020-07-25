@@ -1,7 +1,6 @@
 ﻿$(function () {
-
     var state = {
-        webSiteId = document.querySelector('script[data-website-id]').getAttribute("data-website-id"),
+        webSiteId : document.querySelector('script[data-website-id]').getAttribute("data-website-id"),
         PageViewCountChartNode: document.getElementById("bar-chart-PageViewCounts"),
         URLRoutesVisitedChartNode: document.getElementById("bar-chart-InteractionStats"),
         BrowserTypeStatsChartNode: document.getElementById("bar-chart-BrowserStats"),
@@ -54,6 +53,9 @@
     }
 
     state.Hid_NotFoundText();
+
+    $('#datetimepicker1').datetimepicker();
+    $('#datetimepicker2').datetimepicker();
 
     var scaleOptions = {
         yAxes: [{
@@ -358,4 +360,6 @@
         .catch(function (error) {
             console.log(error);
         })
+
+
 })

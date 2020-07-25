@@ -26,7 +26,7 @@ namespace SharpCounter.Controllers
         public async Task<List<BrowserStatsDTO>> GetBrowserStats(int id)
         {
             var curTime = DateTime.UtcNow;
-            var oldTime = curTime.Subtract(TimeSpan.FromMinutes(30));
+            var oldTime = curTime.Subtract(TimeSpan.FromDays(7));
             var data = await _statsRepo.GetBrowserStats(curTime, oldTime, id);
             return data;
         }
@@ -44,7 +44,7 @@ namespace SharpCounter.Controllers
         public async Task<List<SystemStatsDTO>> GetSystemStats(int id)
         {
             var curTime = DateTime.UtcNow;
-            var oldTime = curTime.Subtract(TimeSpan.FromMinutes(30));
+            var oldTime = curTime.Subtract(TimeSpan.FromDays(7));
             var data = await _statsRepo.GetSystemStats(curTime, oldTime, id);
             return data;
         }
@@ -54,7 +54,7 @@ namespace SharpCounter.Controllers
         public async Task<List<ScreenSizeStatsDTO>> GetScreenSizeStats(int id)
         {
             var curTime = DateTime.UtcNow;
-            var oldTime = curTime.Subtract(TimeSpan.FromMinutes(30));
+            var oldTime = curTime.Subtract(TimeSpan.FromDays(7));
             var data = await _statsRepo.GetScreenSizeStats(curTime, oldTime, id);
             return data;
         }
@@ -63,7 +63,7 @@ namespace SharpCounter.Controllers
         public async Task<List<LocationStatsDTO>> GetLocationStats(int id)
         {
             var curTime = DateTime.UtcNow;
-            var oldTime = curTime.Subtract(TimeSpan.FromMinutes(30));
+            var oldTime = curTime.Subtract(TimeSpan.FromDays(7));
             var data = await _statsRepo.GetLocationStats(curTime, oldTime, id);
             return data;
         }
@@ -72,7 +72,7 @@ namespace SharpCounter.Controllers
         public async Task<List<PageViewStatsDTO>> GetPageViewCountStats(int id)
         {
             var curTime = DateTime.UtcNow;
-            var oldTime = curTime.Subtract(TimeSpan.FromDays(2));
+            var oldTime = curTime.Subtract(TimeSpan.FromDays(7));
             var data = await _statsRepo.GetPageViewCountStats(curTime, oldTime, id);
             return data;
         }

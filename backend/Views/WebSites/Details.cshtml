@@ -1,7 +1,8 @@
 ﻿@model SharpCounter.Enities.WebSites
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css" />
+
 <div class="row">
     <div class="col-md-2">
-
     </div>
     <div class="col-md-8">
         <div class="text-center">
@@ -13,7 +14,6 @@
     </div>
 </div>
 <div class="spacer">
-
 </div>
 <div class="row align-items-center">
     <div class="col-3 col-md-5"></div>
@@ -26,26 +26,64 @@
     <div class="col-4 col-md-4"></div>
 </div>
 <div class="spacer">
-
 </div>
 <div class="row">
-    <div class="col-md-2">
-
-    </div>
-    <div class="col-md-8">
+    <div class="col-md-12">
         <div class="text-center">
-            <h1>Page View Counts for the last the last two days</h1>
+            <h1>Stats From</h1>
+        </div>
+        <div class="spacer">
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1" />
+                        <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+
+                </div>
+            </div>
+
+        </div>
+        <div class="spacer">
+        </div>
+        <div class="text-center">
+            <h1>To</h1>
+        </div>
+        <div class="spacer">
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group date" id="datetimepicker2" data-target-input="nearest">
+                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker2" />
+                        <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+
+                </div>
+            </div>
+
         </div>
     </div>
-    <div class="col-md-2">
-
-    </div>
 </div>
 <div class="spacer">
-
 </div>
 <div class="spacer">
-
 </div>
 <div class="row">
     <div class="col-12">
@@ -53,27 +91,8 @@
     </div>
 </div>
 <div class="spacer">
-
 </div>
 <div class="spacer">
-
-</div>
-<div class="row">
-    <div class="col-md-2">
-
-    </div>
-    <div class="col-md-8">
-        <div class="text-center">
-            <h1>Statistics For The Last 30 Mins</h1>
-        </div>
-    </div>
-    <div class="col-md-2">
-
-    </div>
-</div>
-
-<div class="spacer">
-
 </div>
 <div class="row">
     <div class="col-12">
@@ -82,7 +101,6 @@
     </div>
 </div>
 <div class="spacer">
-
 </div>
 <div class="row">
     <div class="col-12 col-md-6">
@@ -113,5 +131,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"
             integrity="sha256-T/f7Sju1ZfNNfBh7skWn0idlCBcI3RwdLSS4/I7NQKQ=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.0/chroma.min.js" integrity="sha512-yocoLferfPbcwpCMr8v/B0AB4SWpJlouBwgE0D3ZHaiP1nuu5djZclFEIj9znuqghaZ3tdCMRrreLoM8km+jIQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment-with-locales.min.js" integrity="sha512-qSnlnyh7EcD3vTqRoSP4LYsy2yVuqqmnkM9tW4dWo6xvAoxuVXyM36qZK54fyCmHoY1iKi9FJAUZrlPqmGNXFw==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
     <script src="~/js/prod/detailsChart.min.js" asp-append-version="true" data-website-id="@Model.Id"></script>
 }
