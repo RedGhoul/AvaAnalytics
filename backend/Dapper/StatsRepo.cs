@@ -89,14 +89,14 @@ namespace SharpCounter.Dapper
             return data.ToList();
         }
 
-        public async Task<List<PageViewStatsDTO>> GetPageViewCountStats(DateTime curTime, DateTime oldTime, int webSiteId)
+        public async Task<List<PageViewStatsDTO>> GetPageViewCountStats(DateTime StartDate, DateTime EndDate, int webSiteId)
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
             var data = await dbConnection.QueryAsync<PageViewStatsDTO>(
-                @"SELECT ""Count"", ""CreatedAt"" FROM ""PageViewStats"" where ""CreatedAt"" <= @curTime and 
-                ""CreatedAt"" >= @oldTime and ""WebSiteId"" = @Id order by ""CreatedAt"" ASC",
-                new { curTime, oldTime, Id = webSiteId });
+                @"SELECT ""Count"", ""CreatedAt"" FROM ""PageViewStats"" where ""CreatedAt"" <= @EndDate and 
+                ""CreatedAt"" >= @StartDate and ""WebSiteId"" = @Id order by ""CreatedAt"" ASC",
+                new { StartDate, EndDate, Id = webSiteId });
             return data.ToList();
         }
     }

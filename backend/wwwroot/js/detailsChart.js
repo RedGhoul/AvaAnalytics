@@ -1,6 +1,6 @@
 ﻿$(function () {
     var state = {
-        webSiteId : document.querySelector('script[data-website-id]').getAttribute("data-website-id"),
+        webSiteId: document.querySelector('script[data-website-id]').getAttribute("data-website-id"),
         PageViewCountChartNode: document.getElementById("bar-chart-PageViewCounts"),
         URLRoutesVisitedChartNode: document.getElementById("bar-chart-InteractionStats"),
         BrowserTypeStatsChartNode: document.getElementById("bar-chart-BrowserStats"),
@@ -17,6 +17,16 @@
         StatsSerachBtn: document.getElementById("StatsSerach"),
         CurrentStartDate: null,
         CurrentEndDate: null,
+        baseDateTime: null,
+        SetBaseDate: function () {
+            state.CurrentStartDate = moment().subtract(7, "days").format();
+            state.CurrentEndDate = moment().format();
+            state.baseDateTime = {
+                CurrentStartDate: state.CurrentStartDate,
+                CurrentEndDate: state.CurrentEndDate
+            }
+        },
+        PageViewStatsChart: null,
         Hid_NotFoundText: function () {
             state.InteractionStats_NotFoundText.hidden = true;
             state.BrowserStats_NotFoundText.hidden = true;
@@ -33,7 +43,6 @@
             for (var i = 0; i < Data.length; i++) {
                 sum = sum + Data[i];
             }
-            console.log(sum)
             if (sum === 0) {
                 Element.innerHTML = Error_Msg;
                 Element.hidden = false;
@@ -52,9 +61,13 @@
                 return "mobile";
             }
             return "desktop";
+        },
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            Accept: 'application/json'
         }
     }
-
+    state.SetBaseDate();
     state.Hid_NotFoundText();
     jQuery.datetimepicker.setLocale('en');
     $('#date_timepicker_start').datetimepicker({
@@ -66,7 +79,7 @@
         },
         timepicker: false,
         onChangeDateTime: function (dp, $input) {
-            state.CurrentStartDate = $input.val();
+            state.CurrentStartDate = moment($input.val()).format();
         }
     });
     $('#date_timepicker_end').datetimepicker({
@@ -78,12 +91,41 @@
         },
         timepicker: false,
         onChangeDateTime: function (dp, $input) {
-            state.CurrentEndDate = $input.val();
+            state.CurrentEndDate = moment($input.val()).add(1, "days").format();
         }
     });
     state.StatsSerachBtn.addEventListener("click", function (e) {
         e.preventDefault()
-        alert(state.CurrentEndDate)
+        axios({
+            method: 'post', url: '/api/Stats/PageViewCountStats/' + state.webSiteId,
+            data: {
+                CurrentStartDate: state.CurrentStartDate,
+                CurrentEndDate: state.CurrentEndDate
+            },
+            headers: state.headers
+        }).then(function (response) {
+            var data = response.data;
+            var GLabels = [];
+            var GData = [];
+            data.forEach(function (stat) {
+                GLabels.push(moment(stat.createdAt).local().format('YYYY-MM-DD HH:mm:ss'));
+                GData.push(stat.count);
+            });
+            
+            state.PageViewStatsChart.data = {
+                labels: GLabels,
+                datasets: [
+                    {
+                        borderColor: 'rgb(255, 99, 132)',
+                        label: "Counts",
+                        data: GData
+                    }
+                ],
+                fill: false
+            };
+            state.PageViewStatsChart.update();
+        })
+
     });
     var scaleOptions = {
         yAxes: [{
@@ -141,24 +183,25 @@
         LocationSChart.height = 40;
     }
 
-    axios.get('/api/Stats/PageViewCountStats/' + state.webSiteId)
+
+    axios({ method: 'post', url: '/api/Stats/PageViewCountStats/' + state.webSiteId, data: state.baseDateTime, headers: state.headers })
         .then(function (response) {
             var data = response.data;
-            var Ilabels = [];
-            var Idata = [];
+            var GLabels = [];
+            var GData = [];
             data.forEach(function (stat) {
-                Ilabels.push(moment(stat.createdAt).local().format('YYYY-MM-DD HH:mm:ss'));
-                Idata.push(stat.count);
+                GLabels.push(moment(stat.createdAt).local().format('YYYY-MM-DD HH:mm:ss'));
+                GData.push(stat.count);
             });
-            new Chart(state.PageViewCountChartNode, {
+            state.PageViewStatsChart = new Chart(state.PageViewCountChartNode, {
                 type: 'line',
                 data: {
-                    labels: Ilabels,
+                    labels: GLabels,
                     datasets: [
                         {
                             borderColor: 'rgb(255, 99, 132)',
                             label: "Counts",
-                            data: Idata
+                            data: GData
                         }
                     ],
                     fill: false
@@ -179,25 +222,25 @@
             console.log(error);
         })
 
-    axios.get('/api/Stats/InteractionStats/' + state.webSiteId)
+    axios({ method: 'post', url: '/api/Stats/InteractionStats/' + state.webSiteId, data: state.baseDateTime, headers: state.headers })
         .then(function (response) {
             var data = response.data;
-            var Ilabels = [];
-            var Idata = [];
+            var GLabels = [];
+            var GData = [];
             state.DisplayMessage(data, state.InteractionStats_NotFoundText, state.Error_Message)
             data.forEach(function (stat) {
-                Ilabels.push(stat.path);
-                Idata.push(stat.total);
+                GLabels.push(stat.path);
+                GData.push(stat.total);
             });
             new Chart(state.URLRoutesVisitedChartNode, {
                 type: 'horizontalBar',
                 data: {
-                    labels: Ilabels,
+                    labels: GLabels,
                     datasets: [
                         {
                             label: "Counts",
-                            backgroundColor: chroma.scale(state.newGradArr).mode('lch').colors(Idata.length),
-                            data: Idata
+                            backgroundColor: chroma.scale(state.newGradArr).mode('lch').colors(GData.length),
+                            data: GData
                         }
                     ]
                 },
@@ -217,7 +260,7 @@
             console.log(error);
         })
 
-    axios.get('/api/Stats/BrowserStats/' + state.webSiteId)
+    axios({ method: 'post', url: '/api/Stats/BrowserStats/' + state.webSiteId, data: state.baseDateTime, headers: state.headers })
         .then(function (response) {
             var data = response.data;
             state.DisplayMessage(data, state.BrowserStats_NotFoundText, state.Error_Message)
@@ -256,7 +299,7 @@
             console.log(error);
         })
 
-    axios.get('/api/Stats/SystemStats/' + state.webSiteId)
+    axios({ method: 'post', url: '/api/Stats/SystemStats/' + state.webSiteId, data: state.baseDateTime, headers: state.headers })
         .then(function (response) {
             var data = response.data;
             state.DisplayMessage(data, state.SystemStats_NotFoundText, state.Error_Message)
@@ -295,7 +338,7 @@
             console.log(error);
         })
 
-    axios.get('/api/Stats/ScreenSizeStats/' + state.webSiteId)
+    axios({ method: 'post', url: '/api/Stats/ScreenSizeStats/' + state.webSiteId, data: state.baseDateTime, headers: state.headers })
         .then(function (response) {
             var data = response.data;
             var Blabels = [
@@ -351,7 +394,7 @@
             console.log(error);
         })
 
-    axios.get('/api/Stats/LocationStats/' + state.webSiteId)
+    axios({ method: 'post', url: '/api/Stats/LocationStats/' + state.webSiteId, data: state.baseDateTime, headers: state.headers })
         .then(function (response) {
             var data = response.data;
             state.DisplayMessage(data, state.LocationStats_NotFoundText, state.Error_Message)
