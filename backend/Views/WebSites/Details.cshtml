@@ -1,82 +1,39 @@
 ﻿@model SharpCounter.Enities.WebSites
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css" />
-
-<div class="row">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" />
+<div class="row" style="padding-left: 90px;">
     <div class="col-md-2">
+        
     </div>
-    <div class="col-md-8">
+    <div class="col-md-4">
         <div class="text-center">
             <h5 class="display-4">@Model.Name</h5>
         </div>
-    </div>
-    <div class="col-md-2">
-
-    </div>
-</div>
-<div class="spacer">
-</div>
-<div class="row align-items-center">
-    <div class="col-3 col-md-5"></div>
-    <div class="col-5 col-md-4">
-        <div class="btn-group" role="group">
-            <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-            <a class="btn btn-secondary" asp-action="Index">Back to List</a>
-        </div>
-    </div>
-    <div class="col-4 col-md-4"></div>
-</div>
-<div class="spacer">
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="text-center">
-            <h1>Stats From</h1>
-        </div>
-        <div class="spacer">
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-
-                </div>
-                <div class="col-md-4">
-                    <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
-                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1" />
-                        <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-
+        <div class="row align-items-center" style="padding-top:20px;">
+            <div class="col-3">
+            </div>
+            <div class="col-8">
+                <div class="btn-group" role="group">
+                    <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                    <a class="btn btn-secondary" asp-action="Index">Back to List</a>
                 </div>
             </div>
-
-        </div>
-        <div class="spacer">
-        </div>
-        <div class="text-center">
-            <h1>To</h1>
-        </div>
-        <div class="spacer">
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-
-                </div>
-                <div class="col-md-4">
-                    <div class="input-group date" id="datetimepicker2" data-target-input="nearest">
-                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker2" />
-                        <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-
-                </div>
+            <div class="col-3">
             </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="row">
+            <form>
+                <div class="form-group">
+                    <label for="date_timepicker_start">Start Date</label>
+                    <input class="form-control" type="text" id="date_timepicker_start" placeholder="Enter Date">
+                </div>
+                <div class="form-group">
+                    <label for="date_timepicker_start">End Date</label>
+                    <input class="form-control" type="text" id="date_timepicker_end" placeholder="Enter Date">
+                </div>
+                <button type="submit" class="btn btn-secondary" id="StatsSerach">Serach</button>
+            </form>
 
         </div>
     </div>
@@ -132,6 +89,6 @@
             integrity="sha256-T/f7Sju1ZfNNfBh7skWn0idlCBcI3RwdLSS4/I7NQKQ=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.0/chroma.min.js" integrity="sha512-yocoLferfPbcwpCMr8v/B0AB4SWpJlouBwgE0D3ZHaiP1nuu5djZclFEIj9znuqghaZ3tdCMRrreLoM8km+jIQ==" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment-with-locales.min.js" integrity="sha512-qSnlnyh7EcD3vTqRoSP4LYsy2yVuqqmnkM9tW4dWo6xvAoxuVXyM36qZK54fyCmHoY1iKi9FJAUZrlPqmGNXFw==" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
     <script src="~/js/prod/detailsChart.min.js" asp-append-version="true" data-website-id="@Model.Id"></script>
 }

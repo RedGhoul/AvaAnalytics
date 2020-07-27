@@ -14,6 +14,9 @@
         ScreenStats_NotFoundText: document.getElementById("ScreenStats-NotFoundText"),
         LocationStats_NotFoundText: document.getElementById("LocationStats-NotFoundText"),
         Error_Message: 'Nothing Found Just Yet',
+        StatsSerachBtn: document.getElementById("StatsSerach"),
+        CurrentStartDate: null,
+        CurrentEndDate: null,
         Hid_NotFoundText: function () {
             state.InteractionStats_NotFoundText.hidden = true;
             state.BrowserStats_NotFoundText.hidden = true;
@@ -53,10 +56,35 @@
     }
 
     state.Hid_NotFoundText();
-
-    $('#datetimepicker1').datetimepicker();
-    $('#datetimepicker2').datetimepicker();
-
+    jQuery.datetimepicker.setLocale('en');
+    $('#date_timepicker_start').datetimepicker({
+        format: 'Y/m/d',
+        onShow: function (ct) {
+            this.setOptions({
+                maxDate: $('#date_timepicker_end').val() ? jQuery('#date_timepicker_end').val() : false
+            })
+        },
+        timepicker: false,
+        onChangeDateTime: function (dp, $input) {
+            state.CurrentStartDate = $input.val();
+        }
+    });
+    $('#date_timepicker_end').datetimepicker({
+        format: 'Y/m/d',
+        onShow: function (ct) {
+            this.setOptions({
+                minDate: $('#date_timepicker_start').val() ? jQuery('#date_timepicker_start').val() : false
+            })
+        },
+        timepicker: false,
+        onChangeDateTime: function (dp, $input) {
+            state.CurrentEndDate = $input.val();
+        }
+    });
+    state.StatsSerachBtn.addEventListener("click", function (e) {
+        e.preventDefault()
+        alert(state.CurrentEndDate)
+    });
     var scaleOptions = {
         yAxes: [{
             ticks: {
@@ -119,7 +147,7 @@
             var Ilabels = [];
             var Idata = [];
             data.forEach(function (stat) {
-                Ilabels.push(new Date(stat.createdAt).toString().substring(0, 33));
+                Ilabels.push(moment(stat.createdAt).local().format('YYYY-MM-DD HH:mm:ss'));
                 Idata.push(stat.count);
             });
             new Chart(state.PageViewCountChartNode, {
