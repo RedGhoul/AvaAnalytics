@@ -18,7 +18,13 @@
         CurrentStartDate: null,
         CurrentEndDate: null,
         baseDateTime: null,
-        SetBaseDate: function () {
+        Chart_PageViewStats: null,
+        Chart_InteractionStats: null,
+        Chart_BrowserStats: null,
+        Chart_SystemStats: null,
+        Chart_ScreenSizeStats: null,
+        Chart_LocationStats: null,
+        Set_BaseDate: function () {
             state.CurrentStartDate = moment().subtract(7, "days").format();
             state.CurrentEndDate = moment().format();
             state.baseDateTime = {
@@ -26,7 +32,6 @@
                 CurrentEndDate: state.CurrentEndDate
             }
         },
-        PageViewStatsChart: null,
         Hid_NotFoundText: function () {
             state.InteractionStats_NotFoundText.hidden = true;
             state.BrowserStats_NotFoundText.hidden = true;
@@ -34,7 +39,7 @@
             state.ScreenStats_NotFoundText.hidden = true;
             state.LocationStats_NotFoundText.hidden = true;
         },
-        DisplayMessage: function (Data, Element, Error_Msg) {
+        Display_Error_Message: function (Data, Element, Error_Msg) {
             if (Data === null || Data.length === 0) {
                 Element.innerHTML = Error_Msg;
                 Element.hidden = false;
@@ -62,71 +67,131 @@
             }
             return "desktop";
         },
+        Refresh_Chart_UI: function (methodType,urlName,data, chart, ChartDataTranslator) {
+            axios({ method: methodType, url: urlName, data: data, headers: state.headers })
+                .then(function (response) {
+                    var data = response.data;
+                    var GLabels = [];
+                    var GData = [];
+                    data.forEach(function (stat) {
+                        GLabels.push(moment(stat.createdAt).local().format('YYYY-MM-DD HH:mm:ss'));
+                        GData.push(stat.count);
+                    });
+                    chart.data = ChartDataTranslator(GData, GLabels);
+                    chart.update();
+                })
+        },
+        SetUp_DateTimePickers: function () {
+            jQuery.datetimepicker.setLocale('en');
+            $('#date_timepicker_start').datetimepicker({
+                format: 'Y/m/d',
+                onShow: function (ct) {
+                    this.setOptions({
+                        maxDate: $('#date_timepicker_end').val() ? jQuery('#date_timepicker_end').val() : false
+                    })
+                },
+                timepicker: false,
+                onChangeDateTime: function (dp, $input) {
+                    state.CurrentStartDate = moment($input.val()).format();
+                }
+            });
+            $('#date_timepicker_end').datetimepicker({
+                format: 'Y/m/d',
+                onShow: function (ct) {
+                    this.setOptions({
+                        minDate: $('#date_timepicker_start').val() ? jQuery('#date_timepicker_start').val() : false
+                    })
+                },
+                timepicker: false,
+                onChangeDateTime: function (dp, $input) {
+                    state.CurrentEndDate = moment($input.val()).add(1, "days").format();
+                }
+            });
+        },
+        SetUp_DateTime_Event_Listeners: function () {
+            state.StatsSerachBtn.addEventListener("click", function (e) {
+                e.preventDefault()
+                var methodType = 'post';
+                var PageView_DataTranslator = function (GData, GLabels) {
+                    return {
+                        labels: GLabels,
+                        datasets: [
+                            {
+                                borderColor: 'rgb(255, 99, 132)',
+                                label: "Counts",
+                                data: GData
+                            }
+                        ],
+                        fill: false
+                    }
+                };
+                var Generic_DataTranslator = function (GData, GLabels) {
+                    return {
+                        labels: GLabels,
+                        datasets: [
+                            {
+                                label: "Counts",
+                                backgroundColor: chroma.scale(state.newGradArr).mode('lch').colors(GData.length),
+                                data: GData
+                            }
+                        ]
+                    }
+                };
+                var url_Charts = [
+                    {
+                        chart: state.Chart_PageViewStats,
+                        data_function: PageView_DataTranslator,
+                        chart_url: '/api/Stats/PageViewCountStats/' + state.webSiteId
+                    },
+                    {
+                        chart: state.Chart_InteractionStats,
+                        data_function: Generic_DataTranslator,
+                        chart_url: '/api/Stats/InteractionStats/' + state.webSiteId
+                    },
+                    {
+                        chart: state.Chart_BrowserStats,
+                        data_function: Generic_DataTranslator,
+                        chart_url: '/api/Stats/BrowserStats/' + state.webSiteId
+                    },
+                    {
+                        chart: state.Chart_SystemStats,
+                        data_function: Generic_DataTranslator,
+                        chart_url: '/api/Stats/SystemStats/' + state.webSiteId
+                    },
+                    {
+                        chart: state.Chart_ScreenSizeStats,
+                        data_function: Generic_DataTranslator,
+                        chart_url: '/api/Stats/ScreenSizeStats/' + state.webSiteId
+                    },
+                    {
+                        chart: state.Chart_LocationStats,
+                        data_function: Generic_DataTranslator,
+                        chart_url: '/api/Stats/LocationStats/' + state.webSiteId
+                    }
+                ];
+                var dateData = {
+                    CurrentStartDate: state.CurrentStartDate,
+                    CurrentEndDate: state.CurrentEndDate
+                };
+                for (var i = 0; i < url_Charts.length; i++) {
+                    state.Refresh_Chart_UI(
+                        methodType, url_Charts[i].chart_url,
+                        dateData, url_Charts[i].chart,
+                        url_Charts[i].data_function
+                    );
+                }
+            });
+        },
         headers: {
             'Content-Type': 'application/json; charset=utf-8',
             Accept: 'application/json'
         }
     }
-    state.SetBaseDate();
+    state.Set_BaseDate();
     state.Hid_NotFoundText();
-    jQuery.datetimepicker.setLocale('en');
-    $('#date_timepicker_start').datetimepicker({
-        format: 'Y/m/d',
-        onShow: function (ct) {
-            this.setOptions({
-                maxDate: $('#date_timepicker_end').val() ? jQuery('#date_timepicker_end').val() : false
-            })
-        },
-        timepicker: false,
-        onChangeDateTime: function (dp, $input) {
-            state.CurrentStartDate = moment($input.val()).format();
-        }
-    });
-    $('#date_timepicker_end').datetimepicker({
-        format: 'Y/m/d',
-        onShow: function (ct) {
-            this.setOptions({
-                minDate: $('#date_timepicker_start').val() ? jQuery('#date_timepicker_start').val() : false
-            })
-        },
-        timepicker: false,
-        onChangeDateTime: function (dp, $input) {
-            state.CurrentEndDate = moment($input.val()).add(1, "days").format();
-        }
-    });
-    state.StatsSerachBtn.addEventListener("click", function (e) {
-        e.preventDefault()
-        axios({
-            method: 'post', url: '/api/Stats/PageViewCountStats/' + state.webSiteId,
-            data: {
-                CurrentStartDate: state.CurrentStartDate,
-                CurrentEndDate: state.CurrentEndDate
-            },
-            headers: state.headers
-        }).then(function (response) {
-            var data = response.data;
-            var GLabels = [];
-            var GData = [];
-            data.forEach(function (stat) {
-                GLabels.push(moment(stat.createdAt).local().format('YYYY-MM-DD HH:mm:ss'));
-                GData.push(stat.count);
-            });
-            
-            state.PageViewStatsChart.data = {
-                labels: GLabels,
-                datasets: [
-                    {
-                        borderColor: 'rgb(255, 99, 132)',
-                        label: "Counts",
-                        data: GData
-                    }
-                ],
-                fill: false
-            };
-            state.PageViewStatsChart.update();
-        })
-
-    });
+    state.SetUp_DateTimePickers();
+    state.SetUp_DateTime_Event_Listeners();
+   
     var scaleOptions = {
         yAxes: [{
             ticks: {
@@ -193,7 +258,7 @@
                 GLabels.push(moment(stat.createdAt).local().format('YYYY-MM-DD HH:mm:ss'));
                 GData.push(stat.count);
             });
-            state.PageViewStatsChart = new Chart(state.PageViewCountChartNode, {
+            state.Chart_PageViewStats = new Chart(state.PageViewCountChartNode, {
                 type: 'line',
                 data: {
                     labels: GLabels,
@@ -227,12 +292,12 @@
             var data = response.data;
             var GLabels = [];
             var GData = [];
-            state.DisplayMessage(data, state.InteractionStats_NotFoundText, state.Error_Message)
+            state.Display_Error_Message(data, state.InteractionStats_NotFoundText, state.Error_Message)
             data.forEach(function (stat) {
                 GLabels.push(stat.path);
                 GData.push(stat.total);
             });
-            new Chart(state.URLRoutesVisitedChartNode, {
+            state.Chart_InteractionStats = new Chart(state.URLRoutesVisitedChartNode, {
                 type: 'horizontalBar',
                 data: {
                     labels: GLabels,
@@ -263,14 +328,14 @@
     axios({ method: 'post', url: '/api/Stats/BrowserStats/' + state.webSiteId, data: state.baseDateTime, headers: state.headers })
         .then(function (response) {
             var data = response.data;
-            state.DisplayMessage(data, state.BrowserStats_NotFoundText, state.Error_Message)
+            state.Display_Error_Message(data, state.BrowserStats_NotFoundText, state.Error_Message)
             var Blabels = []
             var Bdata = []
             data.forEach(function (stat) {
                 Blabels.push(stat.browser + " " + stat.version);
                 Bdata.push(stat.count);
             });
-            new Chart(state.BrowserTypeStatsChartNode, {
+            state.Chart_BrowserStats = new Chart(state.BrowserTypeStatsChartNode, {
                 type: 'horizontalBar',
                 data: {
                     labels: Blabels,
@@ -302,14 +367,14 @@
     axios({ method: 'post', url: '/api/Stats/SystemStats/' + state.webSiteId, data: state.baseDateTime, headers: state.headers })
         .then(function (response) {
             var data = response.data;
-            state.DisplayMessage(data, state.SystemStats_NotFoundText, state.Error_Message)
+            state.Display_Error_Message(data, state.SystemStats_NotFoundText, state.Error_Message)
             var Slabels = [];
             var Sdata = [];
             data.forEach(function (stat) {
                 Slabels.push(stat.platform + " " + stat.version);
                 Sdata.push(stat.count);
             });
-            new Chart(state.SystemStatsChartNode, {
+            state.Chart_SystemStats = new Chart(state.SystemStatsChartNode, {
                 type: 'horizontalBar',
                 data: {
                     labels: Slabels,
@@ -364,9 +429,9 @@
                 }
             }
             console.log(Bdata)
-            state.DisplayMessage(Bdata, state.ScreenStats_NotFoundText, state.Error_Message)
+            state.Display_Error_Message(Bdata, state.ScreenStats_NotFoundText, state.Error_Message)
 
-            new Chart(state.ScreenSizeStatsChartNode, {
+            state.Chart_ScreenSizeStats = new Chart(state.ScreenSizeStatsChartNode, {
                 type: 'horizontalBar',
                 data: {
                     labels: Blabels,
@@ -397,14 +462,14 @@
     axios({ method: 'post', url: '/api/Stats/LocationStats/' + state.webSiteId, data: state.baseDateTime, headers: state.headers })
         .then(function (response) {
             var data = response.data;
-            state.DisplayMessage(data, state.LocationStats_NotFoundText, state.Error_Message)
+            state.Display_Error_Message(data, state.LocationStats_NotFoundText, state.Error_Message)
             var Blabels = []
             var Bdata = []
             data.forEach(function (stat) {
                 Blabels.push(stat.location);
                 Bdata.push(stat.count);
             });
-            new Chart(state.LocationOfVisitorsStatsChartNode, {
+            state.Chart_LocationStats = new Chart(state.LocationOfVisitorsStatsChartNode, {
                 type: 'horizontalBar',
                 data: {
                     labels: Blabels,
