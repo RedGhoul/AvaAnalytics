@@ -1,18 +1,18 @@
 ﻿$(function () {
     var state = {
-        webSiteId: document.querySelector('script[data-website-id]').getAttribute("data-website-id"),
-        PageViewCountChartNode: document.getElementById("bar-chart-PageViewCounts"),
-        URLRoutesVisitedChartNode: document.getElementById("bar-chart-InteractionStats"),
-        BrowserTypeStatsChartNode: document.getElementById("bar-chart-BrowserStats"),
-        SystemStatsChartNode: document.getElementById("bar-chart-SystemStats"),
-        ScreenSizeStatsChartNode: document.getElementById("bar-chart-ScreenStats"),
-        LocationOfVisitorsStatsChartNode: document.getElementById("bar-chart-LocationStats"),
+        webSiteId: null,
+        PageViewCountChartNode: null,
+        URLRoutesVisitedChartNode: null,
+        BrowserTypeStatsChartNode: null,
+        SystemStatsChartNode: null,
+        ScreenSizeStatsChartNode: null,
+        LocationOfVisitorsStatsChartNode: null,
+        InteractionStats_NotFoundText: null,
+        BrowserStats_NotFoundText: null,
+        SystemStats_NotFoundText: null,
+        ScreenStats_NotFoundText: null,
+        LocationStats_NotFoundText: null,
         newGradArr: ['#CC2936', '#08415C'],
-        InteractionStats_NotFoundText: document.getElementById("InteractionStats-NotFoundText"),
-        BrowserStats_NotFoundText: document.getElementById("BrowserStats-NotFoundText"),
-        SystemStats_NotFoundText: document.getElementById("SystemStats-NotFoundText"),
-        ScreenStats_NotFoundText: document.getElementById("ScreenStats-NotFoundText"),
-        LocationStats_NotFoundText: document.getElementById("LocationStats-NotFoundText"),
         Error_Message: 'Nothing Found Just Yet',
         StatsSerachBtn: document.getElementById("StatsSerach"),
         CurrentStartDate: null,
@@ -67,19 +67,193 @@
             }
             return "desktop";
         },
-        Refresh_Chart_UI: function (methodType,urlName,data, chart, ChartDataTranslator) {
+        Refresh_Chart_UI: function (methodType, urlName, data, chart,
+            ChartDataTranslator, NotFoundText, dataMapper) {
             axios({ method: methodType, url: urlName, data: data, headers: state.headers })
                 .then(function (response) {
                     var data = response.data;
-                    var GLabels = [];
-                    var GData = [];
-                    data.forEach(function (stat) {
-                        GLabels.push(moment(stat.createdAt).local().format('YYYY-MM-DD HH:mm:ss'));
-                        GData.push(stat.count);
-                    });
-                    chart.data = ChartDataTranslator(GData, GLabels);
+                    if (NotFoundText) {
+                        state.Display_Error_Message(data, NotFoundText, state.Error_Message)
+                    }
+                    chart.data = ChartDataTranslator(data, dataMapper);
                     chart.update();
                 })
+        },
+        SetUp_Chart_UI: function () {
+            var methodType = 'post';
+            var PageView_DataTranslator = function (Data, dataMapper) {
+                var MappedData = dataMapper(Data);
+                return {
+                    labels: MappedData.GLabels,
+                    datasets: [
+                        {
+                            borderColor: 'rgb(255, 99, 132)',
+                            label: "Counts",
+                            data: MappedData.GData
+                        }
+                    ],
+                    fill: false
+                }
+            };
+            var Generic_DataTranslator = function (Data, dataMapper) {
+                var MappedData = dataMapper(Data);
+                return {
+                    labels: MappedData.GLabels,
+                    datasets: [
+                        {
+                            label: "Counts",
+                            backgroundColor: chroma.scale(state.newGradArr).mode('lch').colors(MappedData.GData.length),
+                            data: MappedData.GData
+                        }
+                    ]
+                }
+            };
+            var dataMapper_ForPageView = function (data) {
+                var GLabels = [];
+                var GData = [];
+                data.forEach(function (stat) {
+                    GLabels.push(moment(stat.createdAt).local().format('YYYY-MM-DD HH:mm:ss'));
+                    GData.push(stat.count);
+                });
+                return {
+                    GLabels: GLabels,
+                    GData: GData
+                }
+            }
+            var dataMapper_ScreenSize = function (data) {
+                var GLabels = [
+                    'Phones',
+                    'Large Phones',
+                    'Tables',
+                    'Desktops',
+                    'Monitors 4K Plus'
+                ];
+                var hashName = {
+                    'numberOfPhones': 'Phones',
+                    'largePhonesSmallTablets': 'Large Phones',
+                    'tabletsSmallLaptops': 'Tables',
+                    'computerMonitors': 'Desktops',
+                    'computerMonitors4K': 'Monitors 4K Plus'
+                }
+                var GData = [];
+                for (var key in data[0]) {
+                    for (var label in GLabels) {
+                        if (hashName[key] === GLabels[label]) {
+                            GData.push(data[0][key])
+                        }
+                    }
+                }
+                return {
+                    GLabels: GLabels,
+                    GData: GData
+                }
+            }
+            var dataMapper_InteractionStats = function (data) {
+                var GLabels = [];
+                var GData = [];
+                data.forEach(function (stat) {
+                    GLabels.push(stat.path);
+                    GData.push(stat.total);
+                });
+                return {
+                    GLabels: GLabels,
+                    GData: GData
+                }
+            }
+            var dataMapper_BrowserStats = function (data) {
+                var GLabels = []
+                var GData = []
+                data.forEach(function (stat) {
+                    GLabels.push(stat.browser + " " + stat.version);
+                    GData.push(stat.count);
+                });
+                return {
+                    GLabels: GLabels,
+                    GData: GData
+                }
+            }
+            var dataMapper_SystemStats = function (data) {
+                var GLabels = [];
+                var GData = [];
+                data.forEach(function (stat) {
+                    GLabels.push(stat.platform + " " + stat.version);
+                    GData.push(stat.count);
+                });
+                return {
+                    GLabels: GLabels,
+                    GData: GData
+                }
+            }
+            var dataMapper_LocationStats = function (data) {
+                var GLabels = []
+                var GData = []
+                data.forEach(function (stat) {
+                    GLabels.push(stat.location);
+                    GData.push(stat.count);
+                });
+                return {
+                    GLabels: GLabels,
+                    GData: GData
+                }
+            }
+            var url_Charts = [
+                {
+                    chart: state.Chart_PageViewStats,
+                    data_function: PageView_DataTranslator,
+                    chart_url: '/api/Stats/PageViewCountStats/' + state.webSiteId,
+                    notFoundText: null,
+                    dataMapper: dataMapper_ForPageView,
+                },
+                {
+                    chart: state.Chart_InteractionStats,
+                    data_function: Generic_DataTranslator,
+                    chart_url: '/api/Stats/InteractionStats/' + state.webSiteId,
+                    notFoundText: state.InteractionStats_NotFoundText,
+                    dataMapper: dataMapper_InteractionStats,
+                },
+                {
+                    chart: state.Chart_BrowserStats,
+                    data_function: Generic_DataTranslator,
+                    chart_url: '/api/Stats/BrowserStats/' + state.webSiteId,
+                    notFoundText: state.BrowserStats_NotFoundText,
+                    dataMapper: dataMapper_BrowserStats,
+                },
+                {
+                    chart: state.Chart_SystemStats,
+                    data_function: Generic_DataTranslator,
+                    chart_url: '/api/Stats/SystemStats/' + state.webSiteId,
+                    notFoundText: state.SystemStats_NotFoundText,
+                    dataMapper: dataMapper_SystemStats,
+                },
+                {
+                    chart: state.Chart_ScreenSizeStats,
+                    data_function: Generic_DataTranslator,
+                    chart_url: '/api/Stats/ScreenSizeStats/' + state.webSiteId,
+                    notFoundText: state.ScreenStats_NotFoundText,
+                    dataMapper: dataMapper_ScreenSize,
+                },
+                {
+                    chart: state.Chart_LocationStats,
+                    data_function: Generic_DataTranslator,
+                    chart_url: '/api/Stats/LocationStats/' + state.webSiteId,
+                    notFoundText: state.LocationStats_NotFoundText,
+                    dataMapper: dataMapper_LocationStats,
+                }
+            ];
+            var dateData = {
+                CurrentStartDate: state.CurrentStartDate,
+                CurrentEndDate: state.CurrentEndDate
+            };
+
+            for (var i = 0; i < url_Charts.length; i++) {
+                state.Refresh_Chart_UI(
+                    methodType, url_Charts[i].chart_url,
+                    dateData, url_Charts[i].chart,
+                    url_Charts[i].data_function,
+                    url_Charts[i].notFoundText,
+                    url_Charts[i].dataMapper
+                );
+            }
         },
         SetUp_DateTimePickers: function () {
             jQuery.datetimepicker.setLocale('en');
@@ -111,135 +285,160 @@
         SetUp_DateTime_Event_Listeners: function () {
             state.StatsSerachBtn.addEventListener("click", function (e) {
                 e.preventDefault()
-                var methodType = 'post';
-                var PageView_DataTranslator = function (GData, GLabels) {
-                    return {
-                        labels: GLabels,
-                        datasets: [
-                            {
-                                borderColor: 'rgb(255, 99, 132)',
-                                label: "Counts",
-                                data: GData
-                            }
-                        ],
-                        fill: false
-                    }
-                };
-                var Generic_DataTranslator = function (GData, GLabels) {
-                    return {
-                        labels: GLabels,
-                        datasets: [
-                            {
-                                label: "Counts",
-                                backgroundColor: chroma.scale(state.newGradArr).mode('lch').colors(GData.length),
-                                data: GData
-                            }
-                        ]
-                    }
-                };
-                var url_Charts = [
-                    {
-                        chart: state.Chart_PageViewStats,
-                        data_function: PageView_DataTranslator,
-                        chart_url: '/api/Stats/PageViewCountStats/' + state.webSiteId
-                    },
-                    {
-                        chart: state.Chart_InteractionStats,
-                        data_function: Generic_DataTranslator,
-                        chart_url: '/api/Stats/InteractionStats/' + state.webSiteId
-                    },
-                    {
-                        chart: state.Chart_BrowserStats,
-                        data_function: Generic_DataTranslator,
-                        chart_url: '/api/Stats/BrowserStats/' + state.webSiteId
-                    },
-                    {
-                        chart: state.Chart_SystemStats,
-                        data_function: Generic_DataTranslator,
-                        chart_url: '/api/Stats/SystemStats/' + state.webSiteId
-                    },
-                    {
-                        chart: state.Chart_ScreenSizeStats,
-                        data_function: Generic_DataTranslator,
-                        chart_url: '/api/Stats/ScreenSizeStats/' + state.webSiteId
-                    },
-                    {
-                        chart: state.Chart_LocationStats,
-                        data_function: Generic_DataTranslator,
-                        chart_url: '/api/Stats/LocationStats/' + state.webSiteId
-                    }
-                ];
-                var dateData = {
-                    CurrentStartDate: state.CurrentStartDate,
-                    CurrentEndDate: state.CurrentEndDate
-                };
-                for (var i = 0; i < url_Charts.length; i++) {
-                    state.Refresh_Chart_UI(
-                        methodType, url_Charts[i].chart_url,
-                        dateData, url_Charts[i].chart,
-                        url_Charts[i].data_function
-                    );
-                }
+                state.SetUp_Chart_UI();
             });
         },
         headers: {
             'Content-Type': 'application/json; charset=utf-8',
             Accept: 'application/json'
+        },
+        titleOptions: {
+            fontSize: 14,
+            fontColor: 'black',
+            display: true,
+        },
+        scaleOptions: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    fontSize: 14,
+                    fontFamily: "'Roboto', sans-serif",
+                    fontColor: 'black',
+                    fontStyle: '500'
+                }
+            }],
+            xAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    stepSize: 10,
+                    fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: 'black', fontStyle: '500'
+                }
+            }]
+        },
+        scaleOptionsCountViews: {
+            yAxes: [{
+                ticks:
+                {
+                    beginAtZero: true,
+                    fontSize: 14,
+                    fontFamily: "'Roboto', sans-serif",
+                    fontColor: 'black',
+                    fontStyle: '500'
+                }
+            }],
+            xAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    stepSize: 10,
+                    fontSize: 12,
+                    fontFamily: "'Roboto', sans-serif",
+                    fontColor: 'black',
+                    fontStyle: '500',
+                    autoSkip: false,
+                    maxRotation: 90,
+                    minRotation: 90
+                }
+            }]
+        },
+        SetUp_Refs: function () {
+            state.webSiteId = document.querySelector('script[data-website-id]').getAttribute("data-website-id");
+            state.PageViewCountChartNode = document.getElementById("bar-chart-PageViewCounts");
+            state.URLRoutesVisitedChartNode = document.getElementById("bar-chart-InteractionStats");
+            state.BrowserTypeStatsChartNode = document.getElementById("bar-chart-BrowserStats");
+            state.SystemStatsChartNode = document.getElementById("bar-chart-SystemStats");
+            state.ScreenSizeStatsChartNode = document.getElementById("bar-chart-ScreenStats");
+            state.LocationOfVisitorsStatsChartNode = document.getElementById("bar-chart-LocationStats");
+            state.InteractionStats_NotFoundText = document.getElementById("InteractionStats-NotFoundText");
+            state.BrowserStats_NotFoundText = document.getElementById("BrowserStats-NotFoundText");
+            state.SystemStats_NotFoundText = document.getElementById("SystemStats-NotFoundText");
+            state.ScreenStats_NotFoundText = document.getElementById("ScreenStats-NotFoundText");
+            state.LocationStats_NotFoundText = document.getElementById("LocationStats-NotFoundText");
+            state.Chart_PageViewStats = new Chart(state.PageViewCountChartNode, {
+                type: 'line',
+                options: {
+                    legend: { display: false },
+                    title: {
+                        fontSize: state.titleOptions.fontSize,
+                        fontColor: state.titleOptions.fontColor,
+                        display: state.titleOptions.display,
+                        text: 'Page View Counts'
+                    },
+                    scales: state.scaleOptionsCountViews
+                }
+            });
+            state.Chart_InteractionStats = new Chart(state.URLRoutesVisitedChartNode, {
+                type: 'horizontalBar',
+                options: {
+                    legend: { display: false },
+                    title: {
+                        fontSize: state.titleOptions.fontSize,
+                        fontColor: state.titleOptions.fontColor,
+                        display: state.titleOptions.display,
+                        text: 'Page Interactions'
+                    },
+                    scales: state.scaleOptions
+                }
+            });
+            state.Chart_BrowserStats = new Chart(state.BrowserTypeStatsChartNode, {
+                type: 'horizontalBar',
+                options: {
+                    legend: { display: false },
+                    title: {
+                        fontSize: state.titleOptions.fontSize,
+                        fontColor: state.titleOptions.fontColor,
+                        display: state.titleOptions.display,
+                        text: 'Browser Types'
+                    },
+                    scales: state.scaleOptions
+                }
+            });
+            state.Chart_SystemStats = new Chart(state.SystemStatsChartNode, {
+                type: 'horizontalBar',
+                options: {
+                    legend: { display: false },
+                    title: {
+                        fontSize: state.titleOptions.fontSize,
+                        fontColor: state.titleOptions.fontColor,
+                        display: state.titleOptions.display,
+                        text: 'System Types'
+                    },
+                    scales: state.scaleOptions
+                }
+            });
+            state.Chart_ScreenSizeStats = new Chart(state.ScreenSizeStatsChartNode, {
+                type: 'horizontalBar',
+                options: {
+                    legend: { display: false },
+                    title: {
+                        fontSize: state.titleOptions.fontSize,
+                        fontColor: state.titleOptions.fontColor,
+                        display: state.titleOptions.display,
+                        text: 'Screen Sizes'
+                    },
+                    scales: state.scaleOptions
+                }
+            });
+            state.Chart_LocationStats = new Chart(state.LocationOfVisitorsStatsChartNode, {
+                type: 'horizontalBar',
+                options: {
+                    legend: { display: false },
+                    title: {
+                        fontSize: state.titleOptions.fontSize,
+                        fontColor: state.titleOptions.fontColor,
+                        display: state.titleOptions.display,
+                        text: 'Screen Sizes'
+                    },
+                    scales: state.scaleOptions
+                }
+            });
         }
     }
+    state.SetUp_Refs();
     state.Set_BaseDate();
     state.Hid_NotFoundText();
     state.SetUp_DateTimePickers();
     state.SetUp_DateTime_Event_Listeners();
-   
-    var scaleOptions = {
-        yAxes: [{
-            ticks: {
-                beginAtZero: true,
-                fontSize: 14,
-                fontFamily: "'Roboto', sans-serif",
-                fontColor: 'black',
-                fontStyle: '500'
-            }
-        }],
-        xAxes: [{
-            ticks: {
-                beginAtZero: true,
-                stepSize: 10,
-                fontSize: 14, fontFamily: "'Roboto', sans-serif", fontColor: 'black', fontStyle: '500'
-            }
-        }]
-    }
-    var scaleOptionsCountViews = {
-        yAxes: [{
-            ticks:
-            {
-                beginAtZero: true,
-                fontSize: 14,
-                fontFamily: "'Roboto', sans-serif",
-                fontColor: 'black',
-                fontStyle: '500'
-            }
-        }],
-        xAxes: [{
-            ticks: {
-                beginAtZero: true,
-                stepSize: 10,
-                fontSize: 12,
-                fontFamily: "'Roboto', sans-serif",
-                fontColor: 'black',
-                fontStyle: '500',
-                autoSkip: false,
-                maxRotation: 90,
-                minRotation: 90
-            }
-        }]
-    }
-    var titleOptions = {
-        fontSize: 14,
-        fontColor: 'black',
-        display: true,
-    }
+    state.SetUp_Chart_UI();
     if (state.GetDeviceType() === 'mobile') {
         ISChart.height = 80;
         BSChart.height = 40;
@@ -247,255 +446,5 @@
         ScreenSChart.height = 40;
         LocationSChart.height = 40;
     }
-
-
-    axios({ method: 'post', url: '/api/Stats/PageViewCountStats/' + state.webSiteId, data: state.baseDateTime, headers: state.headers })
-        .then(function (response) {
-            var data = response.data;
-            var GLabels = [];
-            var GData = [];
-            data.forEach(function (stat) {
-                GLabels.push(moment(stat.createdAt).local().format('YYYY-MM-DD HH:mm:ss'));
-                GData.push(stat.count);
-            });
-            state.Chart_PageViewStats = new Chart(state.PageViewCountChartNode, {
-                type: 'line',
-                data: {
-                    labels: GLabels,
-                    datasets: [
-                        {
-                            borderColor: 'rgb(255, 99, 132)',
-                            label: "Counts",
-                            data: GData
-                        }
-                    ],
-                    fill: false
-                },
-                options: {
-                    legend: { display: false },
-                    title: {
-                        fontSize: 18,
-                        fontColor: titleOptions.fontColor,
-                        display: titleOptions.display,
-                        text: 'Page View Counts'
-                    },
-                    scales: scaleOptionsCountViews
-                }
-            });
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-
-    axios({ method: 'post', url: '/api/Stats/InteractionStats/' + state.webSiteId, data: state.baseDateTime, headers: state.headers })
-        .then(function (response) {
-            var data = response.data;
-            var GLabels = [];
-            var GData = [];
-            state.Display_Error_Message(data, state.InteractionStats_NotFoundText, state.Error_Message)
-            data.forEach(function (stat) {
-                GLabels.push(stat.path);
-                GData.push(stat.total);
-            });
-            state.Chart_InteractionStats = new Chart(state.URLRoutesVisitedChartNode, {
-                type: 'horizontalBar',
-                data: {
-                    labels: GLabels,
-                    datasets: [
-                        {
-                            label: "Counts",
-                            backgroundColor: chroma.scale(state.newGradArr).mode('lch').colors(GData.length),
-                            data: GData
-                        }
-                    ]
-                },
-                options: {
-                    legend: { display: false },
-                    title: {
-                        fontSize: 18,
-                        fontColor: titleOptions.fontColor,
-                        display: titleOptions.display,
-                        text: 'Page Interactions'
-                    },
-                    scales: scaleOptions
-                }
-            });
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-
-    axios({ method: 'post', url: '/api/Stats/BrowserStats/' + state.webSiteId, data: state.baseDateTime, headers: state.headers })
-        .then(function (response) {
-            var data = response.data;
-            state.Display_Error_Message(data, state.BrowserStats_NotFoundText, state.Error_Message)
-            var Blabels = []
-            var Bdata = []
-            data.forEach(function (stat) {
-                Blabels.push(stat.browser + " " + stat.version);
-                Bdata.push(stat.count);
-            });
-            state.Chart_BrowserStats = new Chart(state.BrowserTypeStatsChartNode, {
-                type: 'horizontalBar',
-                data: {
-                    labels: Blabels,
-                    datasets: [
-                        {
-                            label: "Counts",
-                            backgroundColor: chroma.scale(state.newGradArr).mode('lch').colors(Bdata.length),
-                            data: Bdata
-                        }
-                    ]
-                },
-                options: {
-                    legend: { display: false },
-                    title: {
-                        fontSize: titleOptions.fontSize,
-                        fontColor: titleOptions.fontColor,
-                        display: titleOptions.display,
-                        text: 'Browser Stats'
-                    },
-                    scales: scaleOptions
-                }
-            });
-
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-
-    axios({ method: 'post', url: '/api/Stats/SystemStats/' + state.webSiteId, data: state.baseDateTime, headers: state.headers })
-        .then(function (response) {
-            var data = response.data;
-            state.Display_Error_Message(data, state.SystemStats_NotFoundText, state.Error_Message)
-            var Slabels = [];
-            var Sdata = [];
-            data.forEach(function (stat) {
-                Slabels.push(stat.platform + " " + stat.version);
-                Sdata.push(stat.count);
-            });
-            state.Chart_SystemStats = new Chart(state.SystemStatsChartNode, {
-                type: 'horizontalBar',
-                data: {
-                    labels: Slabels,
-                    datasets: [
-                        {
-                            label: "Counts",
-                            backgroundColor: chroma.scale(state.newGradArr).mode('lch').colors(Sdata.length),
-                            data: Sdata
-                        }
-                    ]
-                },
-                options: {
-                    legend: { display: false },
-                    title: {
-                        fontSize: titleOptions.fontSize,
-                        fontColor: titleOptions.fontColor,
-                        display: titleOptions.display,
-                        text: 'System Stats'
-                    },
-                    scales: scaleOptions
-                }
-            });
-
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-
-    axios({ method: 'post', url: '/api/Stats/ScreenSizeStats/' + state.webSiteId, data: state.baseDateTime, headers: state.headers })
-        .then(function (response) {
-            var data = response.data;
-            var Blabels = [
-                'Phones',
-                'Large Phones',
-                'Tables',
-                'Desktops',
-                'Monitors 4K Plus'
-            ];
-            var hashName = {
-                'numberOfPhones': 'Phones',
-                'largePhonesSmallTablets': 'Large Phones',
-                'tabletsSmallLaptops': 'Tables',
-                'computerMonitors': 'Desktops',
-                'computerMonitors4K': 'Monitors 4K Plus'
-            }
-            var Bdata = [];
-            for (var key in data[0]) {
-                for (var label in Blabels) {
-                    if (hashName[key] === Blabels[label]) {
-                        Bdata.push(data[0][key])
-                    }
-                }
-            }
-            console.log(Bdata)
-            state.Display_Error_Message(Bdata, state.ScreenStats_NotFoundText, state.Error_Message)
-
-            state.Chart_ScreenSizeStats = new Chart(state.ScreenSizeStatsChartNode, {
-                type: 'horizontalBar',
-                data: {
-                    labels: Blabels,
-                    datasets: [
-                        {
-                            label: "Counts",
-                            backgroundColor: chroma.scale(state.newGradArr).mode('lch').colors(Bdata.length),
-                            data: Bdata
-                        }
-                    ]
-                },
-                options: {
-                    legend: { display: false },
-                    title: {
-                        fontSize: titleOptions.fontSize,
-                        fontColor: titleOptions.fontColor,
-                        display: titleOptions.display,
-                        text: 'Screen Size Stats'
-                    },
-                    scales: scaleOptions
-                }
-            });
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-
-    axios({ method: 'post', url: '/api/Stats/LocationStats/' + state.webSiteId, data: state.baseDateTime, headers: state.headers })
-        .then(function (response) {
-            var data = response.data;
-            state.Display_Error_Message(data, state.LocationStats_NotFoundText, state.Error_Message)
-            var Blabels = []
-            var Bdata = []
-            data.forEach(function (stat) {
-                Blabels.push(stat.location);
-                Bdata.push(stat.count);
-            });
-            state.Chart_LocationStats = new Chart(state.LocationOfVisitorsStatsChartNode, {
-                type: 'horizontalBar',
-                data: {
-                    labels: Blabels,
-                    datasets: [
-                        {
-                            label: "Counts",
-                            backgroundColor: chroma.scale(state.newGradArr).mode('lch').colors(Bdata.length),
-                            data: Bdata
-                        }
-                    ]
-                },
-                options: {
-                    legend: { display: false },
-                    title: {
-                        fontSize: titleOptions.fontSize,
-                        fontColor: titleOptions.fontColor,
-                        display: titleOptions.display,
-                        text: 'Location Stats'
-                    },
-                    scales: scaleOptions
-                }
-            });
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-
 
 })
