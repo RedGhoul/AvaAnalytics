@@ -1,0 +1,10 @@
+appsettings.json
+bin
+obj
+wwwroot/lib
+SharpCounter.csproj.user
+.vs/SharpCounter/DesignTimeBuild/.dtbcache.v2
+.vs/SharpCounter/v16/.suo
+GeoLite2-Country.mmdb
+node_modules
+GeoLite2-Country_20200630.tar.gz
