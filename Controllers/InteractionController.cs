@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.Repository;
+using Domain;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using SharpCounter.Dapper;
-using SharpCounter.Enities;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;

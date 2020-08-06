@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Application.DTO;
+using Application.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SharpCounter.Dapper;
-using SharpCounter.Data;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

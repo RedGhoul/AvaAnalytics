@@ -1,7 +1,7 @@
-﻿using Hangfire;
+﻿using Domain;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
-using SharpCounter.Data;
-using SharpCounter.Enities;
+using Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;

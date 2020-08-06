@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Domain;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using SharpCounter.Enities;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 namespace SharpCounter.Areas.Identity.Pages.Account.Manage

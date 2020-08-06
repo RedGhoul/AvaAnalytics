@@ -14,17 +14,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200628135532_addedNewRelation.cs" />
-    <Compile Remove="Migrations\20200628135532_addedNewRelation.Designer.cs" />
-    <Compile Remove="Migrations\20200702172051_changedToIntsInteractions.cs" />
-    <Compile Remove="Migrations\20200702172051_changedToIntsInteractions.Designer.cs" />
-    <Compile Remove="Migrations\20200806155557_changedTableNames.cs" />
-    <Compile Remove="Migrations\20200806155557_changedTableNames.Designer.cs" />
-    <Compile Remove="Migrations\20200806155756_changedTableNames.cs" />
-    <Compile Remove="Migrations\20200806155756_changedTableNames.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="Dapper.Extensions.PostgreSql" Version="3.2.0" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.12" />
@@ -58,6 +47,12 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\js\prod\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Application\Application.csproj" />
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\Persistence\Persistence.csproj" />
   </ItemGroup>
 
 </Project>
