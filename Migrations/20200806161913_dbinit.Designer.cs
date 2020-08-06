@@ -10,15 +10,15 @@ using SharpCounter.Data;
 namespace SharpCounter.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200628135816_addedNewRelation")]
-    partial class addedNewRelation
+    [Migration("20200806161913_dbinit")]
+    partial class dbinit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                .HasAnnotation("ProductVersion", "3.1.5")
+                .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -273,6 +273,9 @@ namespace SharpCounter.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<double>("DevicePixelRatio")
+                        .HasColumnType("double precision");
+
                     b.Property<bool>("FirstVisit")
                         .HasColumnType("boolean");
 
@@ -287,6 +290,12 @@ namespace SharpCounter.Migrations
 
                     b.Property<string>("Referrer")
                         .HasColumnType("text");
+
+                    b.Property<double>("ScreenHeight")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("ScreenWidth")
+                        .HasColumnType("double precision");
 
                     b.Property<int>("SessionId")
                         .HasColumnType("integer");
@@ -303,9 +312,15 @@ namespace SharpCounter.Migrations
 
                     b.HasIndex("CreatedAt");
 
+                    b.HasIndex("DevicePixelRatio");
+
                     b.HasIndex("FirstVisit");
 
                     b.HasIndex("Path");
+
+                    b.HasIndex("ScreenHeight");
+
+                    b.HasIndex("ScreenWidth");
 
                     b.HasIndex("SessionId");
 
@@ -314,17 +329,17 @@ namespace SharpCounter.Migrations
                     b.ToTable("Interactions");
                 });
 
-            modelBuilder.Entity("SharpCounter.Enities.InteractionCounts", b =>
+            modelBuilder.Entity("SharpCounter.Enities.InteractionByPathCounts", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<DateTime>("Hour")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("InteractionStatsId")
+                    b.Property<int>("InteractionPathGroupStatsId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Path")
@@ -338,9 +353,9 @@ namespace SharpCounter.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Hour");
+                    b.HasIndex("Date");
 
-                    b.HasIndex("InteractionStatsId");
+                    b.HasIndex("InteractionPathGroupStatsId");
 
                     b.HasIndex("Path");
 
@@ -349,7 +364,7 @@ namespace SharpCounter.Migrations
                     b.ToTable("InteractionCounts");
                 });
 
-            modelBuilder.Entity("SharpCounter.Enities.InteractionStats", b =>
+            modelBuilder.Entity("SharpCounter.Enities.InteractionPathGroupStats", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -359,8 +374,8 @@ namespace SharpCounter.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("Title")
-                        .HasColumnType("text");
+                    b.Property<int>("TotalRoutes")
+                        .HasColumnType("integer");
 
                     b.Property<int>("WebSiteId")
                         .HasColumnType("integer");
@@ -401,6 +416,68 @@ namespace SharpCounter.Migrations
                     b.HasIndex("WebSiteId");
 
                     b.ToTable("LocationStats");
+                });
+
+            modelBuilder.Entity("SharpCounter.Enities.PageViewStats", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<double>("Count")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("WebSiteId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("WebSiteId");
+
+                    b.ToTable("PageViewStats");
+                });
+
+            modelBuilder.Entity("SharpCounter.Enities.ScreenSizeStats", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int>("ComputerMonitors")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ComputerMonitors4K")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("LargePhonesSmallTablets")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("NumberOfPhones")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TabletsSmallLaptops")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("WebSiteId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Date");
+
+                    b.HasIndex("WebSiteId");
+
+                    b.ToTable("ScreenSizeStats");
                 });
 
             modelBuilder.Entity("SharpCounter.Enities.Session", b =>
@@ -484,10 +561,14 @@ namespace SharpCounter.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("LinkDomain")
+                    b.Property<string>("HomePageLink")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.Property<string>("OwnerId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -578,25 +659,25 @@ namespace SharpCounter.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SharpCounter.Enities.InteractionCounts", b =>
+            modelBuilder.Entity("SharpCounter.Enities.InteractionByPathCounts", b =>
                 {
-                    b.HasOne("SharpCounter.Enities.InteractionStats", "InteractionStats")
-                        .WithMany("InteractionCounts")
-                        .HasForeignKey("InteractionStatsId")
+                    b.HasOne("SharpCounter.Enities.InteractionPathGroupStats", "InteractionPathGroupStats")
+                        .WithMany("InteractionByPathCounts")
+                        .HasForeignKey("InteractionPathGroupStatsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SharpCounter.Enities.WebSites", "WebSite")
-                        .WithMany("InteractionCounts")
+                        .WithMany("InteractionByPathCounts")
                         .HasForeignKey("WebSiteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SharpCounter.Enities.InteractionStats", b =>
+            modelBuilder.Entity("SharpCounter.Enities.InteractionPathGroupStats", b =>
                 {
                     b.HasOne("SharpCounter.Enities.WebSites", "WebSite")
-                        .WithMany("InteractionStats")
+                        .WithMany("InteractionPathGroupStats")
                         .HasForeignKey("WebSiteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -606,6 +687,24 @@ namespace SharpCounter.Migrations
                 {
                     b.HasOne("SharpCounter.Enities.WebSites", "WebSite")
                         .WithMany("LocationStats")
+                        .HasForeignKey("WebSiteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SharpCounter.Enities.PageViewStats", b =>
+                {
+                    b.HasOne("SharpCounter.Enities.WebSites", "WebSite")
+                        .WithMany("PageViewStats")
+                        .HasForeignKey("WebSiteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SharpCounter.Enities.ScreenSizeStats", b =>
+                {
+                    b.HasOne("SharpCounter.Enities.WebSites", "WebSite")
+                        .WithMany("ScreenSizeStats")
                         .HasForeignKey("WebSiteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -633,7 +732,9 @@ namespace SharpCounter.Migrations
                 {
                     b.HasOne("SharpCounter.Enities.ApplicationUser", "Owner")
                         .WithMany("Websites")
-                        .HasForeignKey("OwnerId");
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace SharpCounter.HangFire
 {
-    public class InteractionStatsJob : IMyJob
+    public class InteractionByPathStatsJob : IMyJob
     {
         private readonly ApplicationDbContext _ctx;
 
-        public InteractionStatsJob(ApplicationDbContext ctx)
+        public InteractionByPathStatsJob(ApplicationDbContext ctx)
         {
             _ctx = ctx;
         }
@@ -30,37 +30,37 @@ namespace SharpCounter.HangFire
             List<int> allSites = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
             for (int websiteIndex = 0; websiteIndex < allSites.Count; websiteIndex++)
             {
-                List<InteractionCounts> pathCount = await _ctx.Interactions.Where(
+                List<InteractionByPathCounts> pathCount = await _ctx.Interactions.Where(
                     x => x.WebSiteId == allSites[websiteIndex] &&
                     x.CreatedAt <= now &&
                     x.CreatedAt > oneHourAgo)
                     .GroupBy(x => x.Path)
-                    .Select(d => new InteractionCounts
+                    .Select(d => new InteractionByPathCounts
                     {
                         Path = d.Key,
                         Total = d.Count()
                     }).ToListAsync();
 
-                InteractionStats interactionStats = new InteractionStats
+                InteractionPathGroupStats interactionPathGroupStats = new InteractionPathGroupStats
                 {
                     Date = DateTime.UtcNow,
                     WebSiteId = allSites[websiteIndex],
                     TotalRoutes = pathCount.Count
                 };
-                _ctx.Add(interactionStats);
+                _ctx.Add(interactionPathGroupStats);
                 await _ctx.SaveChangesAsync();
 
                 for (int pathCountIndex = 0; pathCountIndex < pathCount.Count; pathCountIndex++)
                 {
-                    InteractionCounts InteractionCounts = new InteractionCounts
+                    InteractionByPathCounts InteractionByPathCounts = new InteractionByPathCounts
                     {
                         WebSiteId = allSites[websiteIndex],
                         Path = pathCount[pathCountIndex].Path,
                         Date = DateTime.UtcNow,
                         Total = pathCount[pathCountIndex].Total,
-                        InteractionStatsId = interactionStats.Id
+                        InteractionPathGroupStatsId = interactionPathGroupStats.Id
                     };
-                    _ctx.Add(InteractionCounts);
+                    _ctx.Add(InteractionByPathCounts);
                     await _ctx.SaveChangesAsync();
                 }
 

@@ -18,8 +18,8 @@ namespace SharpCounter.HangFire
                 job => job.Run(JobCancellationToken.Null),
                 "*/32 * * * *", TimeZoneInfo.Local);
 
-            RecurringJob.RemoveIfExists(nameof(InteractionStatsJob));
-            RecurringJob.AddOrUpdate<InteractionStatsJob>(nameof(InteractionStatsJob),
+            RecurringJob.RemoveIfExists(nameof(InteractionByPathStatsJob));
+            RecurringJob.AddOrUpdate<InteractionByPathStatsJob>(nameof(InteractionByPathStatsJob),
                 job => job.Run(JobCancellationToken.Null),
                 "*/34 * * * *", TimeZoneInfo.Local);
 

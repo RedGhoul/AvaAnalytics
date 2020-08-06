@@ -13,8 +13,8 @@ namespace SharpCounter.Data
 
         public DbSet<BrowserStats> BrowserStats { get; set; }
         public DbSet<Interaction> Interactions { get; set; }
-        public DbSet<InteractionCounts> InteractionCounts { get; set; }
-        public DbSet<InteractionStats> InteractionStats { get; set; }
+        public DbSet<InteractionByPathCounts> InteractionCounts { get; set; }
+        public DbSet<InteractionPathGroupStats> InteractionStats { get; set; }
         public DbSet<LocationStats> LocationStats { get; set; }
         public DbSet<ScreenSizeStats> ScreenSizeStats { get; set; }
         public DbSet<PageViewStats> PageViewStats { get; set; }
@@ -74,32 +74,32 @@ namespace SharpCounter.Data
             modelBuilder.Entity<Interaction>()
                 .HasIndex(b => b.DevicePixelRatio);
 
-            modelBuilder.Entity<InteractionCounts>()
+            modelBuilder.Entity<InteractionByPathCounts>()
                 .HasOne(w => w.WebSite)
-                .WithMany(w => w.InteractionCounts)
+                .WithMany(w => w.InteractionByPathCounts)
                 .HasForeignKey(w => w.WebSiteId)
                 .IsRequired();
 
-            modelBuilder.Entity<InteractionCounts>()
-                .HasOne(w => w.InteractionStats)
-                .WithMany(w => w.InteractionCounts)
-                .HasForeignKey(w => w.InteractionStatsId)
+            modelBuilder.Entity<InteractionByPathCounts>()
+                .HasOne(w => w.InteractionPathGroupStats)
+                .WithMany(w => w.InteractionByPathCounts)
+                .HasForeignKey(w => w.InteractionPathGroupStatsId)
                 .IsRequired();
 
-            modelBuilder.Entity<InteractionCounts>()
+            modelBuilder.Entity<InteractionByPathCounts>()
                 .HasIndex(x => x.Path);
 
-            modelBuilder.Entity<InteractionCounts>()
+            modelBuilder.Entity<InteractionByPathCounts>()
                 .HasIndex(x => x.Date);
 
 
-            modelBuilder.Entity<InteractionStats>()
+            modelBuilder.Entity<InteractionPathGroupStats>()
                 .HasOne(w => w.WebSite)
-                .WithMany(w => w.InteractionStats)
+                .WithMany(w => w.InteractionPathGroupStats)
                 .HasForeignKey(w => w.WebSiteId)
                 .IsRequired();
 
-            modelBuilder.Entity<InteractionStats>()
+            modelBuilder.Entity<InteractionPathGroupStats>()
                 .HasIndex(x => x.Date);
 
             modelBuilder.Entity<LocationStats>()

@@ -16,7 +16,7 @@ namespace SharpCounter.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                .HasAnnotation("ProductVersion", "3.1.5")
+                .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -327,7 +327,7 @@ namespace SharpCounter.Migrations
                     b.ToTable("Interactions");
                 });
 
-            modelBuilder.Entity("SharpCounter.Enities.InteractionCounts", b =>
+            modelBuilder.Entity("SharpCounter.Enities.InteractionByPathCounts", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -337,7 +337,7 @@ namespace SharpCounter.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("InteractionStatsId")
+                    b.Property<int>("InteractionPathGroupStatsId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Path")
@@ -353,7 +353,7 @@ namespace SharpCounter.Migrations
 
                     b.HasIndex("Date");
 
-                    b.HasIndex("InteractionStatsId");
+                    b.HasIndex("InteractionPathGroupStatsId");
 
                     b.HasIndex("Path");
 
@@ -362,7 +362,7 @@ namespace SharpCounter.Migrations
                     b.ToTable("InteractionCounts");
                 });
 
-            modelBuilder.Entity("SharpCounter.Enities.InteractionStats", b =>
+            modelBuilder.Entity("SharpCounter.Enities.InteractionPathGroupStats", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -657,25 +657,25 @@ namespace SharpCounter.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SharpCounter.Enities.InteractionCounts", b =>
+            modelBuilder.Entity("SharpCounter.Enities.InteractionByPathCounts", b =>
                 {
-                    b.HasOne("SharpCounter.Enities.InteractionStats", "InteractionStats")
-                        .WithMany("InteractionCounts")
-                        .HasForeignKey("InteractionStatsId")
+                    b.HasOne("SharpCounter.Enities.InteractionPathGroupStats", "InteractionPathGroupStats")
+                        .WithMany("InteractionByPathCounts")
+                        .HasForeignKey("InteractionPathGroupStatsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SharpCounter.Enities.WebSites", "WebSite")
-                        .WithMany("InteractionCounts")
+                        .WithMany("InteractionByPathCounts")
                         .HasForeignKey("WebSiteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SharpCounter.Enities.InteractionStats", b =>
+            modelBuilder.Entity("SharpCounter.Enities.InteractionPathGroupStats", b =>
                 {
                     b.HasOne("SharpCounter.Enities.WebSites", "WebSite")
-                        .WithMany("InteractionStats")
+                        .WithMany("InteractionPathGroupStats")
                         .HasForeignKey("WebSiteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

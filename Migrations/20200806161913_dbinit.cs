@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using System;
 
 namespace SharpCounter.Migrations
 {
-    public partial class initDB : Migration
+    public partial class dbinit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -163,10 +163,11 @@ namespace SharpCounter.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     APIKey = table.Column<string>(nullable: true),
-                    LinkDomain = table.Column<string>(nullable: true),
+                    HomePageLink = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UpdatedAt = table.Column<DateTime>(nullable: false),
-                    OwnerId = table.Column<string>(nullable: true)
+                    OwnerId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -176,7 +177,7 @@ namespace SharpCounter.Migrations
                         column: x => x.OwnerId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -190,7 +191,7 @@ namespace SharpCounter.Migrations
                     Version = table.Column<string>(nullable: true),
                     Count = table.Column<int>(nullable: false),
                     CountUnique = table.Column<int>(nullable: false),
-                    WebSiteId = table.Column<int>(nullable: true)
+                    WebSiteId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -200,31 +201,7 @@ namespace SharpCounter.Migrations
                         column: x => x.WebSiteId,
                         principalTable: "WebSites",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "InteractionCounts",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    WebSiteId = table.Column<int>(nullable: true),
-                    Path = table.Column<string>(nullable: true),
-                    Title = table.Column<string>(nullable: true),
-                    Hour = table.Column<DateTime>(nullable: false),
-                    Total = table.Column<int>(nullable: false),
-                    TotalUnique = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_InteractionCounts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_InteractionCounts_WebSites_WebSiteId",
-                        column: x => x.WebSiteId,
-                        principalTable: "WebSites",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -233,10 +210,9 @@ namespace SharpCounter.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    InteractionStatsId = table.Column<int>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
-                    WebSiteId = table.Column<int>(nullable: true),
-                    Title = table.Column<string>(nullable: true)
+                    WebSiteId = table.Column<int>(nullable: false),
+                    TotalRoutes = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -246,7 +222,7 @@ namespace SharpCounter.Migrations
                         column: x => x.WebSiteId,
                         principalTable: "WebSites",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -255,7 +231,7 @@ namespace SharpCounter.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    WebSiteId = table.Column<int>(nullable: true),
+                    WebSiteId = table.Column<int>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
                     Location = table.Column<string>(nullable: true),
                     Count = table.Column<int>(nullable: false),
@@ -269,7 +245,53 @@ namespace SharpCounter.Migrations
                         column: x => x.WebSiteId,
                         principalTable: "WebSites",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PageViewStats",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Count = table.Column<double>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    WebSiteId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PageViewStats", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PageViewStats_WebSites_WebSiteId",
+                        column: x => x.WebSiteId,
+                        principalTable: "WebSites",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ScreenSizeStats",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Date = table.Column<DateTime>(nullable: false),
+                    NumberOfPhones = table.Column<int>(nullable: false),
+                    LargePhonesSmallTablets = table.Column<int>(nullable: false),
+                    TabletsSmallLaptops = table.Column<int>(nullable: false),
+                    ComputerMonitors = table.Column<int>(nullable: false),
+                    ComputerMonitors4K = table.Column<int>(nullable: false),
+                    WebSiteId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ScreenSizeStats", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ScreenSizeStats_WebSites_WebSiteId",
+                        column: x => x.WebSiteId,
+                        principalTable: "WebSites",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -278,7 +300,8 @@ namespace SharpCounter.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    WebSiteId = table.Column<int>(nullable: true),
+                    SessionUId = table.Column<string>(nullable: true),
+                    WebSiteId = table.Column<int>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     LastSeen = table.Column<DateTime>(nullable: false)
                 },
@@ -290,7 +313,60 @@ namespace SharpCounter.Migrations
                         column: x => x.WebSiteId,
                         principalTable: "WebSites",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SystemStats",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Day = table.Column<DateTime>(nullable: false),
+                    Version = table.Column<string>(nullable: true),
+                    Platform = table.Column<string>(nullable: true),
+                    Count = table.Column<int>(nullable: false),
+                    CountUnique = table.Column<int>(nullable: false),
+                    WebSiteId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SystemStats", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SystemStats_WebSites_WebSiteId",
+                        column: x => x.WebSiteId,
+                        principalTable: "WebSites",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "InteractionCounts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    WebSiteId = table.Column<int>(nullable: false),
+                    InteractionPathGroupStatsId = table.Column<int>(nullable: false),
+                    Path = table.Column<string>(nullable: true),
+                    Date = table.Column<DateTime>(nullable: false),
+                    Total = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InteractionCounts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_InteractionCounts_InteractionStats_InteractionPathGroupStat~",
+                        column: x => x.InteractionPathGroupStatsId,
+                        principalTable: "InteractionStats",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_InteractionCounts_WebSites_WebSiteId",
+                        column: x => x.WebSiteId,
+                        principalTable: "WebSites",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -299,13 +375,18 @@ namespace SharpCounter.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    WebSiteId = table.Column<int>(nullable: true),
-                    SessionId = table.Column<int>(nullable: true),
+                    WebSiteId = table.Column<int>(nullable: false),
+                    SessionId = table.Column<int>(nullable: false),
                     Path = table.Column<string>(nullable: true),
                     Title = table.Column<string>(nullable: true),
                     Browser = table.Column<string>(nullable: true),
                     Location = table.Column<string>(nullable: true),
+                    Language = table.Column<string>(nullable: true),
                     FirstVisit = table.Column<bool>(nullable: false),
+                    Referrer = table.Column<string>(nullable: true),
+                    ScreenWidth = table.Column<double>(nullable: false),
+                    ScreenHeight = table.Column<double>(nullable: false),
+                    DevicePixelRatio = table.Column<double>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -316,13 +397,13 @@ namespace SharpCounter.Migrations
                         column: x => x.SessionId,
                         principalTable: "Sessions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Interactions_WebSites_WebSiteId",
                         column: x => x.WebSiteId,
                         principalTable: "WebSites",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -363,14 +444,74 @@ namespace SharpCounter.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_BrowserStats_Browser",
+                table: "BrowserStats",
+                column: "Browser");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BrowserStats_Date",
+                table: "BrowserStats",
+                column: "Date");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BrowserStats_WebSiteId",
                 table: "BrowserStats",
                 column: "WebSiteId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_InteractionCounts_Date",
+                table: "InteractionCounts",
+                column: "Date");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InteractionCounts_InteractionPathGroupStatsId",
+                table: "InteractionCounts",
+                column: "InteractionPathGroupStatsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InteractionCounts_Path",
+                table: "InteractionCounts",
+                column: "Path");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_InteractionCounts_WebSiteId",
                 table: "InteractionCounts",
                 column: "WebSiteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Interactions_Browser",
+                table: "Interactions",
+                column: "Browser");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Interactions_CreatedAt",
+                table: "Interactions",
+                column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Interactions_DevicePixelRatio",
+                table: "Interactions",
+                column: "DevicePixelRatio");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Interactions_FirstVisit",
+                table: "Interactions",
+                column: "FirstVisit");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Interactions_Path",
+                table: "Interactions",
+                column: "Path");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Interactions_ScreenHeight",
+                table: "Interactions",
+                column: "ScreenHeight");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Interactions_ScreenWidth",
+                table: "Interactions",
+                column: "ScreenWidth");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Interactions_SessionId",
@@ -383,6 +524,11 @@ namespace SharpCounter.Migrations
                 column: "WebSiteId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_InteractionStats_Date",
+                table: "InteractionStats",
+                column: "Date");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_InteractionStats_WebSiteId",
                 table: "InteractionStats",
                 column: "WebSiteId");
@@ -393,9 +539,65 @@ namespace SharpCounter.Migrations
                 column: "WebSiteId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PageViewStats_CreatedAt",
+                table: "PageViewStats",
+                column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PageViewStats_WebSiteId",
+                table: "PageViewStats",
+                column: "WebSiteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ScreenSizeStats_Date",
+                table: "ScreenSizeStats",
+                column: "Date");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ScreenSizeStats_WebSiteId",
+                table: "ScreenSizeStats",
+                column: "WebSiteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sessions_CreatedAt",
+                table: "Sessions",
+                column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sessions_LastSeen",
+                table: "Sessions",
+                column: "LastSeen");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sessions_SessionUId",
+                table: "Sessions",
+                column: "SessionUId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Sessions_WebSiteId",
                 table: "Sessions",
                 column: "WebSiteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SystemStats_Day",
+                table: "SystemStats",
+                column: "Day");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SystemStats_Platform",
+                table: "SystemStats",
+                column: "Platform");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SystemStats_WebSiteId",
+                table: "SystemStats",
+                column: "WebSiteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WebSites_APIKey",
+                table: "WebSites",
+                column: "APIKey",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_WebSites_OwnerId",
@@ -430,13 +632,22 @@ namespace SharpCounter.Migrations
                 name: "Interactions");
 
             migrationBuilder.DropTable(
-                name: "InteractionStats");
-
-            migrationBuilder.DropTable(
                 name: "LocationStats");
 
             migrationBuilder.DropTable(
+                name: "PageViewStats");
+
+            migrationBuilder.DropTable(
+                name: "ScreenSizeStats");
+
+            migrationBuilder.DropTable(
+                name: "SystemStats");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "InteractionStats");
 
             migrationBuilder.DropTable(
                 name: "Sessions");
