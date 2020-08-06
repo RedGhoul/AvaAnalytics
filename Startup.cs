@@ -12,9 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Persistence;
 using Presentation;
-using SharpCounter.HangFire;
 
-namespace SharpCounter
+namespace Presentation
 {
     public class Startup
     {
@@ -45,13 +44,9 @@ namespace SharpCounter
 
             app.UseBasicConfiguration(env);
 
-            app.ConfigureHangFireAuth();
-
             app.UseAuth();
 
             app.UseEndPoints();
-
-            HangFireJobScheduler.ScheduleRecurringJobs();
             
             await app.CreateAdminRoleForDefaultUser();
         }

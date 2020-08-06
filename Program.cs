@@ -2,6 +2,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Presentation;
 using Sentry;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
@@ -59,8 +60,8 @@ namespace SharpCounter
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
-.UseSerilog()
-.UseStartup<Startup>();
+                .UseSerilog()
+                .UseStartup<Startup>();
         }
     }
 }
