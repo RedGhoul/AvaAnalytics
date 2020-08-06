@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Domain;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using SharpCounter.Data;
-using SharpCounter.Enities;
+using Persistence;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
-namespace SharpCounter
+namespace Presentation
 {
     public static class AppAuthExtentions
     {
