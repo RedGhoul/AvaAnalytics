@@ -1,14 +1,10 @@
 ﻿using Hangfire;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using SharpCounter.Data;
 using SharpCounter.Enities;
-using SharpCounter.HangFire;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using UAParser;
 
@@ -30,12 +26,12 @@ namespace SharpCounter.HangFire
 
         public async Task RunAtTimeOf(DateTime now)
         {
-            var noww = DateTime.UtcNow;
-            var oneHourAgo = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(30));
-            var allSites = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
+            DateTime noww = DateTime.UtcNow;
+            DateTime oneHourAgo = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(30));
+            List<int> allSites = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
             for (int i = 0; i < allSites.Count; i++)
             {
-                var getFirstTime = await _ctx.Interactions.Where(
+                List<BrowserStats> getFirstTime = await _ctx.Interactions.Where(
                     x => x.WebSiteId == allSites[i] &&
                     x.CreatedAt <= noww &&
                     x.CreatedAt > oneHourAgo)
@@ -45,10 +41,10 @@ namespace SharpCounter.HangFire
                         Browser = d.Key,
                         Count = d.Count()
                     }).ToListAsync();
-                
+
                 for (int j = 0; j < getFirstTime.Count; j++)
                 {
-                    var uaParser = Parser.GetDefault();
+                    Parser uaParser = Parser.GetDefault();
                     ClientInfo c = uaParser.Parse(getFirstTime[j].Browser);
                     BrowserStats browserStats = new BrowserStats
                     {

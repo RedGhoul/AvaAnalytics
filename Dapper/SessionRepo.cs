@@ -5,12 +5,11 @@ using SharpCounter.Enities;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SharpCounter.Dapper
 {
-    public class SessionRepo 
+    public class SessionRepo
     {
         private readonly string connectionString;
         public SessionRepo(IConfiguration configuration)
@@ -18,13 +17,7 @@ namespace SharpCounter.Dapper
             connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        internal IDbConnection Connection
-        {
-            get
-            {
-                return new NpgsqlConnection(connectionString);
-            }
-        }
+        internal IDbConnection Connection => new NpgsqlConnection(connectionString);
 
         public async Task Add(Session item)
         {

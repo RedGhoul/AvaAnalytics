@@ -18,20 +18,14 @@ namespace SharpCounter.Dapper
             connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        internal IDbConnection Connection
-        {
-            get
-            {
-                return new NpgsqlConnection(connectionString);
-            }
-        }
+        internal IDbConnection Connection => new NpgsqlConnection(connectionString);
 
 
         public async Task<ICollection<WebSites>> FindAll()
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
-            var result = await dbConnection.QueryAsync<WebSites>(@"SELECT * FROM ""WebSites""");
+            IEnumerable<WebSites> result = await dbConnection.QueryAsync<WebSites>(@"SELECT * FROM ""WebSites""");
             return result.ToList();
         }
 
@@ -47,7 +41,7 @@ namespace SharpCounter.Dapper
             return await dbConnection.QueryFirstOrDefaultAsync<WebSites>(
                     @"SELECT * FROM ""WebSites"" Where ""APIKey"" = @key",
                     new { key });
-            }
+        }
 
         public void Remove(int id)
         {

@@ -1,14 +1,10 @@
 ﻿using Hangfire;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using SharpCounter.Data;
 using SharpCounter.Enities;
-using SharpCounter.HangFire;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SharpCounter.HangFire
@@ -31,12 +27,12 @@ namespace SharpCounter.HangFire
 
         public async Task RunAtTimeOf(DateTime now)
         {
-            var noww = DateTime.UtcNow;
-            var oneHourAgo = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(30));
-            var allSites = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
+            DateTime noww = DateTime.UtcNow;
+            DateTime oneHourAgo = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(30));
+            List<int> allSites = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
             for (int websiteIndex = 0; websiteIndex < allSites.Count; websiteIndex++)
             {
-                var locationCount = await _ctx.Interactions.Where(
+                List<LocationStats> locationCount = await _ctx.Interactions.Where(
                     x => x.WebSiteId == allSites[websiteIndex] &&
                     x.CreatedAt <= noww &&
                     x.CreatedAt > oneHourAgo)

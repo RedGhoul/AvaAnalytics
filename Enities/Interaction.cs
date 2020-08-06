@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SharpCounter.Enities
 {
@@ -9,7 +6,7 @@ namespace SharpCounter.Enities
     {
         public Interaction()
         {
-            this.CreatedAt = DateTime.UtcNow;
+            CreatedAt = DateTime.UtcNow;
         }
         public int Id { get; set; }
         public int WebSiteId { get; set; }
@@ -19,7 +16,7 @@ namespace SharpCounter.Enities
         public string Path { get; set; }
         public string Title { get; set; }
         public string Browser { get; set; }
-        public string  Location { get; set; }
+        public string Location { get; set; }
         public string Language { get; set; }
         public bool FirstVisit { get; set; }
         public string Referrer { get; set; }

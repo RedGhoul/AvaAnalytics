@@ -1,26 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using SharpCounter.Dapper;
+using SharpCounter.Enities;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Dapper;
-using MaxMind.GeoIP2;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Npgsql;
-using SharpCounter.Dapper;
-using SharpCounter.Data;
-using SharpCounter.Enities;
 
 namespace SharpCounter.Controllers
 {
@@ -35,7 +26,7 @@ namespace SharpCounter.Controllers
         private readonly ILogger<InteractionController> _Logger;
 
         public InteractionController(ILogger<InteractionController> logger,
-            InteractionRepo interactionRepo, SessionRepo SessionRepo, 
+            InteractionRepo interactionRepo, SessionRepo SessionRepo,
             WebSiteRepo WebsiteRepo, IDistributedCache cache)
         {
             _cache = cache;
@@ -111,7 +102,7 @@ namespace SharpCounter.Controllers
                     ScreenHeight = double.Parse(screenProps[1]);
                     DevicePixelRatio = double.Parse(String.Format("{0:0.##}", screenProps[2]));
                 }
-                
+
                 string Country = Request.HttpContext.Connection.RemoteIpAddress.ToString();
                 //Country = result.Country.Name;
                 //try
@@ -144,7 +135,7 @@ namespace SharpCounter.Controllers
                     DevicePixelRatio = DevicePixelRatio,
                     CreatedAt = DateTime.UtcNow
                 };
-               
+
                 await _interactionRepo.Add(interaction);
             }
 
@@ -153,7 +144,7 @@ namespace SharpCounter.Controllers
 
         private async Task<ActionResult> SendPngAsync()
         {
-            var image = await _cache.GetAsync("image");
+            byte[] image = await _cache.GetAsync("image");
             if (image == null)
             {
                 Bitmap icon = new Bitmap(1, 1);
@@ -168,9 +159,9 @@ namespace SharpCounter.Controllers
 
         public static string SHA512(string text)
         {
-            var result = default(string);
+            string result = default(string);
 
-            using (var algo = new SHA512Managed())
+            using (SHA512Managed algo = new SHA512Managed())
             {
                 result = GenerateHashString(algo, text);
             }
@@ -181,7 +172,7 @@ namespace SharpCounter.Controllers
         private static string GenerateHashString(HashAlgorithm algo, string text)
         {
             algo.ComputeHash(Encoding.UTF8.GetBytes(text));
-            var result = algo.Hash;
+            byte[] result = algo.Hash;
             return string.Join(
                 string.Empty,
                 result.Select(x => x.ToString("x2")));

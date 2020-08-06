@@ -1,8 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SharpCounter.Config
 {
@@ -12,7 +9,7 @@ namespace SharpCounter.Config
         {
             try
             {
-                var value = Configuration.GetSection("AppSettings")[name];
+                string value = Configuration.GetSection("AppSettings")[name];
                 if (!string.IsNullOrEmpty(value))
                 {
                     return value;
@@ -32,7 +29,7 @@ namespace SharpCounter.Config
         {
             try
             {
-                var value = Configuration.GetConnectionString(name);
+                string value = Configuration.GetConnectionString(name);
                 if (!string.IsNullOrEmpty(value))
                 {
                     return value;

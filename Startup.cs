@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Hangfire;
+using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using SharpCounter.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SharpCounter.Enities;
-using Hangfire;
-using Hangfire.PostgreSql;
-using SharpCounter.HangFire;
 using SharpCounter.Dapper;
+using SharpCounter.Data;
+using SharpCounter.Enities;
+using SharpCounter.HangFire;
 
 namespace SharpCounter
 {
@@ -35,7 +29,7 @@ namespace SharpCounter
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(
                     Configuration.GetConnectionString("DefaultConnection")));
-            
+
             services.AddDistributedRedisCache(options =>
             {
                 options.Configuration = Configuration.GetConnectionString("ConnectionStringRedis");
@@ -111,7 +105,7 @@ namespace SharpCounter
 
             HangFireJobScheduler.ScheduleRecurringJobs();
             await app.CreateAdminRoleForDefaultUser();
-            
+
         }
     }
 }

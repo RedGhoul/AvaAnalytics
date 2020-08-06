@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 using SharpCounter.Data;
-using SharpCounter.Enities;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SharpCounter.Dapper
 {
-    public class StatsRepo 
+    public class StatsRepo
     {
         private readonly string connectionString;
         public StatsRepo(IConfiguration configuration)
@@ -19,22 +18,16 @@ namespace SharpCounter.Dapper
             connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        internal IDbConnection Connection
-        {
-            get
-            {
-                return new NpgsqlConnection(connectionString);
-            }
-        }
+        internal IDbConnection Connection => new NpgsqlConnection(connectionString);
 
         public async Task<List<BrowserStatsDTO>> GetBrowserStats(DateTime curTime, DateTime oldTime, int webSiteId)
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
-            var data = await dbConnection.QueryAsync<BrowserStatsDTO>(
+            IEnumerable<BrowserStatsDTO> data = await dbConnection.QueryAsync<BrowserStatsDTO>(
                 @"SELECT ""Browser"", ""Version"", SUM(""Count"") as ""Count"" FROM ""BrowserStats"" where  
                 ""Date"" <= @curTime and ""Date"" >= @oldTime and ""WebSiteId"" = @Id GROUP By ""Browser"", ""Version""",
-                new { curTime, oldTime , Id = webSiteId });
+                new { curTime, oldTime, Id = webSiteId });
             return data.ToList();
         }
 
@@ -42,7 +35,7 @@ namespace SharpCounter.Dapper
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
-            var data = await dbConnection.QueryAsync<InteractionCountsDTO>(
+            IEnumerable<InteractionCountsDTO> data = await dbConnection.QueryAsync<InteractionCountsDTO>(
                 @"SELECT ""Path"", ""Date"", ""Total"" FROM ""InteractionCounts"" where ""InteractionStatsId"" = (
                 SELECT IDDATE.""Id"" from(SELECT ""Id"", ""Date"" FROM ""InteractionStats"" WHERE ""WebSiteId"" = @Id)
                 as IDDATE where IDDATE.""Date"" = (SELECT MAX(IDDATE2.""Date"") FROM(SELECT ""Id"", ""Date"" FROM 
@@ -55,7 +48,7 @@ namespace SharpCounter.Dapper
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
-            var data = await dbConnection.QueryAsync<SystemStatsDTO>(
+            IEnumerable<SystemStatsDTO> data = await dbConnection.QueryAsync<SystemStatsDTO>(
                 @"SELECT ""Platform"", ""Version"", SUM(""Count"") as ""Count"" 
                 FROM ""SystemStats"" where ""Day"" <= @curTime and 
                 ""Day"" >= @oldTime and ""WebSiteId"" = @Id 
@@ -68,7 +61,7 @@ namespace SharpCounter.Dapper
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
-            var data = await dbConnection.QueryAsync<ScreenSizeStatsDTO>(
+            IEnumerable<ScreenSizeStatsDTO> data = await dbConnection.QueryAsync<ScreenSizeStatsDTO>(
                 @"SELECT SUM(""NumberOfPhones"") as ""NumberOfPhones"", SUM(""LargePhonesSmallTablets"") as ""LargePhonesSmallTablets"",
                 SUM(""TabletsSmallLaptops"") as ""TabletsSmallLaptops"",SUM(""ComputerMonitors"") ""ComputerMonitors"",
                 SUM(""ComputerMonitors4K"") as ""ComputerMonitors4K"" FROM ""ScreenSizeStats"" where ""Date"" <= @curTime and 
@@ -81,7 +74,7 @@ namespace SharpCounter.Dapper
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
-            var data = await dbConnection.QueryAsync<LocationStatsDTO>(
+            IEnumerable<LocationStatsDTO> data = await dbConnection.QueryAsync<LocationStatsDTO>(
                 @"SELECT ""Location"", SUM(""Count"")
                 FROM ""LocationStats"" where ""Date"" <= @curTime and 
                 ""Date"" >= @oldTime and ""WebSiteId"" = @Id group by ""Location""",
@@ -93,7 +86,7 @@ namespace SharpCounter.Dapper
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
-            var data = await dbConnection.QueryAsync<PageViewStatsDTO>(
+            IEnumerable<PageViewStatsDTO> data = await dbConnection.QueryAsync<PageViewStatsDTO>(
                 @"SELECT ""Count"", ""CreatedAt"" FROM ""PageViewStats"" where ""CreatedAt"" <= @EndDate and 
                 ""CreatedAt"" >= @StartDate and ""WebSiteId"" = @Id order by ""CreatedAt"" ASC",
                 new { StartDate, EndDate, Id = webSiteId });

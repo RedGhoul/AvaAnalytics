@@ -27,34 +27,34 @@ namespace SharpCounter.HangFire
 
         public async Task RunAtTimeOf(DateTime now)
         {
-            var oneHourAgo = now.Subtract(TimeSpan.FromMinutes(30));
-            var allSites = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
+            DateTime oneHourAgo = now.Subtract(TimeSpan.FromMinutes(30));
+            List<int> allSites = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
             for (int websiteIndex = 0; websiteIndex < allSites.Count; websiteIndex++)
             {
-                var sizePhones = _ctx.Interactions.Where(
+                int sizePhones = _ctx.Interactions.Where(
                     x => x.WebSiteId == allSites[websiteIndex] &&
                     x.CreatedAt <= now && x.CreatedAt > oneHourAgo &&
                     x.ScreenWidth != 0 && x.ScreenWidth <= 384).Count();
 
-                var sizeLargePhones = _ctx.Interactions.Where(
+                int sizeLargePhones = _ctx.Interactions.Where(
                     x => x.WebSiteId == allSites[websiteIndex] &&
                     x.CreatedAt <= now && x.CreatedAt > oneHourAgo &&
                     x.ScreenWidth != 0 && x.ScreenWidth <= 1024 && x.ScreenWidth > 384)
                     .Count();
 
-                var sizeTablets = _ctx.Interactions.Where(
+                int sizeTablets = _ctx.Interactions.Where(
                     x => x.WebSiteId == allSites[websiteIndex] &&
                     x.CreatedAt <= now && x.CreatedAt > oneHourAgo &&
                     x.ScreenWidth != 0 && x.ScreenWidth <= 1440 && x.ScreenWidth > 1024)
                     .Count();
 
-                var sizeDesktop = _ctx.Interactions.Where(
+                int sizeDesktop = _ctx.Interactions.Where(
                     x => x.WebSiteId == allSites[websiteIndex] &&
                     x.CreatedAt <= now && x.CreatedAt > oneHourAgo &&
                     x.ScreenWidth != 0 && x.ScreenWidth <= 1920 && x.ScreenWidth > 1440)
                     .Count();
 
-                var sizeDesktopHD = _ctx.Interactions.Where(
+                int sizeDesktopHD = _ctx.Interactions.Where(
                     x => x.WebSiteId == allSites[websiteIndex] &&
                     x.CreatedAt <= now && x.CreatedAt > oneHourAgo &&
                     x.ScreenWidth != 0 && x.ScreenWidth > 1920)

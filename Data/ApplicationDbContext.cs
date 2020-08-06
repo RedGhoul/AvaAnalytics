@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using SharpCounter.Enities;
 
@@ -25,7 +24,7 @@ namespace SharpCounter.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            
+
             modelBuilder.Entity<WebSites>()
                 .HasIndex(b => b.APIKey)
                 .IsUnique();

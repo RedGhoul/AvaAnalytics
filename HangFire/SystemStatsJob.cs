@@ -27,12 +27,12 @@ namespace SharpCounter.HangFire
 
         public async Task RunAtTimeOf(DateTime now)
         {
-            var noww = DateTime.UtcNow;
-            var oneHourAgo = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(30));
-            var allSiteIds = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
+            DateTime noww = DateTime.UtcNow;
+            DateTime oneHourAgo = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(30));
+            List<int> allSiteIds = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
             for (int SiteIdIndex = 0; SiteIdIndex < allSiteIds.Count; SiteIdIndex++)
             {
-                var browserInfoFromInteractionArgs = await _ctx.Interactions.Where(
+                List<SystemStats> browserInfoFromInteractionArgs = await _ctx.Interactions.Where(
                     x => x.WebSiteId == allSiteIds[SiteIdIndex] &&
                     x.CreatedAt <= noww &&
                     x.CreatedAt > oneHourAgo)
@@ -45,7 +45,7 @@ namespace SharpCounter.HangFire
 
                 for (int ArgsIndex = 0; ArgsIndex < browserInfoFromInteractionArgs.Count; ArgsIndex++)
                 {
-                    var uaParser = Parser.GetDefault();
+                    Parser uaParser = Parser.GetDefault();
                     ClientInfo c = uaParser.Parse(browserInfoFromInteractionArgs[ArgsIndex].Version);
                     SystemStats SystemStats = new SystemStats
                     {

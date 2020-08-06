@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SharpCounter.Enities
 {
@@ -9,7 +7,7 @@ namespace SharpCounter.Enities
     {
         public Session()
         {
-            this.CreatedAt = DateTime.UtcNow;
+            CreatedAt = DateTime.UtcNow;
         }
         public int Id { get; set; }
         public string SessionUId { get; set; }

@@ -26,11 +26,11 @@ namespace SharpCounter.HangFire
 
         public async Task RunAtTimeOf(DateTime now)
         {
-            var ThirtyMinsAgo = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(30));
-            var allSites = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
+            DateTime ThirtyMinsAgo = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(30));
+            List<int> allSites = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
             for (int curSiteIndex = 0; curSiteIndex < allSites.Count; curSiteIndex++)
             {
-                var InteractionCount = await _ctx.Interactions.Where(
+                List<int> InteractionCount = await _ctx.Interactions.Where(
                     x => x.WebSiteId == allSites[curSiteIndex] &&
                     x.CreatedAt <= now &&
                     x.CreatedAt >= ThirtyMinsAgo)

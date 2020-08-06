@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SharpCounter.Enities
 {
@@ -10,7 +8,7 @@ namespace SharpCounter.Enities
     {
         public ApplicationUser()
         {
-            this.CreatedAt = DateTime.UtcNow;
+            CreatedAt = DateTime.UtcNow;
         }
 
         public string FirstName { get; set; }

@@ -1,18 +1,11 @@
-﻿using Dapper;
-using Hangfire;
+﻿using Hangfire;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Npgsql;
 using SharpCounter.Data;
 using SharpCounter.Enities;
-using SharpCounter.HangFire;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using UAParser;
 
 namespace SharpCounter.HangFire
 {
@@ -33,11 +26,11 @@ namespace SharpCounter.HangFire
 
         public async Task RunAtTimeOf(DateTime now)
         {
-            var oneHourAgo = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(30));
-            var allSites = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
+            DateTime oneHourAgo = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(30));
+            List<int> allSites = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
             for (int websiteIndex = 0; websiteIndex < allSites.Count; websiteIndex++)
             {
-                var pathCount = await _ctx.Interactions.Where(
+                List<InteractionCounts> pathCount = await _ctx.Interactions.Where(
                     x => x.WebSiteId == allSites[websiteIndex] &&
                     x.CreatedAt <= now &&
                     x.CreatedAt > oneHourAgo)

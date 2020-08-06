@@ -1,5 +1,3 @@
-using System;
-
 namespace SharpCounter.ViewModels
 {
     public class ErrorViewModel
