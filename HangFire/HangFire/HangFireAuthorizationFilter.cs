@@ -1,4 +1,5 @@
 ﻿using Hangfire.Dashboard;
+using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
 namespace HangFire
@@ -7,9 +8,10 @@ namespace HangFire
     {
         public bool Authorize(DashboardContext context)
         {
-            Microsoft.AspNetCore.Http.HttpContext httpContext = context.GetHttpContext();
-            string useRole = httpContext.User.FindFirst(ClaimTypes.Role)?.Value;
-            return true;//useRole == "Admin";
+            HttpContext httpContext = context.GetHttpContext();
+            string userRole = httpContext.User.FindFirst(ClaimTypes.Role)?.Value;
+            if (userRole == null) return false;
+            return userRole.Equals("Admin");
         }
     }
 }
