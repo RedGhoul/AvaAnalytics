@@ -1,0 +1,94 @@
+﻿@model Domain.WebSites
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" />
+<div class="row" style="padding-left: 90px;">
+    <div class="col-md-2">
+        
+    </div>
+    <div class="col-md-6">
+        <div class="text-center">
+            <h5 class="display-4">@Model.Name</h5>
+        </div>
+        <div class="row align-items-center" style="padding-top:20px;">
+            <div class="col-3">
+            </div>
+            <div class="col-8">
+                <div class="btn-group" role="group">
+                    <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                    <a class="btn btn-secondary" asp-action="Index">Back to List</a>
+                </div>
+            </div>
+            <div class="col-3">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="row">
+            <form>
+                <div class="form-group">
+                    <label for="date_timepicker_start">Start Date</label>
+                    <input class="form-control" type="text" id="date_timepicker_start" placeholder="Enter Date">
+                </div>
+                <div class="form-group">
+                    <label for="date_timepicker_start">End Date</label>
+                    <input class="form-control" type="text" id="date_timepicker_end" placeholder="Enter Date">
+                </div>
+                <button type="submit" class="btn btn-secondary" id="StatsSerach">Serach</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+<div class="spacer">
+</div>
+<div class="spacer">
+</div>
+<div class="row">
+    <div class="col-12">
+        <canvas id="bar-chart-PageViewCounts" width="130" height="50"></canvas>
+    </div>
+</div>
+<div class="spacer">
+</div>
+<div class="spacer">
+</div>
+<div class="row">
+    <div class="col-12">
+        <div id="InteractionStats-NotFoundText" style="font-size: x-large;" class="alert alert-warning text-center"></div>
+        <canvas id="bar-chart-InteractionStats" width="130" height="50"></canvas>
+    </div>
+</div>
+<div class="spacer">
+</div>
+<div class="row">
+    <div class="col-12 col-md-6">
+        <div id="BrowserStats-NotFoundText" style="font-size: x-large;" class="alert alert-warning text-center"></div>
+        <canvas id="bar-chart-BrowserStats" width="100" height="50"></canvas>
+    </div>
+    <div class="col-12 col-md-6">
+        <div id="SystemStats-NotFoundText" style="font-size: x-large;" class="alert alert-warning text-center"></div>
+        <canvas id="bar-chart-SystemStats" width="100" height="50"></canvas>
+    </div>
+</div>
+<div class="spacer">
+
+</div>
+<div class="row">
+    <div class="col-12 col-md-6">
+        <div id="ScreenStats-NotFoundText" style="font-size: x-large;" class="alert alert-warning text-center"></div>
+        <canvas id="bar-chart-ScreenStats" width="100" height="50"></canvas>
+    </div>
+    <div class="col-12 col-md-6">
+        <div id="LocationStats-NotFoundText" style="font-size: x-large;" class="alert alert-warning text-center"></div>
+        <canvas id="bar-chart-LocationStats" width="100" height="50"></canvas>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"
+            integrity="sha256-T/f7Sju1ZfNNfBh7skWn0idlCBcI3RwdLSS4/I7NQKQ=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.0/chroma.min.js" integrity="sha512-yocoLferfPbcwpCMr8v/B0AB4SWpJlouBwgE0D3ZHaiP1nuu5djZclFEIj9znuqghaZ3tdCMRrreLoM8km+jIQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment-with-locales.min.js" integrity="sha512-qSnlnyh7EcD3vTqRoSP4LYsy2yVuqqmnkM9tW4dWo6xvAoxuVXyM36qZK54fyCmHoY1iKi9FJAUZrlPqmGNXFw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
+    <script src="~/js/detailsChart.js" data-website-id="@Model.Id"></script>
+}
