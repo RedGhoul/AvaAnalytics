@@ -2,7 +2,7 @@
 
 namespace Application.DTO
 {
-    public class InteractionCountsDTO
+    public class InteractionByPathCountsDTO
     {
         public string Path { get; set; }
         public DateTime Hour { get; set; }

@@ -34,7 +34,6 @@ namespace SharpCounter.Controllers
             return File(response.Image, response.ContentType);
 
         }
-
        
     }
 }

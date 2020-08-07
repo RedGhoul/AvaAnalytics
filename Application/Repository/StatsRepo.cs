@@ -31,11 +31,11 @@ namespace Application.Repository
             return data.ToList();
         }
 
-        public async Task<List<InteractionCountsDTO>> GetInteractionStats(int webSiteId)
+        public async Task<List<InteractionByPathCountsDTO>> GetInteractionByPathCounts(int webSiteId)
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
-            IEnumerable<InteractionCountsDTO> data = await dbConnection.QueryAsync<InteractionCountsDTO>(
+            IEnumerable<InteractionByPathCountsDTO> data = await dbConnection.QueryAsync<InteractionByPathCountsDTO>(
                 @"SELECT ""Path"", ""Date"", ""Total"" FROM ""InteractionByPathCounts"" where ""InteractionPathGroupStatsId"" = (
                 SELECT IDDATE.""Id"" from(SELECT ""Id"", ""Date"" FROM ""InteractionPathGroupStats"" WHERE ""WebSiteId"" = @Id)
                 as IDDATE where IDDATE.""Date"" = (SELECT MAX(IDDATE2.""Date"") FROM(SELECT ""Id"", ""Date"" FROM 
@@ -82,14 +82,14 @@ namespace Application.Repository
             return data.ToList();
         }
 
-        public async Task<List<PageViewStatsDTO>> GetPageViewCountStats(DateTime StartDate, DateTime EndDate, int webSiteId)
+        public async Task<List<PageViewStatsDTO>> GetPageViewCountStats(DateTime curTime, DateTime oldTime, int webSiteId)
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
             IEnumerable<PageViewStatsDTO> data = await dbConnection.QueryAsync<PageViewStatsDTO>(
-                @"SELECT ""Count"", ""CreatedAt"" FROM ""PageViewStats"" where ""CreatedAt"" <= @EndDate and 
-                ""CreatedAt"" >= @StartDate and ""WebSiteId"" = @Id order by ""CreatedAt"" ASC",
-                new { StartDate, EndDate, Id = webSiteId });
+                @"SELECT ""Count"", ""CreatedAt"" FROM ""PageViewStats"" where ""CreatedAt"" <= @curTime and 
+                ""CreatedAt"" >= @oldTime and ""WebSiteId"" = @Id order by ""CreatedAt"" ASC",
+                new { curTime, oldTime, Id = webSiteId });
             return data.ToList();
         }
     }
