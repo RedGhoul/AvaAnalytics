@@ -77,7 +77,7 @@ namespace HangFire
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=HomeHangFire}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
 

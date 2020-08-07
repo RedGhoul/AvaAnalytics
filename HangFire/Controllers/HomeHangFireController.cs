@@ -9,11 +9,11 @@ using HangFire.Models;
 
 namespace HangFire.Controllers
 {
-    public class HomeController : Controller
+    public class HomeHangFireController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeHangFireController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeHangFireController(ILogger<HomeHangFireController> logger)
         {
             _logger = logger;
         }

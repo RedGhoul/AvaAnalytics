@@ -36,10 +36,10 @@ namespace Application.Repository
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
             IEnumerable<InteractionCountsDTO> data = await dbConnection.QueryAsync<InteractionCountsDTO>(
-                @"SELECT ""Path"", ""Date"", ""Total"" FROM ""InteractionCounts"" where ""InteractionStatsId"" = (
-                SELECT IDDATE.""Id"" from(SELECT ""Id"", ""Date"" FROM ""InteractionStats"" WHERE ""WebSiteId"" = @Id)
+                @"SELECT ""Path"", ""Date"", ""Total"" FROM ""InteractionByPathCounts"" where ""InteractionPathGroupStatsId"" = (
+                SELECT IDDATE.""Id"" from(SELECT ""Id"", ""Date"" FROM ""InteractionPathGroupStats"" WHERE ""WebSiteId"" = @Id)
                 as IDDATE where IDDATE.""Date"" = (SELECT MAX(IDDATE2.""Date"") FROM(SELECT ""Id"", ""Date"" FROM 
-                ""InteractionStats"" WHERE ""WebSiteId"" = @Id) as IDDATE2)) and ""WebSiteId"" = @Id;",
+                ""InteractionPathGroupStats"" WHERE ""WebSiteId"" = @Id) as IDDATE2)) and ""WebSiteId"" = @Id;",
                   new { Id = webSiteId });
             return data.ToList();
         }
