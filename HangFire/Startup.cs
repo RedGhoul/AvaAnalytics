@@ -35,12 +35,14 @@ namespace HangFire
                                 Configuration.GetConnectionString("DefaultConnection")));
 
             //Add-Migration InitDb -Context HangFireApplicationDbContext
-            services.AddDbContext<HangFire.Data.HangFireApplicationDbContext>(options =>
+            services.AddDbContext<HangFireApplicationDbContext>(options =>
                            options.UseNpgsql(
                                Configuration.GetConnectionString("SharpCounterHangFireDB")));
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
-                .AddEntityFrameworkStores<HangFire.Data.HangFireApplicationDbContext>();
+            services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddDefaultTokenProviders()
+                .AddDefaultUI()
+                .AddEntityFrameworkStores<HangFireApplicationDbContext>();
 
             services.AddHangfire(x =>
                     x.UsePostgreSqlStorage(Configuration.GetConnectionString("SharpCounterHangFireDB")));
@@ -50,12 +52,12 @@ namespace HangFire
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                //app.UseDatabaseErrorPage();
             }
             else
             {
@@ -77,9 +79,11 @@ namespace HangFire
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=HomeHangFire}/{action=Index}/{id?}");
+                    pattern: "{controller=Homehangfire}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+            await app.CreateAdminRoleForDefaultUser();
 
             HangFireJobScheduler.ScheduleRecurringJobs();
         }
