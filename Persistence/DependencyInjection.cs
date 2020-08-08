@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Hangfire;
 using Hangfire.PostgreSql;
+using Config;
 
 namespace Persistence
 {
@@ -14,11 +15,11 @@ namespace Persistence
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                  options.UseNpgsql(
-                     Configuration.GetConnectionString("DefaultConnection")));
+                      AppSecrets.GetConnectionString(Configuration, "DefaultConnection")));
 
             services.AddDistributedRedisCache(options =>
             {
-                options.Configuration = Configuration.GetConnectionString("ConnectionStringRedis");
+                options.Configuration = AppSecrets.GetConnectionString(Configuration, "ConnectionStringRedis");
             });
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)

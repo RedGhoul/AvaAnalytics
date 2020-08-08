@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using Config;
+using Dapper;
 using Domain;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
@@ -12,7 +13,7 @@ namespace Application.Repository
         private readonly string connectionString;
         public InteractionRepo(IConfiguration configuration)
         {
-            connectionString = configuration.GetConnectionString("DefaultConnection");
+            connectionString = AppSecrets.GetConnectionString(configuration, "DefaultConnection");
         }
 
         internal IDbConnection Connection => new NpgsqlConnection(connectionString);
