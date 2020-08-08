@@ -31,16 +31,16 @@ namespace Application.Repository
             return data.ToList();
         }
 
-        public async Task<List<InteractionByPathCountsDTO>> GetInteractionByPathCounts(int webSiteId)
+        public async Task<List<InteractionByPathCountsDTO>> GetInteractionByPathCounts(DateTime curTime, DateTime oldTime, int webSiteId)
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
             IEnumerable<InteractionByPathCountsDTO> data = await dbConnection.QueryAsync<InteractionByPathCountsDTO>(
-                @"SELECT ""Path"", ""Date"", ""Total"" FROM ""InteractionByPathCounts"" where ""InteractionPathGroupStatsId"" = (
-                SELECT IDDATE.""Id"" from(SELECT ""Id"", ""Date"" FROM ""InteractionPathGroupStats"" WHERE ""WebSiteId"" = @Id)
-                as IDDATE where IDDATE.""Date"" = (SELECT MAX(IDDATE2.""Date"") FROM(SELECT ""Id"", ""Date"" FROM 
-                ""InteractionPathGroupStats"" WHERE ""WebSiteId"" = @Id) as IDDATE2)) and ""WebSiteId"" = @Id;",
-                  new { Id = webSiteId });
+                @"SELECT ""Path"", SUM(""Total"") as ""Total"" FROM ""InteractionByPathCounts"" where 
+                ""InteractionPathGroupStatsId"" in ( SELECT ""Id"" FROM ""InteractionPathGroupStats"" 
+                WHERE ""WebSiteId"" = @Id and ""Date"" <= @curTime and ""Date"" >= @oldTime) 
+                and ""WebSiteId"" = @Id group by ""Path""",
+                  new { curTime, oldTime, Id = webSiteId });
             return data.ToList();
         }
 
