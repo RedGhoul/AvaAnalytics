@@ -8,16 +8,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["SharpCounter.csproj", ""]
-RUN dotnet restore "./SharpCounter.csproj"
+COPY ["./Presentation/Presentation.csproj", ""]
+RUN dotnet restore "./Presentation.csproj"
 COPY . .
 WORKDIR "/src/."
-RUN dotnet build "SharpCounter.csproj" -c Release -o /app/build
+RUN dotnet build "Presentation.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "SharpCounter.csproj" -c Release -o /app/publish
+RUN dotnet publish "Presentation.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "SharpCounter.dll"]
+ENTRYPOINT ["dotnet", "Presentation.dll"]
