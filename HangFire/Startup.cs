@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using SharpCounter.HangFire;
 using Hangfire;
 using Hangfire.PostgreSql;
+using Config;
 
 namespace HangFire
 {
@@ -32,12 +33,12 @@ namespace HangFire
         {
             services.AddDbContext<Persistence.ApplicationDbContext>(options =>
                             options.UseNpgsql(
-                                Configuration.GetConnectionString("DefaultConnection")));
+                                AppSecrets.GetConnectionString(Configuration, "DefaultConnection")));
 
             //Add-Migration InitDb -Context HangFireApplicationDbContext
             services.AddDbContext<HangFireApplicationDbContext>(options =>
                            options.UseNpgsql(
-                               Configuration.GetConnectionString("SharpCounterHangFireDB")));
+                               AppSecrets.GetConnectionString(Configuration, "SharpCounterHangFireDB")));
 
             services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddDefaultTokenProviders()
@@ -45,7 +46,7 @@ namespace HangFire
                 .AddEntityFrameworkStores<HangFireApplicationDbContext>();
 
             services.AddHangfire(x =>
-                    x.UsePostgreSqlStorage(Configuration.GetConnectionString("SharpCounterHangFireDB")));
+                    x.UsePostgreSqlStorage(AppSecrets.GetConnectionString(Configuration, "SharpCounterHangFireDB")));
 
             services.AddControllersWithViews();
             services.AddRazorPages();

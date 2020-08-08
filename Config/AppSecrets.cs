@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 
-namespace SharpCounter.Config
+namespace Config
 {
     public static class AppSecrets
     {

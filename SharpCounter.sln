@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "Persistence\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation", "SharpCounter\Presentation.csproj", "{52EA9CC8-75EA-46A5-A6B6-2DADF0023715}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Config", "Config\Config.csproj", "{8B87E40F-0E32-4318-8A0B-A59DD334FCA7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{52EA9CC8-75EA-46A5-A6B6-2DADF0023715}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52EA9CC8-75EA-46A5-A6B6-2DADF0023715}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52EA9CC8-75EA-46A5-A6B6-2DADF0023715}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B87E40F-0E32-4318-8A0B-A59DD334FCA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B87E40F-0E32-4318-8A0B-A59DD334FCA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B87E40F-0E32-4318-8A0B-A59DD334FCA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B87E40F-0E32-4318-8A0B-A59DD334FCA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

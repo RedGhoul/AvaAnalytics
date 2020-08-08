@@ -4,5 +4,7 @@ Domain/bin
 Domain/obj
 Application/bin
 Application/obj
+Config/bin
+Config/obj
 .vscode
 .vs

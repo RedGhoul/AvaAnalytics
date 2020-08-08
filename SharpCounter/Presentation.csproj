@@ -51,6 +51,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
+    <ProjectReference Include="..\Config\Config.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\HangFire\HangFire.csproj" />
     <ProjectReference Include="..\Persistence\Persistence.csproj" />
