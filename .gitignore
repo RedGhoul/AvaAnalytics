@@ -1,8 +1,8 @@
-Persistence\bin
-Persistence\obj
-Domain\bin
-Domain\obj
-Application\bin
-Application\obj
+Persistence/bin
+Persistence/obj
+Domain/bin
+Domain/obj
+Application/bin
+Application/obj
 .vscode
 .vs
