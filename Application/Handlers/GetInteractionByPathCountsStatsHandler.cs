@@ -22,7 +22,7 @@ namespace Application.Handlers
             DateTime curTime = TimeZoneInfo.ConvertTimeToUtc(request.CurrentEndDate);
             DateTime oldTime = TimeZoneInfo.ConvertTimeToUtc(request.CurrentStartDate);
             return new GetInteractionByPathCountsStatsResponse() 
-            { Data = await _statsRepo.GetInteractionByPathCounts(request.WebSiteId) };
+            { Data = await _statsRepo.GetInteractionByPathCounts(curTime, oldTime, request.WebSiteId) };
         }
     }
 }
