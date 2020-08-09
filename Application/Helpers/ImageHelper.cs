@@ -16,14 +16,12 @@ namespace Application.Helpers
             byte[] image = await _cache.GetAsync("image");
             if (image == null)
             {
-                Bitmap icon = new Bitmap(1, 1);
                 MemoryStream memStreams = new MemoryStream();
-                icon.Save(memStreams, ImageFormat.Png);
                 memStreams.Position = 0;
                 image = memStreams.ToArray();
                 await _cache.SetAsync("image", image);
             }
-            return (new MemoryStream(image), "image/png");
+            return (new MemoryStream(), "image/png");
         }
     }
 }
