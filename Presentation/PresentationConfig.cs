@@ -47,6 +47,14 @@ namespace Presentation
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sharp Counter V1");
+            });
+
         }
     }
 }

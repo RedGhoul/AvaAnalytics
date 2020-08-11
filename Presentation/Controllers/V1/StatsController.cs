@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace SharpCounter.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
