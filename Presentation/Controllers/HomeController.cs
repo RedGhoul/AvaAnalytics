@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SharpCounter.ViewModels;
+using System;
 using System.Diagnostics;
 
 namespace SharpCounter.Controllers
@@ -12,6 +13,9 @@ namespace SharpCounter.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.CodeSnip = @"<script defer src=""https://sharp-counter.experimentsinthedeep.com/js/prod/count.min.js""" + Environment.NewLine +
+                               @"data-sharpcounter=""https://sharp-counter.experimentsinthedeep.com/api/Interaction/Count""" + Environment.NewLine +
+                               @"data-sharpcounter-apikey=""<YOUR-API-KEY>"" ></script>" + Environment.NewLine;
             return View();
         }
 
