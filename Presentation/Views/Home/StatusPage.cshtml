@@ -1,1 +1,157 @@
-﻿Current Status
+﻿<style>
+    .container {
+        padding-top: 50px;
+    }
+
+    #messagebox {
+        border: solid 1px #cecece;
+        min-height: 100px;
+        color: #4B515D;
+    }
+
+        #messagebox.success {
+            border: solid 1px #00C851;
+            border-left: solid 4px #00C851;
+        }
+
+        #messagebox.fail {
+            border: solid 1px #ff4444;
+            border-left: solid 4px #ff4444;
+        }
+
+        #messagebox.warning {
+            border: solid 1px #ffbb33;
+            border-left: solid 4px #ffbb33;
+        }
+
+    #messagebox-icon {
+        padding: 1em;
+    }
+
+    #messagebox-detail-link {
+        margin-left: 1em;
+        margin-right: 1em;
+        position: relative;
+        right: 0;
+    }
+
+    #messagebox-header {
+        padding-left: 0.6em;
+    }
+
+    #expanded-status {
+        border: solid 1px black;
+    }
+</style>
+@{ bool Operational = true; }
+<div class="container">
+    @if (Operational)
+    {
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4 success" id="messagebox">
+        <div class="row">
+            <div class="col-md-2" id="messagebox-icon">
+                <span class="fa fa-2x fa-check text-success"></span>
+            </div>
+            <div class="col-md-10">
+                <div class="row h5" id="messagebox-header">Systems Operational</div>
+                @for (int i = 1; i < 8; i++)
+                {
+                    <div class="row" style="padding-top:5px;">
+                        
+                        <div class="col-md-1">
+                            <span class="fa fa-check-circle text-success"></span>
+                        </div>
+                        <div class="col-md-10">
+                            Worker @i
+                        </div>
+                        </div>
+                 }
+
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-4"></div>
+</div> }
+else
+{
+
+<div class="row" style="margin-top: 1em;">
+    <div class="col-md-4"></div>
+    <div class="col-md-4 fail" id="messagebox">
+        <div class="row">
+            <div class="col-md-2" id="messagebox-icon">
+                <span class="fa fa-2x fa-times text-danger"></span>
+            </div>
+            <div class="col-md-10">
+                <div class="row h5" id="messagebox-header">Process Failed to Complete</div>
+                <div class="row">
+                    <div class="col-md-1">
+                        <span class="fa fa-times-circle text-danger"></span>
+                    </div>
+                    <div class="col-md-10">
+                        Item 1  done
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1">
+                        <span class="fa fa-times-circle text-danger"></span>
+                    </div>
+                    <div class="col-md-10">
+                        Item 1  done
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="pull-right" id="messagebox-detail-link">
+                <a href="#">More Information</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+
+                <div class="row" style="margin-top: 1em;">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4 warning" id="messagebox">
+                        <div class="row">
+                            <div class="col-md-2" id="messagebox-icon">
+                                <span class="fa fa-2x fa-exclamation-triangle text-warning"></span>
+                            </div>
+                            <div class="col-md-10">
+                                <div class="row h5" id="messagebox-header">
+                                    Process Completed with Errors
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <span class="fa fa-check-circle text-success"></span>
+                                    </div>
+                                    <div class="col-md-10">
+                                        Item 1  done
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <span class="fa fa-times-circle text-danger"></span>
+                                    </div>
+                                    <div class="col-md-10">
+                                        Item 1  done
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="pull-right" id="messagebox-detail-link">
+                                <a href="#">More Information</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>            
+            }
+
+
+</div>
