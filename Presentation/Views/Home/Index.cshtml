@@ -1,9 +1,11 @@
-﻿<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js" integrity="sha512-tHQeqtcNWlZtEh8As/4MmZ5qpy0wj04svWFK7MIzLmUVIzaHXS8eod9OmHxyBL1UET5Rchvw7Ih4ZDv5JojZww==" crossorigin="anonymous"></script>
+﻿@model Domain.SiteContent
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js" integrity="sha512-tHQeqtcNWlZtEh8As/4MmZ5qpy0wj04svWFK7MIzLmUVIzaHXS8eod9OmHxyBL1UET5Rchvw7Ih4ZDv5JojZww==" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/github-gist.min.css" integrity="sha512-LcufBzA8yrkLJmMzmj3KYSM6tfPOxYdG2byxGbmRzHFSuP5wumxGcbVmmUXnkYpB3OqnHprnX54l7w19dpttlA==" crossorigin="anonymous" /><div style="padding-top:20px;padding-bottom:20px;"></div>
 <div class="row">
     <div class="col-md-12">
         <div class="text-center">
-            <h1 class="display-2 text-center">Simple Clean Analytics</h1>
+            <h1 class="display-2 text-center">@Model.LargeHeader</h1>
         </div>
     </div>
 </div>
@@ -15,12 +17,7 @@
     <div class="col-md-8">
         <blockquote class="blockquote text-center">
             <p class="mb-0">
-                SharpCounter is an open source web analytics
-                platform available as a hosted service (free for non-commercial use)
-                or self-hosted app. This project was inspired by
-                <a href="https://www.goatcounter.com/">goatcounter</a>.
-                SharpCount wants to be a dead simple way for anyone to
-                track metrics about this web app.
+                @Model.BlurgUnderLargerHeader
             </p>
         </blockquote>
     </div>
@@ -96,11 +93,11 @@
     <div class="col-md-6">
 
         <div class="text-center">
-            <h1 class="display-4">Simple</h1>
+            <h1 class="display-4">@Model.Header1</h1>
         </div>
         <blockquote class="blockquote text-center">
             <p class="mb-0">
-                A single line of code to add to your site
+                @Model.Header1Content
             </p>
         </blockquote>
         <script>
@@ -108,83 +105,83 @@
         </script>
         <pre>
             <code class="html">
-                @ViewBag.CodeSnip
-            </code></pre >
-            </div >
-                <div class="col-md-3">
+                @Model.Header1CodeSnip
+            </code></pre>
+    </div>
+    <div class="col-md-3">
 
-                </div>
-</div >
-                <div style="padding-top:20px;padding-bottom:20px;"></div>
-                <div class="row">
-                    <div class="col-md-3">
+    </div>
+</div>
+<div style="padding-top:20px;padding-bottom:20px;"></div>
+<div class="row">
+    <div class="col-md-3">
 
-                    </div>
-                    <div class="col-md-6">
-                        <div class="text-center">
-                            <h1 class="display-4">Clean</h1>
-                        </div>
-                        <blockquote class="blockquote text-center">
-                            <p class="mb-0">
-                                Only a few key metrics to make actionable changes to better serve your users
-                    </p>
-                        </blockquote>
-                    </div>
-                    <div class="col-md-3">
+    </div>
+    <div class="col-md-6">
+        <div class="text-center">
+            <h1 class="display-4">@Model.Header2</h1>
+        </div>
+        <blockquote class="blockquote text-center">
+            <p class="mb-0">
+                @Model.Header2Content
+            </p>
+        </blockquote>
+    </div>
+    <div class="col-md-3">
 
-                    </div>
+    </div>
 
-                </div>
-                <div style="padding-top:20px;padding-bottom:20px;"></div>
-                <div class="row">
-                    <div class="col-md-3">
+</div>
+<div style="padding-top:20px;padding-bottom:20px;"></div>
+<div class="row">
+    <div class="col-md-3">
 
-                    </div>
-                    <div class="col-md-6">
-                        <div class="text-center">
-                            <h1 class="display-4">Easy to Use</h1>
-                        </div>
-                        <blockquote class="blockquote text-center">
-                            <p class="mb-0">
-                                A straight forward dashboard anyone can use & understand
-                    </p>
-                        </blockquote>
-                    </div>
-                    <div class="col-md-3">
+    </div>
+    <div class="col-md-6">
+        <div class="text-center">
+            <h1 class="display-4">@Model.Header3</h1>
+        </div>
+        <blockquote class="blockquote text-center">
+            <p class="mb-0">
+                @Model.Header3Content
+            </p>
+        </blockquote>
+    </div>
+    <div class="col-md-3">
 
-                    </div>
+    </div>
 
-                </div>
-                <div style="padding-top:20px;padding-bottom:20px;"></div>
-                <div style="padding-top:20px;padding-bottom:20px;"></div>
-                <div style="padding-top:20px;padding-bottom:20px;"></div>
+</div>
+<div style="padding-top:20px;padding-bottom:20px;"></div>
+<div style="padding-top:20px;padding-bottom:20px;"></div>
+<div style="padding-top:20px;padding-bottom:20px;"></div>
 
-                <div class="row">
-                    <div class="col-md-2">
+<div class="row">
+    <div class="col-md-2">
 
-                    </div>
-                    <div class="col-md-8">
-                        <div class="text-center">
-                            <h1 class="display-4">Why this product exists</h1>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
+    </div>
+    <div class="col-md-8">
+        <div class="text-center">
+            <h1 class="display-4">@Model.FinalHeader</h1>
+        </div>
+    </div>
+    <div class="col-md-2">
 
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
 
-                    </div>
-                    <div class="col-md-8">
-                        <blockquote class="blockquote text-center">
-                            <p class="mb-0">
-                                I wanted to challenge myself, and learn more about what goes into a web analytics platform.
-                    </p>
-                        </blockquote>
-                    </div>
-                    <div class="col-md-2">
+    </div>
+    <div class="col-md-8">
+        <blockquote class="blockquote text-center">
+            <p class="mb-0">
+                @Model.FinalHeaderContent
+            </p>
+        </blockquote>
+    </div>
+    <div class="col-md-2">
 
-                    </div>
+    </div>
 
-                </div>
+</div>

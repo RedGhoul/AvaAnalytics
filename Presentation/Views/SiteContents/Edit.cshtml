@@ -1,0 +1,130 @@
+﻿@model Domain.SiteContent
+
+@{
+    ViewData["Title"] = "Create";
+}
+<link href="https://cdn.quilljs.com/1.3.4/quill.snow.css" rel="stylesheet">
+<style>
+    .control-label {
+        font-size: xx-large;
+    }
+</style>
+<h1>Create</h1>
+
+<h4>SiteContent</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit" asp-controller="SiteContents" id="create_site_content">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="LargeHeader" class="control-label"></label>
+                <textarea asp-for="LargeHeader" class="form-control" rows="4" cols="50"></textarea>
+
+            </div>
+            <div class="form-group">
+                <label asp-for="BlurgUnderLargerHeader" class="control-label"></label>
+                <textarea asp-for="BlurgUnderLargerHeader" class="form-control" rows="4" cols="50"></textarea>
+
+            </div>
+            <div class="form-group">
+                <label asp-for="Header1" class="control-label"></label>
+                <textarea asp-for="Header1" class="form-control" rows="4" cols="50"></textarea>
+
+            </div>
+            <div class="form-group">
+                <label asp-for="Header1Content" class="control-label"></label>
+                <textarea asp-for="Header1Content" class="form-control" rows="4" cols="50"></textarea>
+
+            </div>
+            <div class="form-group">
+                <label asp-for="Header1CodeSnip" class="control-label"></label>
+                <textarea asp-for="Header1CodeSnip" class="form-control" rows="4" cols="50"></textarea>
+            </div>
+            <div class="form-group">
+                <label asp-for="Header2" class="control-label"></label>
+                <textarea asp-for="Header2" class="form-control" rows="4" cols="50"></textarea>
+            </div>
+            <div class="form-group">
+                <label asp-for="Header2Content" class="control-label"></label>
+                <textarea asp-for="Header2Content" class="form-control" rows="4" cols="50"></textarea>
+            </div>
+            <div class="form-group">
+                <label asp-for="Header3" class="control-label"></label>
+                <textarea asp-for="Header3" class="form-control" rows="4" cols="50"></textarea>
+            </div>
+            <div class="form-group">
+                <label asp-for="Header3Content" class="control-label"></label>
+                <textarea asp-for="Header3Content" class="form-control" rows="4" cols="50"></textarea>
+            </div>
+            <div class="form-group">
+                <label asp-for="FinalHeader" class="control-label"></label>
+                <textarea asp-for="FinalHeader" class="form-control" rows="4" cols="50"></textarea>
+            </div>
+            <div class="form-group">
+                <label asp-for="FinalHeaderContent" class="control-label"></label>
+                <textarea asp-for="FinalHeaderContent" class="form-control" rows="4" cols="50"></textarea>
+            </div>
+            <div class="form-group">
+                <label asp-for="WhatWeCollect" class="control-label"></label>
+                <input asp-for="WhatWeCollect" class="form-control" hidden />
+                <div id="editorWhatWeCollect" style="height: 300px;">
+                    @Html.Raw(Model.WhatWeCollect)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PrivacyPolicy" class="control-label"></label>
+                <input asp-for="PrivacyPolicy" class="form-control" hidden />
+                <div id="editorPrivacyPolicy" style="height: 300px;">
+                    @Html.Raw(Model.PrivacyPolicy)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Documentation" class="control-label"></label>
+                <input asp-for="Documentation" class="form-control" hidden />
+                <div id="editorDocumentation" style="height: 300px;">
+                    @Html.Raw(Model.Documentation)
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.quilljs.com/1.3.4/quill.js"></script>
+    <script>
+        var quillDocs = new Quill('#editorDocumentation', {
+            theme: 'snow'
+        });
+        quillDocs.on('text-change', function (delta) {
+            var Documentation = document.querySelector('input[name=Documentation]');
+            Documentation.value = quillDocs.root.innerHTML;
+        });
+
+        var quillPrivacyPolicy = new Quill('#editorPrivacyPolicy', {
+            theme: 'snow'
+        });
+        quillPrivacyPolicy.on('text-change', function (delta) {
+            var PrivacyPolicy = document.querySelector('input[name=PrivacyPolicy]');
+            PrivacyPolicy.value = quillPrivacyPolicy.root.innerHTML;
+        });
+
+
+        var quillWhatWeCollect = new Quill('#editorWhatWeCollect', {
+            theme: 'snow'
+        });
+        quillWhatWeCollect.on('text-change', function (delta) {
+            var WhatWeCollect = document.querySelector('input[name=WhatWeCollect]');
+            WhatWeCollect.value = quillWhatWeCollect.root.innerHTML;
+        });
+    </script>
+}

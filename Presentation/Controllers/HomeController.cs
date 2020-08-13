@@ -1,41 +1,43 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Persistence;
 using SharpCounter.ViewModels;
 using System;
 using System.Diagnostics;
+using System.Linq;
 
 namespace SharpCounter.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController()
+        private readonly ApplicationDbContext _context;
+
+        public HomeController(ApplicationDbContext context)
         {
+            _context = context;
         }
 
         public IActionResult Index()
-        {
-            ViewBag.CodeSnip = @"<script defer src=""https://sharp-counter.experimentsinthedeep.com/js/prod/count.min.js""" + Environment.NewLine +
-                               @"data-sharpcounter=""https://sharp-counter.experimentsinthedeep.com/api/Interaction/Count""" + Environment.NewLine +
-                               @"data-sharpcounter-apikey=""<YOUR-API-KEY>"" ></script>" + Environment.NewLine;
-            return View();
+        { 
+            return View(_context.SiteContents.FirstOrDefault());
         }
 
         public IActionResult WhatWeCollect()
         {
-            return View();
+            return View(_context.SiteContents.FirstOrDefault());
         }
 
         public IActionResult PrivacyPolicy()
         {
-            return View();
+            return View(_context.SiteContents.FirstOrDefault());
         }
         public IActionResult StatusPage()
         {
-            return View();
+            return View(_context.SiteContents.FirstOrDefault());
         }
 
         public IActionResult Documentation()
         {
-            return View();
+            return View(_context.SiteContents.FirstOrDefault());
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
