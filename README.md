@@ -1,3 +1,4 @@
 # SharpCounter
 
-based on Goat Counter
+Based on Goat Counter
+Using Hang Fire
