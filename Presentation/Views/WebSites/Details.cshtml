@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" />
 <div class="row" style="padding-left: 90px;">
     <div class="col-md-2">
-        
+
     </div>
     <div class="col-md-6">
         <div class="text-center">
@@ -90,5 +90,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.0/chroma.min.js" integrity="sha512-yocoLferfPbcwpCMr8v/B0AB4SWpJlouBwgE0D3ZHaiP1nuu5djZclFEIj9znuqghaZ3tdCMRrreLoM8km+jIQ==" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment-with-locales.min.js" integrity="sha512-qSnlnyh7EcD3vTqRoSP4LYsy2yVuqqmnkM9tW4dWo6xvAoxuVXyM36qZK54fyCmHoY1iKi9FJAUZrlPqmGNXFw==" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
-    <script src="~/js/detailsChart.js" data-website-id="@Model.Id"></script>
+    <environment exclude="Development">
+        <script src="~/js/detailsChart.js" data-website-id="@Model.Id"></script>
+    </environment>
+
+    <environment exclude="Production">
+        <script src="~/js/prod/detailsChart.min.js" data-website-id="@Model.Id"></script>
+    </environment>
 }
