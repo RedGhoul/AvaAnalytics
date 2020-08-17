@@ -10,8 +10,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Persistence;
 using Presentation;
+using Presentation.Swagger;
+using System;
 
 namespace Presentation
 {
@@ -34,7 +37,7 @@ namespace Presentation
             services.AddControllersWithViews();
             
             services.AddRazorPages().AddRazorRuntimeCompilation();
-            
+            services.AddSwagger();
             services.AddResponseCompression();
         }
 

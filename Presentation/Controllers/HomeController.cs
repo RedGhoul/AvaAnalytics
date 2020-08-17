@@ -1,37 +1,43 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Persistence;
 using SharpCounter.ViewModels;
+using System;
 using System.Diagnostics;
+using System.Linq;
 
 namespace SharpCounter.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController()
+        private readonly ApplicationDbContext _context;
+
+        public HomeController(ApplicationDbContext context)
         {
+            _context = context;
         }
 
         public IActionResult Index()
-        {
-            return View();
+        { 
+            return View(_context.SiteContents.FirstOrDefault());
         }
 
         public IActionResult WhatWeCollect()
         {
-            return View();
+            return View(_context.SiteContents.FirstOrDefault());
         }
 
         public IActionResult PrivacyPolicy()
         {
-            return View();
+            return View(_context.SiteContents.FirstOrDefault());
         }
         public IActionResult StatusPage()
         {
-            return View();
+            return View(_context.SiteContents.FirstOrDefault());
         }
 
         public IActionResult Documentation()
         {
-            return View();
+            return View(_context.SiteContents.FirstOrDefault());
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

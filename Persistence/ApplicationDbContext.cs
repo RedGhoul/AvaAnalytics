@@ -20,6 +20,8 @@ namespace Persistence
         public DbSet<PageViewStats> PageViewStats { get; set; }
         public DbSet<Session> Sessions { get; set; }
         public DbSet<WebSites> WebSites { get; set; }
+        public DbSet<SiteContent> SiteContents { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
