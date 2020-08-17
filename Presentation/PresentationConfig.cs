@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,17 @@ namespace Presentation
         public static void UseBasicConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseResponseCompression();
+            /*
+                The X-Forwarded-For (XFF) header is a de-facto standard header for identifying the originating IP 
+                address of a client connecting to a web server through an HTTP proxy or a load balancer. When traffic
+                is intercepted between clients and servers, server access logs contain the IP address of the proxy or 
+                load balancer only. To see the original IP address of the client, the X-Forwarded-For request header is used.
+             */
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                ForwardedHeaders.XForwardedProto
+            });
 
             if (env.IsDevelopment())
             {

@@ -3,6 +3,7 @@ using Application.Helpers;
 using Application.Repository;
 using Application.Response;
 using Domain;
+using MaxMind.GeoIP2;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
@@ -99,19 +100,17 @@ namespace Application.Handlers
                 }
 
                 string Country = request.RemoteIpAddress;
-                //Country = result.Country.Name;
-                //try
-                //{
-                //    using var reader = new DatabaseReader("GeoLite2-Country.mmdb");
-                //    var result = reader.Country(Request.HttpContext
-                //        .Connection.RemoteIpAddress.ToString());
-                //    Country = result.Country.Name;
-                //}
-                //catch (Exception ex)
-                //{
-                //    _Logger.LogError(ex.Message);
-                //    _Logger.LogError(ex.StackTrace);
-                //}
+                try
+                {
+                    using var reader = new DatabaseReader("GeoLite2-Country.mmdb");
+                    var result = reader.Country(request.RemoteIpAddress.ToString());
+                    Country = result.Country.Name;
+                }
+                catch (Exception ex)
+                {
+                    _Logger.LogError(ex.Message);
+                    _Logger.LogError(ex.StackTrace);
+                }
 
 
                 Interaction interaction = new Interaction

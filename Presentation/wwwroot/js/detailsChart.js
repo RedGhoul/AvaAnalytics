@@ -80,6 +80,7 @@
                 })
         },
         SetUp_Chart_UI: function () {
+            state.Hid_NotFoundText();
             var methodType = 'post';
             var PageView_DataTranslator = function (Data, dataMapper) {
                 var MappedData = dataMapper(Data);
@@ -257,8 +258,11 @@
         },
         SetUp_DateTimePickers: function () {
             jQuery.datetimepicker.setLocale('en');
+
+            $('#date_timepicker_start')[0].value = moment(state.CurrentStartDate).format("MM/DD/YYYY");;
             $('#date_timepicker_start').datetimepicker({
-                format: 'Y/m/d',
+                startDate: state.CurrentStartDate,
+                format: 'm/d/y',
                 onShow: function (ct) {
                     this.setOptions({
                         maxDate: $('#date_timepicker_end').val() ? jQuery('#date_timepicker_end').val() : false
@@ -269,8 +273,11 @@
                     state.CurrentStartDate = moment($input.val()).format();
                 }
             });
+
+            $('#date_timepicker_end')[0].value = moment(state.CurrentEndDate).format("MM/DD/YYYY");;
             $('#date_timepicker_end').datetimepicker({
-                format: 'Y/m/d',
+                startDate: state.CurrentEndDate,
+                format: 'm/d/y',
                 onShow: function (ct) {
                     this.setOptions({
                         minDate: $('#date_timepicker_start').val() ? jQuery('#date_timepicker_start').val() : false
@@ -431,20 +438,27 @@
                     scales: state.scaleOptions
                 }
             });
+        },
+        SetUp_ChartHeight: function () {
+            if (state.GetDeviceType() === 'mobile') {
+                Chart_InteractionStats.height = 80;
+                Chart_BrowserStats.height = 40;
+                Chart_SystemStats.height = 40;
+                Chart_ScreenSizeStats.height = 40;
+                Chart_LocationStats.height = 40;
+            }
+        },
+        StartUp_View: function () {
+            state.SetUp_Refs();
+            state.Set_BaseDate();
+            state.Hid_NotFoundText();
+            state.SetUp_DateTimePickers();
+            state.SetUp_DateTime_Event_Listeners();
+            state.SetUp_Chart_UI();
+            state.SetUp_ChartHeight();
         }
     }
-    state.SetUp_Refs();
-    state.Set_BaseDate();
-    state.Hid_NotFoundText();
-    state.SetUp_DateTimePickers();
-    state.SetUp_DateTime_Event_Listeners();
-    state.SetUp_Chart_UI();
-    if (state.GetDeviceType() === 'mobile') {
-        ISChart.height = 80;
-        BSChart.height = 40;
-        SysSChart.height = 40;
-        ScreenSChart.height = 40;
-        LocationSChart.height = 40;
-    }
+    
+    state.StartUp_View();
 
 })
