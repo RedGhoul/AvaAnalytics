@@ -1,6 +1,8 @@
 ﻿using Application.Repository;
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -20,7 +22,11 @@ namespace Application
             services.AddSingleton<InteractionRepo, InteractionRepo>();
             services.AddSingleton<SessionRepo, SessionRepo>();
             services.AddSingleton<StatsRepo, StatsRepo>();
-
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders =
+                    ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
             return services;
         }
     }

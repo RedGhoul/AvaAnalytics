@@ -38,12 +38,8 @@ namespace Presentation
                 is intercepted between clients and servers, server access logs contain the IP address of the proxy or 
                 load balancer only. To see the original IP address of the client, the X-Forwarded-For request header is used.
              */
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor |
-                ForwardedHeaders.XForwardedProto
-            });
 
+            app.UseForwardedHeaders();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
