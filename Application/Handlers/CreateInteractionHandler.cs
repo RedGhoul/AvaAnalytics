@@ -100,6 +100,7 @@ namespace Application.Handlers
                 }
 
                 string Country = request.RemoteIpAddress;
+                
                 try
                 {
                     using var reader = new DatabaseReader("GeoLite2-Country.mmdb");

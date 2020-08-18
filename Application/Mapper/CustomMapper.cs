@@ -18,7 +18,7 @@ namespace Application.Mapper
                 Path = p,
                 Title = t,
                 ScreenSizeAttr = s,
-                RemoteIpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString(),
+                RemoteIpAddress = Request.Headers["X-Real-IP"],
                 Browser = Request.Headers["User-Agent"],
                 Language = Request.Headers["Accept-Language"],
                 Referrer = Request.Headers["Referer"]
