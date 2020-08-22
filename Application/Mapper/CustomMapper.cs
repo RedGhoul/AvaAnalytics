@@ -18,7 +18,7 @@ namespace Application.Mapper
                 Path = p,
                 Title = t,
                 ScreenSizeAttr = s,
-                RemoteIpAddress = Request.Headers["X-Real-IP"],
+                RemoteIpAddress = Request.Headers["X-Real-IP"],//to get the real ip
                 Browser = Request.Headers["User-Agent"],
                 Language = Request.Headers["Accept-Language"],
                 Referrer = Request.Headers["Referer"]
