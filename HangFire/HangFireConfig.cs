@@ -18,7 +18,7 @@ namespace HangFire
             });
             app.UseHangfireServer(new BackgroundJobServerOptions
             {
-                WorkerCount = Environment.ProcessorCount * 8,
+                WorkerCount = Environment.ProcessorCount,
             });
 
         }
