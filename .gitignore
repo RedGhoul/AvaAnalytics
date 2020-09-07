@@ -8,3 +8,4 @@ Config/bin
 Config/obj
 .vscode
 .vs
+DataAggregator/Properties/launchSettings.json
