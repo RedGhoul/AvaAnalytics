@@ -11,6 +11,8 @@
     <environment include="Production">
         <link rel="stylesheet" href="~/css/site.min.css" />
     </environment>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.4/css/alertify.min.css" integrity="sha256-HyknUQX006D7lC1CzL2BQqMMjX7cQV7unnkuNrYUDgM=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.4/css/themes/bootstrap.min.css" integrity="sha256-tWRKenfvuraOz4u9wNIkJVrUFbRN712r9WtYhGUPirg=" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
 </head>
 <body>
@@ -69,19 +71,19 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.4/alertify.min.js" integrity="sha256-TmZbMuBl7X3riNkZNRGGFWfpltDc50OK5Kzj4UrtvuE=" crossorigin="anonymous"></script>
-
-    <environment include="Development">
-        <script defer src="~/js/site.js"></script>
-    </environment>
-    <environment include="Production">
-        <script defer src="~/js/prod/site.min.js"></script>
-    </environment>
     <script>
         var notificationMadeBy = alertify.message('Created by Avaneesa Basappa', 10000);
         notificationMadeBy.ondismiss = function () { return false; };
         var notificationCheckMeOut = alertify.message('Check me out at <a href="https://www.avaneesa.me/">avaneesa.me</a>', 10000);
         notificationCheckMeOut.ondismiss = function () { return false; };
     </script>
+    <environment include="Development">
+        <script defer src="~/js/site.js"></script>
+    </environment>
+    <environment include="Production">
+        <script defer src="~/js/prod/site.min.js"></script>
+    </environment>
+
     @RenderSection("Scripts", required: false)
     <script defer src="~/js/prod/count.min.js" data-sharpcounter="https://www.avaanalytics.com/api/Interaction/Count"
             data-sharpcounter-apikey="9cdfb14e-4949-4201-81da-f741d9d1ab10"></script>
