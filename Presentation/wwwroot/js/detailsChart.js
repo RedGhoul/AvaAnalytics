@@ -112,10 +112,18 @@
             var dataMapper_ForPageView = function (data) {
                 var GLabels = [];
                 var GData = [];
+                //display: false,
+                var count = 0;
                 data.forEach(function (stat) {
-                    GLabels.push(moment(stat.createdAt).local().format('YYYY-MM-DD HH:mm:ss'));
-                    GData.push(stat.count);
+                    if (stat.count > 0) {
+                        count++;
+                        GLabels.push(moment(stat.createdAt).local().format('MMMM Do YYYY, h:mm:ss a'));
+                        GData.push(stat.count);
+                    }
                 });
+                if (count > 60) {
+                    state.Chart_PageViewStats.options.scales = state.scaleOptionsBigCountViews;
+                }
                 return {
                     GLabels: GLabels,
                     GData: GData
@@ -125,7 +133,7 @@
                 var GLabels = [
                     'Phones',
                     'Large Phones',
-                    'Tables',
+                    'Tablets',
                     'Desktops',
                     'Monitors 4K Plus'
                 ];
@@ -322,6 +330,23 @@
                 }
             }]
         },
+        scaleOptionsBigCountViews: {
+            yAxes: [{
+                ticks:
+                {
+                    beginAtZero: true,
+                    fontSize: 14,
+                    fontFamily: "'Roboto', sans-serif",
+                    fontColor: 'black',
+                    fontStyle: '500'
+                }
+            }],
+            xAxes: [{
+                ticks: {
+                    display: false,
+                }
+            }]
+        },
         scaleOptionsCountViews: {
             yAxes: [{
                 ticks:
@@ -336,14 +361,14 @@
             xAxes: [{
                 ticks: {
                     beginAtZero: true,
-                    stepSize: 10,
-                    fontSize: 12,
+                    stepSize: 30,
+                    fontSize: 13,
                     fontFamily: "'Roboto', sans-serif",
                     fontColor: 'black',
                     fontStyle: '500',
-                    autoSkip: false,
-                    maxRotation: 90,
-                    minRotation: 90
+                    autoSkip: true,
+                    maxRotation: 300,
+                    //minRotation: 90
                 }
             }]
         },

@@ -104,7 +104,7 @@ namespace Application.Handlers
                 try
                 {
                     using var reader = new DatabaseReader("GeoLite2-Country.mmdb");
-                    var result = reader.Country(request.RemoteIpAddress.ToString());
+                    var result = reader.Country(request.RemoteIpAddress ?? "");
                     Country = result.Country.Name;
                 }
                 catch (Exception ex)

@@ -16,7 +16,6 @@ namespace SharpCounter.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class StatsController : ControllerBase
     {
         private readonly ILogger<StatsController> _Logger;

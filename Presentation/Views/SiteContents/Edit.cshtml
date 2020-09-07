@@ -9,64 +9,62 @@
         font-size: xx-large;
     }
 </style>
-<h1>Create</h1>
-
-<h4>SiteContent</h4>
+<h1>Edit Site Content</h1>
 <hr />
 <div class="row">
     <div class="col-md-12">
         <form asp-action="Edit" asp-controller="SiteContents" id="create_site_content">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="LargeHeader" class="control-label"></label>
+                <label class="control-label">Large Header</label>
                 <textarea asp-for="LargeHeader" class="form-control" rows="4" cols="50"></textarea>
 
             </div>
             <div class="form-group">
-                <label asp-for="BlurgUnderLargerHeader" class="control-label"></label>
+                <label class="control-label">Blurb Under Large Header</label>
                 <textarea asp-for="BlurgUnderLargerHeader" class="form-control" rows="4" cols="50"></textarea>
 
             </div>
             <div class="form-group">
-                <label asp-for="Header1" class="control-label"></label>
+                <label class="control-label">Header 1</label>
                 <textarea asp-for="Header1" class="form-control" rows="4" cols="50"></textarea>
 
             </div>
             <div class="form-group">
-                <label asp-for="Header1Content" class="control-label"></label>
+                <label class="control-label">Header 1 Content</label>
                 <textarea asp-for="Header1Content" class="form-control" rows="4" cols="50"></textarea>
 
             </div>
             <div class="form-group">
-                <label asp-for="Header1CodeSnip" class="control-label"></label>
+                <label class="control-label">Header 1 Code Snip</label>
                 <textarea asp-for="Header1CodeSnip" class="form-control" rows="4" cols="50"></textarea>
             </div>
             <div class="form-group">
-                <label asp-for="Header2" class="control-label"></label>
+                <label class="control-label">Header 2</label>
                 <textarea asp-for="Header2" class="form-control" rows="4" cols="50"></textarea>
             </div>
             <div class="form-group">
-                <label asp-for="Header2Content" class="control-label"></label>
+                <label class="control-label">Header 2 Content</label>
                 <textarea asp-for="Header2Content" class="form-control" rows="4" cols="50"></textarea>
             </div>
             <div class="form-group">
-                <label asp-for="Header3" class="control-label"></label>
+                <label class="control-label">Header 3</label>
                 <textarea asp-for="Header3" class="form-control" rows="4" cols="50"></textarea>
             </div>
             <div class="form-group">
-                <label asp-for="Header3Content" class="control-label"></label>
+                <label class="control-label">Header 3 Content</label>
                 <textarea asp-for="Header3Content" class="form-control" rows="4" cols="50"></textarea>
             </div>
             <div class="form-group">
-                <label asp-for="FinalHeader" class="control-label"></label>
+                <label class="control-label">Final Header</label>
                 <textarea asp-for="FinalHeader" class="form-control" rows="4" cols="50"></textarea>
             </div>
             <div class="form-group">
-                <label asp-for="FinalHeaderContent" class="control-label"></label>
+                <label class="control-label">Final Header Content</label>
                 <textarea asp-for="FinalHeaderContent" class="form-control" rows="4" cols="50"></textarea>
             </div>
             <div class="form-group">
-                <label asp-for="WhatWeCollect" class="control-label"></label>
+                <label class="control-label">What We Collect Text</label>
                 <input asp-for="WhatWeCollect" class="form-control" hidden />
                 <div id="editorWhatWeCollect" style="height: 300px;">
                     @Html.Raw(Model.WhatWeCollect)
@@ -74,7 +72,7 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="PrivacyPolicy" class="control-label"></label>
+                <label class="control-label">Privacy Policy Text</label>
                 <input asp-for="PrivacyPolicy" class="form-control" hidden />
                 <div id="editorPrivacyPolicy" style="height: 300px;">
                     @Html.Raw(Model.PrivacyPolicy)
@@ -82,7 +80,7 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="Documentation" class="control-label"></label>
+                <label class="control-label">Documentation Text</label>
                 <input asp-for="Documentation" class="form-control" hidden />
                 <div id="editorDocumentation" style="height: 300px;">
                     @Html.Raw(Model.Documentation)
@@ -100,7 +98,7 @@
 </div>
 
 @section Scripts {
-    <script src="https://cdn.quilljs.com/1.3.4/quill.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js" integrity="sha512-P2W2rr8ikUPfa31PLBo5bcBQrsa+TNj8jiKadtaIrHQGMo6hQM6RdPjQYxlNguwHz8AwSQ28VkBK6kHBLgd/8g==" crossorigin="anonymous"></script>
     <script>
         var quillDocs = new Quill('#editorDocumentation', {
             theme: 'snow'

@@ -16,9 +16,9 @@
     </div>
     <div class="col-md-8">
         <blockquote class="blockquote text-center">
-            <p class="mb-0">
+            <h4 class="mb-0">
                 @Model.BlurgUnderLargerHeader
-            </p>
+            </h4>
         </blockquote>
     </div>
     <div class="col-md-2">
@@ -26,7 +26,19 @@
     </div>
 
 </div>
+<div style="padding-top:20px;padding-bottom:20px;"></div>
 
+<div class="row">
+    <div class="col-md-3">
+
+    </div>
+    <div class="col-md-6">
+        <a class="btn btn-lg btn-block btn-danger" asp-area="Identity" asp-page="/Account/Register">Get Started</a>
+    </div>
+    <div class="col-md-3">
+
+    </div>
+</div>
 <div style="padding-top:20px;padding-bottom:20px;"></div>
 <div class="row">
     <div class="col-md-3">
@@ -79,7 +91,7 @@
 
     </div>
     <div class="col-md-6">
-        <a class="btn btn-lg btn-block btn-danger" asp-area="Identity" asp-page="/Account/Register">Get Started</a>
+        <a class="btn btn-lg btn-block btn-success" asp-action="DemoSite">See a live demo</a>
     </div>
     <div class="col-md-3">
 
@@ -87,10 +99,10 @@
 </div>
 <div style="padding-top:20px;padding-bottom:20px;"></div>
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-2">
 
     </div>
-    <div class="col-md-6">
+    <div class="col-md-8">
 
         <div class="text-center">
             <h1 class="display-4">@Model.Header1</h1>
@@ -104,11 +116,11 @@
             hljs.initHighlightingOnLoad();
         </script>
         <pre>
-            <code class="html">
+        <code class="html">
                 @Model.Header1CodeSnip
             </code></pre>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
 
     </div>
 </div>
@@ -152,8 +164,6 @@
     </div>
 
 </div>
-<div style="padding-top:20px;padding-bottom:20px;"></div>
-<div style="padding-top:20px;padding-bottom:20px;"></div>
 <div style="padding-top:20px;padding-bottom:20px;"></div>
 
 <div class="row">

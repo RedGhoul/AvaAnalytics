@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Domain;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 using SharpCounter.ViewModels;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SharpCounter.Controllers
 {
@@ -14,6 +17,17 @@ namespace SharpCounter.Controllers
         public HomeController(ApplicationDbContext context)
         {
             _context = context;
+        }
+        public async Task<IActionResult> DemoSite()
+        {
+
+            WebSites webSites = await _context.WebSites
+                .FirstOrDefaultAsync(m => m.Id == 1);
+            if (webSites == null)
+            {
+                return NotFound();
+            }
+            return View(webSites);
         }
 
         public IActionResult Index()

@@ -105,7 +105,8 @@ namespace SharpCounter.Controllers
             modWebsite.HomePageLink = webSites.HomePageLink;
             modWebsite.Name = webSites.Name;
             await _context.SaveChangesAsync();
-            return View(webSites);
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: WebSites/Delete/5
