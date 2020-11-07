@@ -3,8 +3,10 @@ using Application.Repository;
 using Domain;
 using Hangfire;
 using Hangfire.PostgreSql;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -40,7 +42,14 @@ namespace Presentation
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddSwagger();
             services.AddResponseCompression();
-           
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+              .AddCookie(options =>
+              {
+                  options.Cookie.HttpOnly = true;
+                  options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                  options.Cookie.SameSite = SameSiteMode.Strict;
+              });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

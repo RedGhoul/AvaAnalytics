@@ -23,7 +23,8 @@ namespace Presentation
 
         public static void UseAuth(this IApplicationBuilder app)
         {
-            app.UseAuthentication();
+            app.UseCookiePolicy();
+            //app.UseAuthentication();
 
             app.UseAuthorization();
         }
@@ -55,7 +56,6 @@ namespace Presentation
             app.UseStaticFiles();
 
             app.UseSession();
-
             app.UseRouting();
 
             app.UseSwagger();
