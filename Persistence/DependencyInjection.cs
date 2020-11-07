@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Config;
+using System;
 
 namespace Persistence
 {
@@ -26,8 +27,13 @@ namespace Persistence
                .AddDefaultTokenProviders()
                .AddDefaultUI()
                .AddEntityFrameworkStores<ApplicationDbContext>();
-           
-            
+
+            services.AddSession(options =>
+            {
+                // 20 minutes later from last access your session will be removed.
+                options.IdleTimeout = TimeSpan.FromMinutes(20);
+            });
+
             return services;
         }
     }
