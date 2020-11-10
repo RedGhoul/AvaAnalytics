@@ -43,15 +43,8 @@ namespace Presentation
             services.AddSwagger();
             services.AddResponseCompression();
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-              .AddCookie(options =>
-              {
-                  options.Cookie.HttpOnly = true;
-                  options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                  options.Cookie.SameSite = SameSiteMode.Strict;
-              });
+            services.AddHangfireServer();
 
-            services.AddDataProtection();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,9 +55,11 @@ namespace Presentation
 
             app.UseAuth();
 
+            app.UseHangFireConfiguration();
+
             app.UseEndPoints();
             
-            await app.CreateAdminRoleForDefaultUser();
+            await app.UseStartupMethods();
         }
     }
 }

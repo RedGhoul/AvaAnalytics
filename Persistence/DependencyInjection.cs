@@ -15,12 +15,11 @@ namespace Persistence
         public static IServiceCollection AddPersistance(this IServiceCollection services, IConfiguration Configuration)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                 options.UseNpgsql(
-                      AppSecrets.GetConnectionString(Configuration, "DefaultConnection")));
+                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDistributedRedisCache(options =>
             {
-                options.Configuration = AppSecrets.GetConnectionString(Configuration, "ConnectionStringRedis");
+                options.Configuration = Configuration.GetConnectionString("ConnectionStringRedis");
             });
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -28,11 +27,8 @@ namespace Persistence
                .AddDefaultUI()
                .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddSession(options =>
-            {
-                // 20 minutes later from last access your session will be removed.
-                options.IdleTimeout = TimeSpan.FromMinutes(20);
-            });
+            services.AddHangfire(config =>
+                 config.UsePostgreSqlStorage(Configuration.GetConnectionString("DefaultConnection")));
 
             return services;
         }

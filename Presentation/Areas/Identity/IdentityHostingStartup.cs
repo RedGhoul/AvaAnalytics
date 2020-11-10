@@ -24,16 +24,7 @@ namespace SharpCounter.Areas.Identity
         {
             builder.ConfigureServices((context, services) =>
             {
-                services.AddDistributedRedisCache(options =>
-                {
-                    options.Configuration = AppSecrets.GetConnectionString(Configuration, "ConnectionStringRedis");
-                });
 
-                services.AddSession(options =>
-                {
-                    // 20 minutes later from last access your session will be removed.
-                    options.IdleTimeout = TimeSpan.FromMinutes(20);
-                });
             });
         }
     }

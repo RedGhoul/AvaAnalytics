@@ -10,6 +10,22 @@ namespace Presentation
 {
     public static class PresentationConfig
     {
+        public static void UseHangFireConfiguration(this IApplicationBuilder app)
+        {
+            app.UseHangfireServer(new BackgroundJobServerOptions()
+            {
+                SchedulePollingInterval = TimeSpan.FromMinutes(1),
+                HeartbeatInterval = TimeSpan.FromSeconds(20),
+                ServerCheckInterval = TimeSpan.FromSeconds(20),
+                WorkerCount = Environment.ProcessorCount * 2,
+                ServerName = "Jobs"
+            });
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new[] { new HangFireAuthorizationFilter() }
+            });
+        }
+
         public static void UseEndPoints(this IApplicationBuilder app)
         {
             app.UseEndpoints(endpoints =>
@@ -23,8 +39,7 @@ namespace Presentation
 
         public static void UseAuth(this IApplicationBuilder app)
         {
-            app.UseCookiePolicy();
-            //app.UseAuthentication();
+            app.UseAuthentication();
 
             app.UseAuthorization();
         }
@@ -43,7 +58,7 @@ namespace Presentation
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                //app.UseDatabaseErrorPage();
             }
             else
             {
