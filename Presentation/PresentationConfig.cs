@@ -72,7 +72,6 @@ namespace Presentation
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseSession();
             app.UseRouting();
 
             app.UseSwagger();
