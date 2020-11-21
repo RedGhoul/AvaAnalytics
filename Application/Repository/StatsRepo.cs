@@ -16,7 +16,7 @@ namespace Application.Repository
         private readonly string connectionString;
         public StatsRepo(IConfiguration configuration)
         {
-            connectionString = AppSecrets.GetConnectionString(configuration, "DefaultConnection");
+            connectionString = AppSecrets.GetConnectionString(configuration);
         }
 
         internal IDbConnection Connection => new NpgsqlConnection(connectionString);
@@ -76,7 +76,7 @@ namespace Application.Repository
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
             IEnumerable<LocationStatsDTO> data = await dbConnection.QueryAsync<LocationStatsDTO>(
-                @"SELECT ""Location"", SUM(""Count"")
+                @"SELECT ""Location"", SUM(""Count"") as ""Count""
                 FROM ""LocationStats"" where ""Date"" <= @curTime and 
                 ""Date"" >= @oldTime and ""WebSiteId"" = @Id group by ""Location""",
                 new { curTime, oldTime, Id = webSiteId });

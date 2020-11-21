@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿
 using System;
-
+using Microsoft.Extensions.Configuration;
 namespace Config
 {
     public static class AppSecrets
@@ -43,6 +43,21 @@ namespace Config
             }
 
             return Environment.GetEnvironmentVariable(name);
+        }
+
+        public static string GetConnectionString(IConfiguration Configuration)
+        {
+            string AppDBConnectionString;
+            if (Configuration.GetSection("Environment").Value.Equals("Dev"))
+            {
+                AppDBConnectionString = Configuration.GetConnectionString("AvaAnalytics_Local");
+            }
+            else
+            {
+                AppDBConnectionString = Configuration.GetConnectionString("AvaAnalytics_Prod");
+            }
+
+            return AppDBConnectionString;
         }
     }
 }

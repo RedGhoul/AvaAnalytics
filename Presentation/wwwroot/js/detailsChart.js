@@ -109,6 +109,20 @@
                     ]
                 }
             };
+            var Location_Generic_DataTranslator = function (Data, dataMapper) {
+                var MappedData = dataMapper(Data);
+                console.log(MappedData)
+                return {
+                    labels: MappedData.GLabels,
+                    datasets: [
+                        {
+                            label: "Counts",
+                            backgroundColor: chroma.scale(state.newGradArr).mode('lch').colors(MappedData.GData.length),
+                            data: MappedData.GData
+                        }
+                    ]
+                }
+            };
             var dataMapper_ForPageView = function (data) {
                 var GLabels = [];
                 var GData = [];
@@ -243,7 +257,7 @@
                 },
                 {
                     chart: state.Chart_LocationStats,
-                    data_function: Generic_DataTranslator,
+                    data_function: Location_Generic_DataTranslator,
                     chart_url: '/api/Stats/LocationStats/' + state.webSiteId,
                     notFoundText: state.LocationStats_NotFoundText,
                     dataMapper: dataMapper_LocationStats,
@@ -458,7 +472,7 @@
                         fontSize: state.titleOptions.fontSize,
                         fontColor: state.titleOptions.fontColor,
                         display: state.titleOptions.display,
-                        text: 'Screen Sizes'
+                        text: 'Location Stats'
                     },
                     scales: state.scaleOptions
                 }

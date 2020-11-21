@@ -18,10 +18,10 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
     <PackageReference Include="Dapper.Extensions.PostgreSql" Version="3.2.0" />
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.17" />
-    <PackageReference Include="HangFire.Core" Version="1.7.17" />
-    <PackageReference Include="Hangfire.PostgreSql" Version="1.7.1" />
-    <PackageReference Include="MaxMind.GeoIP2" Version="3.3.0" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.18" />
+    <PackageReference Include="HangFire.Core" Version="1.7.18" />
+    <PackageReference Include="Hangfire.PostgreSql" Version="1.8.0" />
+    <PackageReference Include="MaxMind.GeoIP2" Version="4.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.7" />

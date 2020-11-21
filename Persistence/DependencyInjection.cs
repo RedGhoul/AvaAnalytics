@@ -14,8 +14,10 @@ namespace Persistence
     {
         public static IServiceCollection AddPersistance(this IServiceCollection services, IConfiguration Configuration)
         {
+            string AppDBConnectionString = AppSecrets.GetConnectionString(Configuration);
+
             services.AddDbContext<ApplicationDbContext>(options =>
-                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+                 options.UseNpgsql(AppDBConnectionString));
 
             services.AddDistributedRedisCache(options =>
             {
@@ -28,9 +30,10 @@ namespace Persistence
                .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddHangfire(config =>
-                 config.UsePostgreSqlStorage(Configuration.GetConnectionString("DefaultConnection")));
+                 config.UsePostgreSqlStorage(AppDBConnectionString));
 
             return services;
         }
+
     }
 }

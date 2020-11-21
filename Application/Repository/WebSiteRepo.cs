@@ -16,7 +16,7 @@ namespace Application.Repository
         private readonly string connectionString;
         public WebSiteRepo(IConfiguration configuration)
         {
-            connectionString = AppSecrets.GetConnectionString(configuration, "DefaultConnection");
+            connectionString = AppSecrets.GetConnectionString(configuration);
         }
 
         internal IDbConnection Connection => new NpgsqlConnection(connectionString);
