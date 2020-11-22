@@ -15,6 +15,7 @@
         newGradArr: ['#CC2936', '#08415C'],
         Error_Message: 'Nothing Found Just Yet',
         StatsSerachBtn: document.getElementById("StatsSerach"),
+        WebSiteTimeScaleTitle: $("#DateTimeDisplay"),
         CurrentStartDate: null,
         CurrentEndDate: null,
         baseDateTime: null,
@@ -25,8 +26,15 @@
         Chart_ScreenSizeStats: null,
         Chart_LocationStats: null,
         Set_BaseDate: function () {
-            state.CurrentStartDate = moment().subtract(7, "days").format();
+            if (state.isDemo) {
+                state.CurrentStartDate = moment().subtract(200, "days").format();
+            } else {
+                state.CurrentStartDate = moment().subtract(7, "days").format();
+            }
             state.CurrentEndDate = moment().format();
+
+            state.WebSiteTimeScaleTitle.text(moment(state.CurrentStartDate).format('MMMM d, YYYY') + " " + " to " + " " + moment(state.CurrentEndDate).format('MMMM d, YYYY'));
+
             state.baseDateTime = {
                 CurrentStartDate: state.CurrentStartDate,
                 CurrentEndDate: state.CurrentEndDate
@@ -111,7 +119,6 @@
             };
             var Location_Generic_DataTranslator = function (Data, dataMapper) {
                 var MappedData = dataMapper(Data);
-                console.log(MappedData)
                 return {
                     labels: MappedData.GLabels,
                     datasets: [
@@ -382,12 +389,12 @@
                     fontStyle: '500',
                     autoSkip: true,
                     maxRotation: 300,
-                    //minRotation: 90
                 }
             }]
         },
         SetUp_Refs: function () {
             state.webSiteId = document.querySelector('script[data-website-id]').getAttribute("data-website-id");
+            state.isDemo = (document.querySelector('script[data-is-demo]').getAttribute("data-is-demo") === 'true') || false;
             state.PageViewCountChartNode = document.getElementById("bar-chart-PageViewCounts");
             state.URLRoutesVisitedChartNode = document.getElementById("bar-chart-InteractionStats");
             state.BrowserTypeStatsChartNode = document.getElementById("bar-chart-BrowserStats");
@@ -497,7 +504,5 @@
             state.SetUp_ChartHeight();
         }
     }
-    
     state.StartUp_View();
-
-})
+});
