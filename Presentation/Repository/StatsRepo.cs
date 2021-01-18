@@ -15,7 +15,7 @@ namespace Application.Repository
         private readonly string connectionString;
         public StatsRepo(IConfiguration configuration)
         {
-            connectionString = .GetConnectionString(configuration);
+            connectionString = Application.AppSecrets.GetConnectionString(configuration);
         }
 
         internal IDbConnection Connection => new MySqlConnection(connectionString);

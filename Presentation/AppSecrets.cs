@@ -1,7 +1,7 @@
 ﻿
 using System;
 using Microsoft.Extensions.Configuration;
-namespace Config
+namespace Application
 {
     public static class AppSecrets
     {

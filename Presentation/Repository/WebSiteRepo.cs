@@ -1,5 +1,4 @@
-﻿using Config;
-using Dapper;
+﻿using Dapper;
 using Domain;
 using Microsoft.Extensions.Configuration;
 using MySqlConnector;

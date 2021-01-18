@@ -4,16 +4,39 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Hangfire;
-using Config;
 using System;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
-using Hangfire.MySql.Core;
 using System.Transactions;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Persistence;
+using Application.Repository;
+using Microsoft.AspNetCore.Builder;
+using MediatR;
+using System.Reflection;
+using AutoMapper;
+using Microsoft.AspNetCore.HttpOverrides;
+using Hangfire.MySql;
 
-namespace Persistence
+namespace Application
 {
     public static class DependencyInjection
     {
+        public static IServiceCollection AddApplication(this IServiceCollection services)
+        {
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+
+            services.AddSingleton<WebSiteRepo, WebSiteRepo>();
+            services.AddSingleton<InteractionRepo, InteractionRepo>();
+            services.AddSingleton<SessionRepo, SessionRepo>();
+            services.AddSingleton<StatsRepo, StatsRepo>();
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders =
+                    ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
+            return services;
+        }
+
         public static IServiceCollection AddPersistance(this IServiceCollection services, IConfiguration Configuration)
         {
             string AppDBConnectionString = AppSecrets.GetConnectionString(Configuration);
@@ -42,17 +65,17 @@ namespace Persistence
                .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddHangfire(config =>
-                  config.UseStorage(new MySqlStorage(AppDBConnectionString, new MySqlStorageOptions
-                  {
-                      TransactionIsolationLevel = (System.Data.IsolationLevel?)IsolationLevel.ReadCommitted,
-                      QueuePollInterval = TimeSpan.FromSeconds(15),
-                      JobExpirationCheckInterval = TimeSpan.FromHours(1),
-                      CountersAggregateInterval = TimeSpan.FromMinutes(5),
-                      PrepareSchemaIfNecessary = true,
-                      DashboardJobListLimit = 50000,
-                      TransactionTimeout = TimeSpan.FromMinutes(1),
-                      TablePrefix = "Hangfire"
-                  })));
+                 config.UseStorage(new MySqlStorage(AppDBConnectionString, new MySqlStorageOptions
+                 {
+                     TransactionIsolationLevel = (System.Transactions.IsolationLevel?)IsolationLevel.ReadCommitted,
+                     QueuePollInterval = TimeSpan.FromSeconds(15),
+                     JobExpirationCheckInterval = TimeSpan.FromHours(1),
+                     CountersAggregateInterval = TimeSpan.FromMinutes(5),
+                     PrepareSchemaIfNecessary = true,
+                     DashboardJobListLimit = 50000,
+                     TransactionTimeout = TimeSpan.FromMinutes(1),
+                     TablesPrefix = "Hangfire"
+                 })));
 
             return services;
         }
