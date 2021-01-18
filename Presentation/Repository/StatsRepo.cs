@@ -1,5 +1,4 @@
 ﻿using Application.DTO;
-using Config;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using MySqlConnector;
@@ -16,7 +15,7 @@ namespace Application.Repository
         private readonly string connectionString;
         public StatsRepo(IConfiguration configuration)
         {
-            connectionString = AppSecrets.GetConnectionString(configuration);
+            connectionString = .GetConnectionString(configuration);
         }
 
         internal IDbConnection Connection => new MySqlConnection(connectionString);

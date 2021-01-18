@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Hangfire;
-using Hangfire.PostgreSql;
 using Config;
 using System;
 

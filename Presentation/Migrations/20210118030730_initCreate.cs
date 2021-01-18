@@ -1,10 +1,10 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Persistence.Migrations
+namespace Presentation.Migrations
 {
-    public partial class dbinit : Migration
+    public partial class initCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,10 +12,10 @@ namespace Persistence.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true)
+                    Id = table.Column<string>(type: "varchar(255)", nullable: false),
+                    Name = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "longtext", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -26,24 +26,24 @@ namespace Persistence.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
-                    UserName = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
-                    Email = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(nullable: false),
-                    PasswordHash = table.Column<string>(nullable: true),
-                    SecurityStamp = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    PhoneNumber = table.Column<string>(nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
-                    LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
-                    CreatedAt = table.Column<DateTime>(nullable: false)
+                    Id = table.Column<string>(type: "varchar(255)", nullable: false),
+                    FirstName = table.Column<string>(type: "longtext", nullable: true),
+                    LastName = table.Column<string>(type: "longtext", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "longtext", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "longtext", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "longtext", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "longtext", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -51,14 +51,40 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SiteContents",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    LargeHeader = table.Column<string>(type: "longtext", nullable: true),
+                    BlurgUnderLargerHeader = table.Column<string>(type: "longtext", nullable: true),
+                    Header1 = table.Column<string>(type: "longtext", nullable: true),
+                    Header1Content = table.Column<string>(type: "longtext", nullable: true),
+                    Header1CodeSnip = table.Column<string>(type: "longtext", nullable: true),
+                    Header2 = table.Column<string>(type: "longtext", nullable: true),
+                    Header2Content = table.Column<string>(type: "longtext", nullable: true),
+                    Header3 = table.Column<string>(type: "longtext", nullable: true),
+                    Header3Content = table.Column<string>(type: "longtext", nullable: true),
+                    FinalHeader = table.Column<string>(type: "longtext", nullable: true),
+                    FinalHeaderContent = table.Column<string>(type: "longtext", nullable: true),
+                    WhatWeCollect = table.Column<string>(type: "longtext", nullable: true),
+                    PrivacyPolicy = table.Column<string>(type: "longtext", nullable: true),
+                    Documentation = table.Column<string>(type: "longtext", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SiteContents", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    RoleId = table.Column<string>(nullable: false),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    RoleId = table.Column<string>(type: "varchar(255)", nullable: false),
+                    ClaimType = table.Column<string>(type: "longtext", nullable: true),
+                    ClaimValue = table.Column<string>(type: "longtext", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -75,11 +101,11 @@ namespace Persistence.Migrations
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<string>(nullable: false),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: false),
+                    ClaimType = table.Column<string>(type: "longtext", nullable: true),
+                    ClaimValue = table.Column<string>(type: "longtext", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -96,10 +122,10 @@ namespace Persistence.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(nullable: false),
-                    ProviderKey = table.Column<string>(nullable: false),
-                    ProviderDisplayName = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: false)
+                    LoginProvider = table.Column<string>(type: "varchar(255)", nullable: false),
+                    ProviderKey = table.Column<string>(type: "varchar(255)", nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "longtext", nullable: true),
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -116,8 +142,8 @@ namespace Persistence.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(nullable: false),
-                    RoleId = table.Column<string>(nullable: false)
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: false),
+                    RoleId = table.Column<string>(type: "varchar(255)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -140,10 +166,10 @@ namespace Persistence.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Value = table.Column<string>(nullable: true)
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "varchar(255)", nullable: false),
+                    Name = table.Column<string>(type: "varchar(255)", nullable: false),
+                    Value = table.Column<string>(type: "longtext", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -160,14 +186,14 @@ namespace Persistence.Migrations
                 name: "WebSites",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    APIKey = table.Column<string>(nullable: true),
-                    HomePageLink = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    CreatedAt = table.Column<DateTime>(nullable: false),
-                    UpdatedAt = table.Column<DateTime>(nullable: false),
-                    OwnerId = table.Column<string>(nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    APIKey = table.Column<string>(type: "varchar(255)", nullable: true),
+                    HomePageLink = table.Column<string>(type: "longtext", nullable: true),
+                    Name = table.Column<string>(type: "longtext", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    OwnerId = table.Column<string>(type: "varchar(255)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -184,14 +210,14 @@ namespace Persistence.Migrations
                 name: "BrowserStats",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Date = table.Column<DateTime>(nullable: false),
-                    Browser = table.Column<string>(nullable: true),
-                    Version = table.Column<string>(nullable: true),
-                    Count = table.Column<int>(nullable: false),
-                    CountUnique = table.Column<int>(nullable: false),
-                    WebSiteId = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Browser = table.Column<string>(type: "varchar(255)", nullable: true),
+                    Version = table.Column<string>(type: "longtext", nullable: true),
+                    Count = table.Column<int>(type: "int", nullable: false),
+                    CountUnique = table.Column<int>(type: "int", nullable: false),
+                    WebSiteId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -208,11 +234,11 @@ namespace Persistence.Migrations
                 name: "InteractionPathGroupStats",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Date = table.Column<DateTime>(nullable: false),
-                    WebSiteId = table.Column<int>(nullable: false),
-                    TotalRoutes = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    WebSiteId = table.Column<int>(type: "int", nullable: false),
+                    TotalRoutes = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -229,13 +255,13 @@ namespace Persistence.Migrations
                 name: "LocationStats",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    WebSiteId = table.Column<int>(nullable: false),
-                    Date = table.Column<DateTime>(nullable: false),
-                    Location = table.Column<string>(nullable: true),
-                    Count = table.Column<int>(nullable: false),
-                    CountUnique = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    WebSiteId = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Location = table.Column<string>(type: "longtext", nullable: true),
+                    Count = table.Column<int>(type: "int", nullable: false),
+                    CountUnique = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -252,11 +278,11 @@ namespace Persistence.Migrations
                 name: "PageViewStats",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Count = table.Column<double>(nullable: false),
-                    CreatedAt = table.Column<DateTime>(nullable: false),
-                    WebSiteId = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Count = table.Column<double>(type: "double", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    WebSiteId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -273,15 +299,15 @@ namespace Persistence.Migrations
                 name: "ScreenSizeStats",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Date = table.Column<DateTime>(nullable: false),
-                    NumberOfPhones = table.Column<int>(nullable: false),
-                    LargePhonesSmallTablets = table.Column<int>(nullable: false),
-                    TabletsSmallLaptops = table.Column<int>(nullable: false),
-                    ComputerMonitors = table.Column<int>(nullable: false),
-                    ComputerMonitors4K = table.Column<int>(nullable: false),
-                    WebSiteId = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    NumberOfPhones = table.Column<int>(type: "int", nullable: false),
+                    LargePhonesSmallTablets = table.Column<int>(type: "int", nullable: false),
+                    TabletsSmallLaptops = table.Column<int>(type: "int", nullable: false),
+                    ComputerMonitors = table.Column<int>(type: "int", nullable: false),
+                    ComputerMonitors4K = table.Column<int>(type: "int", nullable: false),
+                    WebSiteId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -298,12 +324,12 @@ namespace Persistence.Migrations
                 name: "Sessions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    SessionUId = table.Column<string>(nullable: true),
-                    WebSiteId = table.Column<int>(nullable: false),
-                    CreatedAt = table.Column<DateTime>(nullable: false),
-                    LastSeen = table.Column<DateTime>(nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    SessionUId = table.Column<string>(type: "varchar(255)", nullable: true),
+                    WebSiteId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    LastSeen = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -320,14 +346,14 @@ namespace Persistence.Migrations
                 name: "SystemStats",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Day = table.Column<DateTime>(nullable: false),
-                    Version = table.Column<string>(nullable: true),
-                    Platform = table.Column<string>(nullable: true),
-                    Count = table.Column<int>(nullable: false),
-                    CountUnique = table.Column<int>(nullable: false),
-                    WebSiteId = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Day = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Version = table.Column<string>(type: "longtext", nullable: true),
+                    Platform = table.Column<string>(type: "varchar(255)", nullable: true),
+                    Count = table.Column<int>(type: "int", nullable: false),
+                    CountUnique = table.Column<int>(type: "int", nullable: false),
+                    WebSiteId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -344,19 +370,19 @@ namespace Persistence.Migrations
                 name: "InteractionByPathCounts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    WebSiteId = table.Column<int>(nullable: false),
-                    InteractionPathGroupStatsId = table.Column<int>(nullable: false),
-                    Path = table.Column<string>(nullable: true),
-                    Date = table.Column<DateTime>(nullable: false),
-                    Total = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    WebSiteId = table.Column<int>(type: "int", nullable: false),
+                    InteractionPathGroupStatsId = table.Column<int>(type: "int", nullable: false),
+                    Path = table.Column<string>(type: "varchar(255)", nullable: true),
+                    Date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Total = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_InteractionByPathCounts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_InteractionByPathCounts_InteractionPathGroupStats_Interacti~",
+                        name: "FK_InteractionByPathCounts_InteractionPathGroupStats_Interactio~",
                         column: x => x.InteractionPathGroupStatsId,
                         principalTable: "InteractionPathGroupStats",
                         principalColumn: "Id",
@@ -373,21 +399,21 @@ namespace Persistence.Migrations
                 name: "Interactions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    WebSiteId = table.Column<int>(nullable: false),
-                    SessionId = table.Column<int>(nullable: false),
-                    Path = table.Column<string>(nullable: true),
-                    Title = table.Column<string>(nullable: true),
-                    Browser = table.Column<string>(nullable: true),
-                    Location = table.Column<string>(nullable: true),
-                    Language = table.Column<string>(nullable: true),
-                    FirstVisit = table.Column<bool>(nullable: false),
-                    Referrer = table.Column<string>(nullable: true),
-                    ScreenWidth = table.Column<double>(nullable: false),
-                    ScreenHeight = table.Column<double>(nullable: false),
-                    DevicePixelRatio = table.Column<double>(nullable: false),
-                    CreatedAt = table.Column<DateTime>(nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    WebSiteId = table.Column<int>(type: "int", nullable: false),
+                    SessionId = table.Column<int>(type: "int", nullable: false),
+                    Path = table.Column<string>(type: "varchar(255)", nullable: true),
+                    Title = table.Column<string>(type: "longtext", nullable: true),
+                    Browser = table.Column<string>(type: "varchar(255)", nullable: true),
+                    Location = table.Column<string>(type: "longtext", nullable: true),
+                    Language = table.Column<string>(type: "longtext", nullable: true),
+                    FirstVisit = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Referrer = table.Column<string>(type: "longtext", nullable: true),
+                    ScreenWidth = table.Column<double>(type: "double", nullable: false),
+                    ScreenHeight = table.Column<double>(type: "double", nullable: false),
+                    DevicePixelRatio = table.Column<double>(type: "double", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -639,6 +665,9 @@ namespace Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "ScreenSizeStats");
+
+            migrationBuilder.DropTable(
+                name: "SiteContents");
 
             migrationBuilder.DropTable(
                 name: "SystemStats");
