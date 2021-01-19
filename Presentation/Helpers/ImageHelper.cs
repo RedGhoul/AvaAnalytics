@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
+using Presentation.Repository;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,17 +12,19 @@ namespace Application.Helpers
 {
     public static class ImageHelper
     {
-        public static async Task<(MemoryStream, string)> SendPngStream(IDistributedCache _cache)
+        public static (MemoryStream, string) SendPngStream(CacheRepo _cache)
         {
-            byte[] image = await _cache.GetAsync("image");
+            byte[] image = Encoding.ASCII.GetBytes(_cache.GetStringAsync("image"));
             if (image == null)
             {
                 MemoryStream memStreams = new MemoryStream();
                 memStreams.Position = 0;
                 image = memStreams.ToArray();
-                await _cache.SetAsync("image", image);
+                _cache.SetStringAsync("image", image.ToString());
             }
             return (new MemoryStream(), "image/png");
         }
+
+
     }
 }

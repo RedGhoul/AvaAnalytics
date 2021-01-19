@@ -1,6 +1,7 @@
 ﻿using Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Presentation;
 
 namespace Persistence
 {
@@ -21,7 +22,7 @@ namespace Persistence
         public DbSet<Session> Sessions { get; set; }
         public DbSet<WebSites> WebSites { get; set; }
         public DbSet<SiteContent> SiteContents { get; set; }
-
+        public DbSet<Cache> Caches { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -154,6 +155,10 @@ namespace Persistence
 
             modelBuilder.Entity<PageViewStats>()
                 .HasIndex(x => x.CreatedAt);
+
+            modelBuilder.Entity<Cache>()
+               .HasIndex(u => u.Key)
+               .IsUnique();
 
         }
 

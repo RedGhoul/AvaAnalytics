@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Presentation.Repository;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,7 +19,7 @@ namespace Application.Handlers
 {
     public class CreateInteractionHandler : IRequestHandler<CreateInteractionCommand, CreateInteractionResponse>
     {
-        private readonly IDistributedCache _cache;
+        private readonly CacheRepo _cache;
         private readonly WebSiteRepo _websiteRepo;
         private readonly SessionRepo _sessionRepo;
         private readonly InteractionRepo _interactionRepo;
@@ -26,9 +27,8 @@ namespace Application.Handlers
 
         public CreateInteractionHandler(ILogger<CreateInteractionHandler> logger,
            InteractionRepo interactionRepo, SessionRepo SessionRepo,
-           WebSiteRepo WebsiteRepo, IDistributedCache cache)
+           WebSiteRepo WebsiteRepo)
         {
-            _cache = cache;
             _websiteRepo = WebsiteRepo;
             _sessionRepo = SessionRepo;
             _interactionRepo = interactionRepo;
@@ -44,7 +44,7 @@ namespace Application.Handlers
                 WebSites curSite = null;
                 Session curSession = null;
 
-                string site = await _cache.GetStringAsync(request.Key);
+                string site = _cache.GetStringAsync(request.Key);
                 if (site != null)
                 {
                     curSite = JsonConvert.DeserializeObject<WebSites>(site);
@@ -56,10 +56,10 @@ namespace Application.Handlers
                     {
                         return await SendResponse();
                     }
-                    await _cache.SetStringAsync(request.Key, JsonConvert.SerializeObject(curSite));
+                    _cache.SetStringAsync(request.Key, JsonConvert.SerializeObject(curSite));
                 }
                 bool isFirst = false;
-                string sessionString = await _cache.GetStringAsync(sessionHash);
+                string sessionString = _cache.GetStringAsync(sessionHash);
                 if (sessionString != null)
                 {
                     curSession = JsonConvert.DeserializeObject<Session>(sessionString);
@@ -80,7 +80,7 @@ namespace Application.Handlers
                         curSession = await _sessionRepo.FindBySessionHash(sessionHash);
                         isFirst = true;
                     }
-                    await _cache.SetStringAsync(sessionHash,
+                    _cache.SetStringAsync(sessionHash,
                         JsonConvert.SerializeObject(curSession,
                         Formatting.Indented, new JsonSerializerSettings
                         {
@@ -138,7 +138,7 @@ namespace Application.Handlers
 
         private async Task<CreateInteractionResponse> SendResponse()
         {
-            var ResponseInfo = await ImageHelper.SendPngStream(_cache);
+            var ResponseInfo = ImageHelper.SendPngStream(_cache);
 
             return new CreateInteractionResponse()
             {

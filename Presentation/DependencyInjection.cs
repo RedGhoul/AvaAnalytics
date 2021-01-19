@@ -15,6 +15,7 @@ using System.Reflection;
 using AutoMapper;
 using Microsoft.AspNetCore.HttpOverrides;
 using Hangfire.MySql;
+using Presentation.Repository;
 
 namespace Application
 {
@@ -29,6 +30,7 @@ namespace Application
             services.AddSingleton<InteractionRepo, InteractionRepo>();
             services.AddSingleton<SessionRepo, SessionRepo>();
             services.AddSingleton<StatsRepo, StatsRepo>();
+            services.AddSingleton<CacheRepo, CacheRepo>();
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders =
@@ -43,21 +45,12 @@ namespace Application
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySql(
-                // Replace with your connection string.
                 AppDBConnectionString,
-                // Replace with your server version and type.
-                // For common usages, see pull request #1233.
-                new MySqlServerVersion(new Version(8, 0, 21)), // use MariaDbServerVersion for MariaDB
+                new MySqlServerVersion(new Version(8, 0, 21)),
                 mySqlOptions => mySqlOptions
                     .CharSetBehavior(CharSetBehavior.NeverAppend))
-            // Everything from this point on is optional but helps with debugging.
             .EnableSensitiveDataLogging()
             .EnableDetailedErrors());
-
-            services.AddDistributedRedisCache(options =>
-            {
-                options.Configuration = Configuration.GetConnectionString("ConnectionStringRedis");
-            });
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                .AddDefaultTokenProviders()
