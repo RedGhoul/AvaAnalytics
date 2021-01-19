@@ -48,13 +48,15 @@ namespace Application
         public static string GetConnectionString(IConfiguration Configuration)
         {
             string AppDBConnectionString;
-            if (Configuration.GetSection("Environment").Value.Equals("Dev"))
+            if (GetAppSettingsValue(Configuration,"Environment").Equals("Dev"))
             {
-                AppDBConnectionString = Configuration.GetConnectionString("AvaAnalytics_Local");
+                AppDBConnectionString = GetConnectionString(Configuration,"AvaAnalytics_Local");
             }
             else
             {
-                AppDBConnectionString = Configuration.GetConnectionString("AvaAnalytics_Prod");
+                
+                AppDBConnectionString = GetConnectionString(Configuration, "AvaAnalytics_Prod");
+                
             }
 
             return AppDBConnectionString;
