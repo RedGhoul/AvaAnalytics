@@ -17,8 +17,8 @@ namespace Application
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                Console.WriteLine("Could not find it in the Configuration");
+                //Console.WriteLine(e);
+                //Console.WriteLine("Could not find it in the Configuration");
                 Console.WriteLine("using the following value instead: " + Environment.GetEnvironmentVariable(name));
             }
 
@@ -37,8 +37,8 @@ namespace Application
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                Console.WriteLine("Could not find it in the Configuration");
+                //Console.WriteLine(e);
+                //Console.WriteLine("Could not find it in the Configuration");
                 Console.WriteLine("using the following value instead: " + Environment.GetEnvironmentVariable(name));
             }
 
