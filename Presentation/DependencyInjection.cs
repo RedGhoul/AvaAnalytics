@@ -64,6 +64,10 @@ namespace Application
                .AddDefaultUI()
                .AddEntityFrameworkStores<ApplicationDbContext>();
 
+
+            Console.WriteLine("YOLO =>" + AppDBConnectionString);
+
+
             services.AddHangfire(config =>
                  config.UseStorage(new MySqlStorage(AppDBConnectionString, new MySqlStorageOptions
                  {
