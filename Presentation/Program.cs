@@ -24,7 +24,7 @@ namespace SharpCounter
             }
             catch (Exception e)
             {
-                configuration = new ConfigurationBuilder().AddEnvironmentVariables().Build();
+                
                 Console.WriteLine(e);
             }
 
