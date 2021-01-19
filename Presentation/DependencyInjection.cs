@@ -30,7 +30,7 @@ namespace Application
             services.AddSingleton<InteractionRepo, InteractionRepo>();
             services.AddSingleton<SessionRepo, SessionRepo>();
             services.AddSingleton<StatsRepo, StatsRepo>();
-            services.AddSingleton<CacheRepo, CacheRepo>();
+            services.AddTransient<CacheRepo, CacheRepo>();
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders =
