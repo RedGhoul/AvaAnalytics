@@ -12,17 +12,10 @@ namespace SharpCounter.Areas.Identity
 {
     public class IdentityHostingStartup : IHostingStartup
     {
-        public IConfiguration Configuration { get; }
-
-        public IdentityHostingStartup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
         public void Configure(IWebHostBuilder builder)
         {
             builder.ConfigureServices((context, services) =>
             {
-
             });
         }
     }
