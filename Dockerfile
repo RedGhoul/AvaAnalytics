@@ -9,10 +9,6 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 WORKDIR /src
 COPY ["Presentation/Presentation.csproj", "/Presentation/"]
-COPY ["Application/Application.csproj", "/Application/"]
-COPY ["Config/Config.csproj", "/Config/"]
-COPY ["Domain/Domain.csproj", "/Domain/"]
-COPY ["Persistence/Persistence.csproj", "/Persistence/"]
 RUN dotnet restore "/Presentation/Presentation.csproj"
 COPY . .
 WORKDIR "/src/."

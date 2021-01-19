@@ -24,8 +24,8 @@ namespace Application.Repository
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
             await dbConnection.ExecuteAsync(
-                @"Insert into ""Sessions""
-                (""SessionUId"", ""LastSeen"", ""CreatedAt"", ""WebSiteId"") VALUES
+                @"Insert into Sessions
+                (SessionUId, LastSeen, CreatedAt, WebSiteId) VALUES
                 (@SessionUId, @LastSeen, @CreatedAt, @WebSiteId)", item);
         }
         public async Task<Session> FindBySessionHash(string sessionHash)
@@ -33,7 +33,7 @@ namespace Application.Repository
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
             return await dbConnection.QueryFirstOrDefaultAsync<Session>(
-                    @"SELECT * FROM ""Sessions"" where ""SessionUId"" = @sessionHash",
+                    @"SELECT * FROM Sessions where SessionUId = @sessionHash",
                      new { sessionHash });
 
         }

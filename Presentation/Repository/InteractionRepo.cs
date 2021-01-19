@@ -22,10 +22,10 @@ namespace Application.Repository
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
             await dbConnection.ExecuteAsync(
-                 @"Insert into ""Interactions""
-                (""WebSiteId"", ""SessionId"", ""Path"", ""Title"",""Browser"",
-                 ""Location"", ""Language"", ""FirstVisit"", ""Referrer"", ""CreatedAt"",
-                 ""ScreenWidth"", ""ScreenHeight"",""DevicePixelRatio"") 
+                 @"Insert into Interactions
+                (WebSiteId, SessionId, Path, Title,Browser,
+                 Location, Language, FirstVisit, Referrer, CreatedAt,
+                 ScreenWidth, ScreenHeight,DevicePixelRatio) 
                 VALUES
                 (@WebSiteId, @SessionId, @Path, @Title, @Browser, @Location,
                  @Language, @FirstVisit, @Referrer, @CreatedAt, @ScreenWidth,

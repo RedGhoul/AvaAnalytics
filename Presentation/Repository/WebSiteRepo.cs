@@ -25,7 +25,7 @@ namespace Application.Repository
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
-            IEnumerable<WebSites> result = await dbConnection.QueryAsync<WebSites>(@"SELECT * FROM ""WebSites""");
+            IEnumerable<WebSites> result = await dbConnection.QueryAsync<WebSites>(@"SELECT * FROM WebSites");
             return result.ToList();
         }
 
@@ -39,7 +39,7 @@ namespace Application.Repository
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
             return await dbConnection.QueryFirstOrDefaultAsync<WebSites>(
-                    @"SELECT * FROM ""WebSites"" Where ""APIKey"" = @key",
+                    @"SELECT * FROM WebSites Where APIKey = @key",
                     new { key });
         }
 
