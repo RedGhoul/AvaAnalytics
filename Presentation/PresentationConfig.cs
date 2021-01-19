@@ -19,7 +19,7 @@ namespace Presentation
                 SchedulePollingInterval = TimeSpan.FromMinutes(1),
                 HeartbeatInterval = TimeSpan.FromSeconds(20),
                 ServerCheckInterval = TimeSpan.FromSeconds(20),
-                WorkerCount = 2,
+                WorkerCount = Environment.ProcessorCount * 5,
                 ServerName = "Jobs"
             });
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
