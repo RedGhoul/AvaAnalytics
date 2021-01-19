@@ -27,12 +27,13 @@ namespace Application.Handlers
 
         public CreateInteractionHandler(ILogger<CreateInteractionHandler> logger,
            InteractionRepo interactionRepo, SessionRepo SessionRepo,
-           WebSiteRepo WebsiteRepo)
+           WebSiteRepo WebsiteRepo, CacheRepo CacheRepo)
         {
             _websiteRepo = WebsiteRepo;
             _sessionRepo = SessionRepo;
             _interactionRepo = interactionRepo;
             _Logger = logger;
+            _cache = CacheRepo;
         }
 
         public async Task<CreateInteractionResponse> Handle(CreateInteractionCommand request, CancellationToken cancellationToken)
