@@ -56,7 +56,6 @@
   <ItemGroup>
     <Folder Include="wwwroot\js\prod\" />
     <Folder Include="Commands\" />
-    <Folder Include="DTO\" />
     <Folder Include="Handlers\" />
     <Folder Include="Helpers\" />
     <Folder Include="Mapper\" />

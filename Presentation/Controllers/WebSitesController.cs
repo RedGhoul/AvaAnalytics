@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Presentation.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -47,6 +49,33 @@ namespace SharpCounter.Controllers
                 return NotFound();
             }
             return View(webSites);
+        }
+
+        // GET: WebSites/AllWebSiteDetails
+        public async Task<IActionResult> Overview()
+        {
+            List<WebSiteOverviewDTO> webSiteOverviewDTOs = new List<WebSiteOverviewDTO>();
+
+            List<WebSites> webSites = _context.WebSites.ToList();
+
+            DateTime startDate = DateTime.UtcNow;
+            DateTime endDate = startDate.AddDays(-30);
+
+            foreach (var item in webSites)
+            {
+                webSiteOverviewDTOs.Add(new WebSiteOverviewDTO()
+                {
+                    Website = item,
+                    LocationStats = await _statsRepo.GetLocationStats(startDate, endDate, item.Id),
+                    PageViewStats = await _statsRepo.GetPageViewCountStats(startDate, endDate, item.Id)
+                });
+            }
+            
+            if (webSites == null)
+            {
+                return NotFound();
+            }
+            return View(webSiteOverviewDTOs);
         }
 
         // GET: WebSites/Create

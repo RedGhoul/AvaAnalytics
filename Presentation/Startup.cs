@@ -42,7 +42,7 @@ namespace Presentation
             services.AddSwagger();
             services.AddResponseCompression();
 
-            services.AddHangfireServer();
+            //services.AddHangfireServer();
 
         }
 
@@ -54,11 +54,11 @@ namespace Presentation
 
             app.UseAuth();
 
-            app.UseHangFireConfiguration();
+            //app.UseHangFireConfiguration();
 
             app.UseEndPoints();
             
-            await app.UseStartupMethods();
+            //await app.UseStartupMethods();
         }
     }
 }
