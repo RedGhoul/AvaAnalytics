@@ -38,10 +38,10 @@ namespace Presentation.HangFire
                 job => job.Run(JobCancellationToken.Null),
                 "*/5 * * * *", TimeZoneInfo.Local);
 
-            RecurringJob.RemoveIfExists(nameof(KeepAliveJob));
-            RecurringJob.AddOrUpdate<KeepAliveJob>(nameof(KeepAliveJob),
-                job => job.Run(JobCancellationToken.Null),
-                Cron.Minutely(), TimeZoneInfo.Local);
+            // RecurringJob.RemoveIfExists(nameof(KeepAliveJob));
+            // RecurringJob.AddOrUpdate<KeepAliveJob>(nameof(KeepAliveJob),
+            //     job => job.Run(JobCancellationToken.Null),
+            //     Cron.Minutely(), TimeZoneInfo.Local);
         }
     }
 }
