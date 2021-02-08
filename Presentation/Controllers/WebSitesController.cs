@@ -51,10 +51,10 @@ namespace SharpCounter.Controllers
             vm.WebSite = await _context.WebSites
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            vm.TimeZoneValues = TimeZoneInfo.GetSystemTimeZones().Select(x => new SelectListItem
+            vm.TimeZoneValues = _context.TimeZoneValues.Select(x => new SelectListItem
             {
-                Text = x.DisplayName,
-                Value = x.DisplayName,
+                Text = x.Text,
+                Value = x.Text,
 
             }).ToList();
 
