@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using TimeZoneConverter;
 
 namespace Application.Repository
 {
@@ -106,7 +107,7 @@ namespace Application.Repository
             var listOfDtos = data.ToList();
             for (int i = 0; i < listOfDtos.Count; i++)
             {
-                TimeZoneInfo cstZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+                TimeZoneInfo cstZone = TZConvert.GetTimeZoneInfo("Eastern Standard Time");
                 listOfDtos[i].CreatedAt = TimeZoneInfo.ConvertTimeFromUtc(listOfDtos[i].CreatedAt, cstZone);
             }
             return listOfDtos;
