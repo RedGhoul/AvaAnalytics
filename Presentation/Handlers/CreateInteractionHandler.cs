@@ -137,15 +137,15 @@ namespace Application.Handlers
             return await SendResponse();
         }
 
-        private async Task<CreateInteractionResponse> SendResponse()
+        private Task<CreateInteractionResponse> SendResponse()
         {
             var ResponseInfo = ImageHelper.SendPngStream(_cache);
 
-            return new CreateInteractionResponse()
+            return Task.FromResult(new CreateInteractionResponse()
             {
                 ContentType = ResponseInfo.Item2,
                 Image = ResponseInfo.Item1
-            };
+            });
         }
     }
 }
