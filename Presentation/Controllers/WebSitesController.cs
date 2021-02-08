@@ -45,24 +45,25 @@ namespace SharpCounter.Controllers
             }
             ApplicationUser curUser = await _userManager.GetUserAsync(HttpContext.User);
             UserSetting currentUserSetting = await _context.UserSettings.Where(x => x.ApplicationUserId.Equals(curUser.Id)).FirstOrDefaultAsync();
-            
-            WebSiteDetailsViewModel vm = new WebSiteDetailsViewModel();
 
-            vm.WebSite = await _context.WebSites
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            vm.TimeZoneValues = _context.TimeZoneValues.Select(x => new SelectListItem
+            WebSiteDetailsViewModel vm = new WebSiteDetailsViewModel
             {
-                Text = x.Text,
-                Value = x.Text,
+                WebSite = await _context.WebSites
+                .FirstOrDefaultAsync(m => m.Id == id),
 
-            }).ToList();
+                TimeZoneValues = _context.TimeZoneValues.Select(x => new SelectListItem
+                {
+                    Text = x.Text,
+                    Value = x.Text,
 
-            if(currentUserSetting.CurrentTimeZone != null)
+                }).ToList()
+            };
+
+            if (currentUserSetting.CurrentTimeZone != null)
             {
                 for (int i = 0; i < vm.TimeZoneValues.Count; i++)
                 {
-                    if (vm.TimeZoneValues[i].Text.Contains(currentUserSetting.CurrentTimeZone))
+                    if (vm.TimeZoneValues[i].Text.Equals(currentUserSetting.CurrentTimeZone))
                     {
                         vm.TimeZoneValues[i].Selected = true;
                     }
