@@ -100,7 +100,7 @@ namespace Application.Repository
             dbConnection.Open();
             IEnumerable<PageViewStatsDTO> data = await dbConnection.QueryAsync<PageViewStatsDTO>(
                 @"SELECT Count, CreatedAt FROM PageViewStats where CreatedAt <= @curTime and 
-                CreatedAt >= @oldTime and WebSiteId = @Id and Count != 0 order by CreatedAt ASC LIMIT 5",
+                CreatedAt >= @oldTime and WebSiteId = @Id and Count != 0 order by CreatedAt DESC LIMIT 5",
                 new { curTime, oldTime, Id = webSiteId });
 
 
