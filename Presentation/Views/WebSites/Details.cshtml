@@ -1,15 +1,18 @@
-﻿@model Domain.WebSites
+﻿@model Presentation.ViewModels.WebSiteDetailsViewModel
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" />
 <style>
 
 </style>
 <div class="row" style="padding-left: 90px;">
     <div class="col-md-2">
-
+        <div class="col-lg-10">
+            @Html.DropDownListFor(model => model.SelectedTimeZone, Model.TimeZoneValues, "--Select Time Zone--", new { @class = "form-control" })
+        </div>
     </div>
     <div class="col-md-6">
         <div class="text-center">
-            <h5 class="display-4">@Model.Name</h5>
+            <h5 class="display-4">@Model.WebSite.Name</h5>
         </div>
         <div class="text-center">
             <h3>Showing</h3>
@@ -19,7 +22,7 @@
         </div>
         <div class="text-center">
             <div class="btn-group" role="group">
-                <a class="btn btn-info" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                <a class="btn btn-info" asp-action="Edit" asp-route-id="@Model.WebSite.Id">Edit</a>
                 <a class="btn btn-success" asp-action="Index">Back to List</a>
             </div>
         </div>
@@ -94,10 +97,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment-with-locales.min.js" integrity="sha512-qSnlnyh7EcD3vTqRoSP4LYsy2yVuqqmnkM9tW4dWo6xvAoxuVXyM36qZK54fyCmHoY1iKi9FJAUZrlPqmGNXFw==" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
     <environment include="Development">
-        <script src="~/js/detailsChart.js" data-website-id="@Model.Id" data-is-demo="false"></script>
+        <script src="~/js/detailsChart.js" data-website-id="@Model.WebSite.Id" data-is-demo="false"></script>
     </environment>
 
     <environment include="Production">
-        <script src="~/js/prod/detailsChart.min.js" data-website-id="@Model.Id" data-is-demo="false"></script>
+        <script src="~/js/prod/detailsChart.min.js" data-website-id="@Model.WebSite.Id" data-is-demo="false"></script>
     </environment>
 }

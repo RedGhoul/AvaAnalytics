@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
 namespace Presentation.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210208125102_addedTimeZones")]
+    partial class addedTimeZones
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -641,6 +643,25 @@ namespace Presentation.Migrations
                     b.ToTable("Caches");
                 });
 
+            modelBuilder.Entity("Presentation.Models.TimeZoneValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("UserSettingId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserSettingId");
+
+                    b.ToTable("TimeZoneValues");
+                });
+
             modelBuilder.Entity("Presentation.Models.UserSetting", b =>
                 {
                     b.Property<int>("Id")
@@ -652,9 +673,6 @@ namespace Presentation.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CurrentTimeZone")
-                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -844,6 +862,17 @@ namespace Presentation.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Presentation.Models.TimeZoneValue", b =>
+                {
+                    b.HasOne("Presentation.Models.UserSetting", "UserSetting")
+                        .WithMany("TimeZones")
+                        .HasForeignKey("UserSettingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserSetting");
+                });
+
             modelBuilder.Entity("Presentation.Models.UserSetting", b =>
                 {
                     b.HasOne("Domain.ApplicationUser", "ApplicationUser")
@@ -889,6 +918,11 @@ namespace Presentation.Migrations
                     b.Navigation("Sessions");
 
                     b.Navigation("SystemStats");
+                });
+
+            modelBuilder.Entity("Presentation.Models.UserSetting", b =>
+                {
+                    b.Navigation("TimeZones");
                 });
 #pragma warning restore 612, 618
         }

@@ -3,9 +3,11 @@ using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Presentation.Models;
+using Presentation.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,19 +43,46 @@ namespace SharpCounter.Controllers
             {
                 return NotFound();
             }
+            ApplicationUser curUser = await _userManager.GetUserAsync(HttpContext.User);
+            UserSetting currentUserSetting = await _context.UserSettings.Where(x => x.ApplicationUserId.Equals(curUser.Id)).FirstOrDefaultAsync();
+            
+            WebSiteDetailsViewModel vm = new WebSiteDetailsViewModel();
 
-            WebSites webSites = await _context.WebSites
+            vm.WebSite = await _context.WebSites
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (webSites == null)
+
+            vm.TimeZoneValues = TimeZoneInfo.GetSystemTimeZones().Select(x => new SelectListItem
+            {
+                Text = x.DisplayName,
+                Value = x.DisplayName,
+
+            }).ToList();
+
+            for (int i = 0; i < vm.TimeZoneValues.Count; i++)
+            {
+                if (vm.TimeZoneValues[i].Text.Equals(currentUserSetting.CurrentTimeZone))
+                {
+                    vm.TimeZoneValues[i].Selected = true;
+                }
+                else
+                {
+                    vm.TimeZoneValues[i].Selected = false;
+                }
+            }
+
+            if (vm.WebSite == null)
             {
                 return NotFound();
             }
-            return View(webSites);
+            return View(vm);
         }
 
         // GET: WebSites/AllWebSiteDetails
         public async Task<IActionResult> Overview()
         {
+            ApplicationUser curUser = await _userManager.GetUserAsync(HttpContext.User);
+            UserSetting currentUserSetting = await _context.UserSettings.Where(x => x.ApplicationUserId.Equals(curUser.Id)).FirstOrDefaultAsync();
+
             List<WebSiteOverviewDTO> webSiteOverviewDTOs = new List<WebSiteOverviewDTO>();
 
             List<WebSites> webSites = _context.WebSites.ToList();
@@ -64,8 +93,9 @@ namespace SharpCounter.Controllers
             foreach (var item in webSites)
             {
                 var LocationStats = await _statsRepo.GetLocationStats(startDate, endDate, item.Id);
-                var PageViewStats = await _statsRepo.GetNonZeroPageViewCountStats(startDate, endDate, item.Id);
-                
+                var PageViewStats = await _statsRepo.GetNonZeroPageViewCountStats(startDate, endDate, currentUserSetting.CurrentTimeZone ?? "Eastern Standard Time",item.Id);
+
+
                 webSiteOverviewDTOs.Add(new WebSiteOverviewDTO()
                 {
                     Website = item,

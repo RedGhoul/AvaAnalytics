@@ -2,6 +2,7 @@
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using MySqlConnector;
+using Presentation.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -94,7 +95,7 @@ namespace Application.Repository
             return data.ToList();
         }
 
-        public async Task<List<PageViewStatsDTO>> GetNonZeroPageViewCountStats(DateTime curTime, DateTime oldTime, int webSiteId)
+        public async Task<List<PageViewStatsDTO>> GetNonZeroPageViewCountStats(DateTime curTime, DateTime oldTime, string timeZoneName, int webSiteId)
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
@@ -103,14 +104,10 @@ namespace Application.Repository
                 CreatedAt >= @oldTime and WebSiteId = @Id and Count != 0 order by CreatedAt DESC LIMIT 5",
                 new { curTime, oldTime, Id = webSiteId });
 
-
-            var listOfDtos = data.ToList();
-            for (int i = 0; i < listOfDtos.Count; i++)
-            {
-                TimeZoneInfo cstZone = TZConvert.GetTimeZoneInfo("Eastern Standard Time");
-                listOfDtos[i].CreatedAt = TimeZoneInfo.ConvertTimeFromUtc(listOfDtos[i].CreatedAt, cstZone);
-            }
+            List<PageViewStatsDTO> listOfDtos = DateTimeDTOHelper.SetTimeZone(data, timeZoneName);
             return listOfDtos;
         }
+
+        
     }
 }

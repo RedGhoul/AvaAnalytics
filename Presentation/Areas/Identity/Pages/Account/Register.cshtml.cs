@@ -6,7 +6,10 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Persistence;
+using Presentation.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -23,17 +26,19 @@ namespace SharpCounter.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-
+        private readonly ApplicationDbContext _context;
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+             ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context;
         }
 
         [BindProperty]
@@ -78,6 +83,19 @@ namespace SharpCounter.Areas.Identity.Pages.Account
                 IdentityResult result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
+                    ApplicationUser curUser = await _userManager.GetUserAsync(HttpContext.User);
+                    UserSetting currentUserSetting = await _context.UserSettings.Where(x => x.ApplicationUserId.Equals(curUser.Id)).FirstOrDefaultAsync();
+
+                    if (currentUserSetting == null)
+                    {
+                        _context.UserSettings.Add(new UserSetting()
+                        {
+                            ApplicationUserId = curUser.Id,
+                            CurrentTimeZone = "Eastern Standard Time"
+                        });
+                        _context.SaveChanges();
+                    }
+
                     _logger.LogInformation("User created a new account with password.");
 
                     string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

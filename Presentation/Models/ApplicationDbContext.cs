@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Presentation;
+using Presentation.Models;
 
 namespace Persistence
 {
@@ -23,6 +24,7 @@ namespace Persistence
         public DbSet<WebSites> WebSites { get; set; }
         public DbSet<SiteContent> SiteContents { get; set; }
         public DbSet<Cache> Caches { get; set; }
+        public DbSet<UserSetting> UserSettings { get; set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -160,15 +162,13 @@ namespace Persistence
                .HasIndex(u => u.Key)
                .IsUnique();
 
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasOne(s => s.UserSettings)
+                .WithOne(s => s.ApplicationUser)
+                .HasForeignKey<UserSetting>(s => s.ApplicationUserId);
+
         }
 
-        //If all of your tables are in a single schema, this approach could work(below code assumes that the name of your schema is public)
-
-        //DROP SCHEMA public CASCADE;
-        //CREATE SCHEMA public;
-        //If you are using PostgreSQL 9.3 or greater, you may also need to restore the default grants.
-
-        //GRANT ALL ON SCHEMA public TO postgres;
-        //    GRANT ALL ON SCHEMA public TO public;
     }
 }

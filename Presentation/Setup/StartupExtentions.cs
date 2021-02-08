@@ -1,10 +1,13 @@
 ﻿using Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 using Presentation.HangFire;
+using Presentation.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 namespace Presentation
 {
@@ -45,6 +48,19 @@ namespace Presentation
                     await UserManager.AddToRoleAsync(user, "Admin");
                 }
 
+            }
+
+           
+            UserSetting currentUserSetting = await content.UserSettings.Where(x => x.ApplicationUserId.Equals(user.Id)).FirstOrDefaultAsync();
+
+            if (currentUserSetting == null)
+            {
+                content.UserSettings.Add(new UserSetting()
+                {
+                    ApplicationUserId = user.Id,
+                    CurrentTimeZone = "Eastern Standard Time"
+                });
+                content.SaveChanges();
             }
 
             return scope;
