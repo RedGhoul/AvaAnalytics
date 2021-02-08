@@ -92,5 +92,24 @@ namespace Application.Repository
                 new { curTime, oldTime, Id = webSiteId });
             return data.ToList();
         }
+
+        public async Task<List<PageViewStatsDTO>> GetNonZeroPageViewCountStats(DateTime curTime, DateTime oldTime, int webSiteId)
+        {
+            using IDbConnection dbConnection = Connection;
+            dbConnection.Open();
+            IEnumerable<PageViewStatsDTO> data = await dbConnection.QueryAsync<PageViewStatsDTO>(
+                @"SELECT Count, CreatedAt FROM PageViewStats where CreatedAt <= @curTime and 
+                CreatedAt >= @oldTime and WebSiteId = @Id and Count != 0 order by CreatedAt ASC LIMIT 5",
+                new { curTime, oldTime, Id = webSiteId });
+
+
+            var listOfDtos = data.ToList();
+            for (int i = 0; i < listOfDtos.Count; i++)
+            {
+                TimeZoneInfo cstZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+                listOfDtos[i].CreatedAt = TimeZoneInfo.ConvertTimeFromUtc(listOfDtos[i].CreatedAt, cstZone);
+            }
+            return listOfDtos;
+        }
     }
 }

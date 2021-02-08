@@ -63,11 +63,14 @@ namespace SharpCounter.Controllers
 
             foreach (var item in webSites)
             {
+                var LocationStats = await _statsRepo.GetLocationStats(startDate, endDate, item.Id);
+                var PageViewStats = await _statsRepo.GetNonZeroPageViewCountStats(startDate, endDate, item.Id);
+                
                 webSiteOverviewDTOs.Add(new WebSiteOverviewDTO()
                 {
                     Website = item,
-                    LocationStats = await _statsRepo.GetLocationStats(startDate, endDate, item.Id),
-                    PageViewStats = await _statsRepo.GetPageViewCountStats(startDate, endDate, item.Id)
+                    LocationStats = LocationStats,
+                    PageViewStats = PageViewStats
                 });
             }
             

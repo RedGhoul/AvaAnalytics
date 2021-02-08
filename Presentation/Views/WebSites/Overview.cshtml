@@ -4,61 +4,80 @@
     <h1>Overview of Sites</h1>
     @foreach (var item in Model)
     {
-        <div class="container">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-4">
-                        </div>
-                        <div class="col-4">
-                            <h2>@item.Website.Name</h2>
-                        </div>
-                        <div class="col-4">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <h3>Page View</h3>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Count</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var viewStat in item.PageViewStats.OrderByDescending(x => x.CreatedAt).Take(3))
-                                {
-                                    <tr>
-                                        <th scope="row">@viewStat.CreatedAt</th>
-                                        <td>@viewStat.Count</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="row">
-                        <h3>Location</h3>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Location</th>
-                                    <th scope="col">Count</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var locationStat in item.LocationStats)
-                                {
-                                    <tr>
-                                        <th scope="row">@locationStat.Location</th>
-                                        <td>@locationStat.Count</td>
-                                    </tr>
-                                 }
-                            </tbody>
-                        </table>
-                    </div>
+<div class="container">
+    <hr />
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-4">
+                </div>
+                <div class="col-4">
+                    <h2>@item.Website.Name</h2>
+                </div>
+                <div class="col-4">
+                    <a class="btn btn-secondary btn-lg" asp-action="Details" asp-controller="WebSites" asp-route-id="@item.Website.Id">View Details</a>
                 </div>
             </div>
-        </div>
+            <div class="row">
+                <h3>Most Recent Page Views</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (item.PageViewStats.Count > 0)
+                        {
+        @foreach (var viewStat in item.PageViewStats.OrderByDescending(x => x.CreatedAt))
+        {
+<tr>
+    <th scope="row">@viewStat.CreatedAt</th>
+    <td>@viewStat.Count</td>
+</tr>
+} }
+    else
+    {
+<tr>
+    <th scope="row">None Found</th>
+    <td>None Found</td>
+</tr>
+}
 
-    }
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <h3>Location</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Location</th>
+                            <th scope="col">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (item.LocationStats.Count > 0)
+                        {
+        @foreach (var locationStat in item.LocationStats)
+        {
+<tr>
+    <th scope="row">@locationStat.Location</th>
+    <td>@locationStat.Count</td>
+</tr>} }
+    else
+    {
+<tr>
+    <th scope="row">None Found</th>
+    <td>None Found</td>
+</tr>
+}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>}
 </div>
