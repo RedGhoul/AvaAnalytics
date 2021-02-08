@@ -6,9 +6,8 @@
 </style>
 <div class="row" style="padding-left: 90px;">
     <div class="col-md-2">
-        <div class="col-lg-10">
-            @Html.DropDownListFor(model => model.SelectedTimeZone, Model.TimeZoneValues, "--Select Time Zone--", new { @class = "form-control" })
-        </div>
+        @Html.DropDownListFor(model => model.SelectedTimeZone, Model.TimeZoneValues, "--Select Time Zone--", new { @class = "form-control" })
+
     </div>
     <div class="col-md-6">
         <div class="text-center">
@@ -103,4 +102,19 @@
     <environment include="Production">
         <script src="~/js/prod/detailsChart.min.js" data-website-id="@Model.WebSite.Id" data-is-demo="false"></script>
     </environment>
+
+
+    <script>
+        var TimeZoneDropDown = $("#SelectedTimeZone");
+        TimeZoneDropDown.change(function () {
+            axios({
+                method: "POST",
+                url: "/UserSettings/SetTimeZone",
+                data: {
+                    value: $("#SelectedTimeZone :selected").val(),
+                }
+            });
+        });
+
+    </script>
 }

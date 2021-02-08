@@ -23,7 +23,7 @@ namespace Application.Handlers
             DateTime curTime = TimeZoneInfo.ConvertTimeToUtc(request.CurrentEndDate);
             DateTime oldTime = TimeZoneInfo.ConvertTimeToUtc(request.CurrentStartDate);
             return new GetPageViewStatsResponse()
-            { Data = await _statsRepo.GetPageViewCountStats(curTime, oldTime, request.WebSiteId) };
+            { Data = await _statsRepo.GetPageViewCountStats(curTime, oldTime, request.TimeZone ?? "Eastern Standard Time" , request.WebSiteId) };
         }
     }
 }

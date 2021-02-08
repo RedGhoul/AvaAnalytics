@@ -3,12 +3,18 @@ using Application.Queries;
 using Application.Repository;
 using Application.Response;
 using AutoMapper;
+using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Persistence;
+using Presentation.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SharpCounter.Controllers
@@ -21,11 +27,17 @@ namespace SharpCounter.Controllers
         private readonly ILogger<StatsController> _Logger;
         private readonly IMediator _Mediator;
         private readonly IMapper _Mapper;
-        public StatsController(ILogger<StatsController> logger, IMediator mediator, IMapper mapper)
+        private readonly UserManager<ApplicationUser> _UserManager;
+        private readonly ApplicationDbContext _Context;
+        public StatsController(ILogger<StatsController> logger, IMediator mediator, 
+            IMapper mapper, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
             _Logger = logger;
             _Mediator = mediator;
             _Mapper = mapper;
+            _UserManager = userManager;
+            _Context = context;
+
         }
 
         // GET: api/Stats/BrowserStats/5
@@ -75,7 +87,14 @@ namespace SharpCounter.Controllers
         [HttpPost("PageViewCountStats/{id}")]
         public async Task<List<PageViewStatsDTO>> GetPageViewCountStats(int id, DateRangeDTO dateRange)
         {
+            ApplicationUser curUser = await _UserManager.GetUserAsync(HttpContext.User);
+            UserSetting currentUserSetting = await _Context.UserSettings.Where(x => x.ApplicationUserId.Equals(curUser.Id)).FirstOrDefaultAsync();
+
+
             GetPageViewStatsQuery query = _Mapper.Map(dateRange, new GetPageViewStatsQuery(id));
+            
+            query.TimeZone = currentUserSetting.CurrentTimeZone;
+
             GetPageViewStatsResponse response = await _Mediator.Send(query);
             return response.Data;
         }

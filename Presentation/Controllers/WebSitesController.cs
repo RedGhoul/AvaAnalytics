@@ -58,17 +58,21 @@ namespace SharpCounter.Controllers
 
             }).ToList();
 
-            for (int i = 0; i < vm.TimeZoneValues.Count; i++)
+            if(currentUserSetting.CurrentTimeZone != null)
             {
-                if (vm.TimeZoneValues[i].Text.Equals(currentUserSetting.CurrentTimeZone))
+                for (int i = 0; i < vm.TimeZoneValues.Count; i++)
                 {
-                    vm.TimeZoneValues[i].Selected = true;
-                }
-                else
-                {
-                    vm.TimeZoneValues[i].Selected = false;
+                    if (vm.TimeZoneValues[i].Text.Contains(currentUserSetting.CurrentTimeZone))
+                    {
+                        vm.TimeZoneValues[i].Selected = true;
+                    }
+                    else
+                    {
+                        vm.TimeZoneValues[i].Selected = false;
+                    }
                 }
             }
+            
 
             if (vm.WebSite == null)
             {

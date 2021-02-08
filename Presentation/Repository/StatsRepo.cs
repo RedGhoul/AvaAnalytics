@@ -81,10 +81,11 @@ namespace Application.Repository
                 FROM LocationStats where Date <= @curTime and 
                 Date >= @oldTime and WebSiteId = @Id group by Location",
                 new { curTime, oldTime, Id = webSiteId });
+
             return data.ToList();
         }
 
-        public async Task<List<PageViewStatsDTO>> GetPageViewCountStats(DateTime curTime, DateTime oldTime, int webSiteId)
+        public async Task<List<PageViewStatsDTO>> GetPageViewCountStats(DateTime curTime, DateTime oldTime, string timeZoneName, int webSiteId)
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
@@ -92,6 +93,8 @@ namespace Application.Repository
                 @"SELECT Count, CreatedAt FROM PageViewStats where CreatedAt <= @curTime and 
                 CreatedAt >= @oldTime and WebSiteId = @Id order by CreatedAt ASC",
                 new { curTime, oldTime, Id = webSiteId });
+
+            List<PageViewStatsDTO> listOfDtos = DateTimeDTOHelper.SetTimeZone(data, timeZoneName);
             return data.ToList();
         }
 
