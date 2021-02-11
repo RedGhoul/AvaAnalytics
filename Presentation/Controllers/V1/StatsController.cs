@@ -87,14 +87,14 @@ namespace SharpCounter.Controllers
         [HttpPost("PageViewCountStats/{id}")]
         public async Task<List<PageViewStatsDTO>> GetPageViewCountStats(int id, DateRangeDTO dateRange)
         {
-            ApplicationUser curUser = await _UserManager.GetUserAsync(HttpContext.User);
-            UserSetting currentUserSetting = await _Context.UserSettings.Where(x => x.ApplicationUserId.Equals(curUser.Id)).FirstOrDefaultAsync();
-
-
             GetPageViewStatsQuery query = _Mapper.Map(dateRange, new GetPageViewStatsQuery(id));
+            ApplicationUser curUser = await _UserManager.GetUserAsync(HttpContext.User);
+            if (curUser != null)
+            {
+                UserSetting currentUserSetting = await _Context.UserSettings.Where(x => x.ApplicationUserId.Equals(curUser.Id)).FirstOrDefaultAsync();
+                query.TimeZone = currentUserSetting.CurrentTimeZone;
+            }
             
-            query.TimeZone = currentUserSetting.CurrentTimeZone;
-
             GetPageViewStatsResponse response = await _Mediator.Send(query);
             return response.Data;
         }

@@ -59,21 +59,20 @@ namespace SharpCounter.Controllers
                 }).ToList()
             };
 
-            if (currentUserSetting.CurrentTimeZone != null)
+
+            for (int i = 0; i < vm.TimeZoneValues.Count; i++)
             {
-                for (int i = 0; i < vm.TimeZoneValues.Count; i++)
+                if (!string.IsNullOrEmpty(currentUserSetting.CurrentTimeZone) && 
+                    vm.TimeZoneValues[i].Text.Equals(currentUserSetting.CurrentTimeZone))
                 {
-                    if (vm.TimeZoneValues[i].Text.Equals(currentUserSetting.CurrentTimeZone))
-                    {
-                        vm.TimeZoneValues[i].Selected = true;
-                    }
-                    else
-                    {
-                        vm.TimeZoneValues[i].Selected = false;
-                    }
+                    vm.TimeZoneValues[i].Selected = true;
+                }
+                else
+                {
+                    vm.TimeZoneValues[i].Selected = false;
                 }
             }
-            
+
 
             if (vm.WebSite == null)
             {
@@ -98,7 +97,7 @@ namespace SharpCounter.Controllers
             foreach (var item in webSites)
             {
                 var LocationStats = await _statsRepo.GetLocationStats(startDate, endDate, item.Id);
-                var PageViewStats = await _statsRepo.GetNonZeroPageViewCountStats(startDate, endDate, currentUserSetting.CurrentTimeZone ?? "Eastern Standard Time",item.Id);
+                var PageViewStats = await _statsRepo.GetNonZeroPageViewCountStats(startDate, endDate, currentUserSetting.CurrentTimeZone ?? "Eastern Standard Time", item.Id);
 
 
                 webSiteOverviewDTOs.Add(new WebSiteOverviewDTO()
@@ -108,7 +107,7 @@ namespace SharpCounter.Controllers
                     PageViewStats = PageViewStats
                 });
             }
-            
+
             if (webSites == null)
             {
                 return NotFound();
