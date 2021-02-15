@@ -63,11 +63,11 @@ namespace Application
                  {
                      TransactionIsolationLevel = (System.Transactions.IsolationLevel?)IsolationLevel.Serializable,
                      QueuePollInterval = TimeSpan.FromSeconds(15),
-                     JobExpirationCheckInterval = TimeSpan.FromMinutes(5),
-                     CountersAggregateInterval = TimeSpan.FromMinutes(5),
+                     JobExpirationCheckInterval = TimeSpan.FromMinutes(6),
+                     CountersAggregateInterval = TimeSpan.FromMinutes(6),
                      PrepareSchemaIfNecessary = true,
                      DashboardJobListLimit = 50000,
-                     TransactionTimeout = TimeSpan.FromMinutes(10),
+                     TransactionTimeout = TimeSpan.FromMinutes(15),
                      TablesPrefix = "Hangfire"
                  })));
 

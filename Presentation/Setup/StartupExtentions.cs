@@ -15,7 +15,7 @@ namespace Presentation
     {
         public static async Task UseStartupMethods(this IApplicationBuilder app)
         {
-            IServiceScope scope = await CreateRoles(app);
+            //IServiceScope scope = await CreateRoles(app);
             HangFireJobScheduler.ScheduleRecurringJobs();
         }
 

@@ -19,7 +19,7 @@ namespace Presentation
                 SchedulePollingInterval = TimeSpan.FromMinutes(1),
                 HeartbeatInterval = TimeSpan.FromSeconds(20),
                 ServerCheckInterval = TimeSpan.FromSeconds(20),
-                WorkerCount = Environment.ProcessorCount * 2,
+                WorkerCount = 4,
                 ServerName = "Jobs"
             });
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
@@ -59,6 +59,12 @@ namespace Presentation
             app.UseForwardedHeaders();
             if (env.IsDevelopment())
             {
+                app.UseSwagger();
+
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sharp Counter V1");
+                });
                 app.UseDeveloperExceptionPage();
                 //app.UseDatabaseErrorPage();
             }
@@ -74,12 +80,7 @@ namespace Presentation
 
             app.UseRouting();
 
-            app.UseSwagger();
-
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sharp Counter V1");
-            });
+            
 
         }
     }

@@ -12,11 +12,19 @@ namespace Presentation.Helpers
         public static List<PageViewStatsDTO> SetTimeZone(IEnumerable<PageViewStatsDTO> data, string timeZoneName)
         {
             var listOfDtos = data.ToList();
-            for (int i = 0; i < listOfDtos.Count; i++)
+            try
             {
-                TimeZoneInfo cstZone = TZConvert.GetTimeZoneInfo(timeZoneName);
-                listOfDtos[i].CreatedAt = TimeZoneInfo.ConvertTimeFromUtc(listOfDtos[i].CreatedAt, cstZone);
+                for (int i = 0; i < listOfDtos.Count; i++)
+                {
+                    TimeZoneInfo cstZone = TZConvert.GetTimeZoneInfo(timeZoneName);
+                    listOfDtos[i].CreatedAt = TimeZoneInfo.ConvertTimeFromUtc(listOfDtos[i].CreatedAt, cstZone);
+                }
             }
+            catch (Exception)
+            {
+                Console.WriteLine("TZConvert.GetTimeZoneInfo not around");
+            }
+           
 
             return listOfDtos;
         }

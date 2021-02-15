@@ -58,7 +58,7 @@ namespace Presentation
 
             app.UseEndPoints();
             
-            //await app.UseStartupMethods();
+            await app.UseStartupMethods();
         }
     }
 }
