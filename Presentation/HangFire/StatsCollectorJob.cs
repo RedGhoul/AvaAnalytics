@@ -1,6 +1,8 @@
-﻿using Domain;
+﻿using Application;
+using Domain;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Persistence;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using System;
@@ -14,10 +16,12 @@ namespace Presentation.HangFire
     public class StatsCollectorJob : IMyJob
     {
         private readonly ApplicationDbContext _ctx;
+        private readonly string _DbConnectionString;
 
-        public StatsCollectorJob(ApplicationDbContext ctx)
+        public StatsCollectorJob(ApplicationDbContext ctx, IConfiguration config)
         {
             _ctx = ctx;
+            _DbConnectionString = AppSecrets.GetConnectionString(config);
         }
 
         public async Task Run(IJobCancellationToken token)
@@ -32,7 +36,8 @@ namespace Presentation.HangFire
 
             List<int> allSites = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            optionsBuilder.UseMySql(_ctx.Database.GetDbConnection().ConnectionString,
+
+            optionsBuilder.UseMySql(_DbConnectionString,
                 new MySqlServerVersion(new Version(8, 0, 21)),
                 mySqlOptions => mySqlOptions
                     .CharSetBehavior(CharSetBehavior.NeverAppend));
@@ -221,6 +226,7 @@ namespace Presentation.HangFire
                 }
             });
 
+            GC.Collect();
         }
     }
 }
