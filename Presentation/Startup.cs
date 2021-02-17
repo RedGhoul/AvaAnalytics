@@ -1,22 +1,10 @@
 ﻿using Application;
-using Application.Repository;
-using Domain;
 using Hangfire;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using Persistence;
-using Presentation;
 using Presentation.Swagger;
-using System;
 
 namespace Presentation
 {
@@ -33,11 +21,11 @@ namespace Presentation
         {
 
             services.AddPersistance(Configuration);
-            
+
             services.AddApplication();
 
             services.AddControllersWithViews();
-            
+
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddSwagger();
             services.AddResponseCompression();
@@ -57,7 +45,7 @@ namespace Presentation
             app.UseHangFireConfiguration();
 
             app.UseEndPoints();
-            
+
             await app.UseStartupMethods();
         }
     }

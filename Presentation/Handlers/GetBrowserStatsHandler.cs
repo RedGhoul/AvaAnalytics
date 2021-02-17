@@ -1,11 +1,8 @@
-﻿using Application.DTO;
-using Application.Queries;
+﻿using Application.Queries;
 using Application.Repository;
 using Application.Response;
 using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 

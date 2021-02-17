@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using TimeZoneConverter;
 
 namespace Application.Repository
 {
@@ -111,6 +110,6 @@ namespace Application.Repository
             return listOfDtos;
         }
 
-        
+
     }
 }

@@ -1,12 +1,6 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
-using Presentation.Repository;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
+﻿using Presentation.Repository;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Helpers
 {

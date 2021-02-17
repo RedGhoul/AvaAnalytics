@@ -5,13 +5,10 @@ using Application.Response;
 using Domain;
 using MaxMind.GeoIP2;
 using MediatR;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Presentation.Repository;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -101,7 +98,7 @@ namespace Application.Handlers
                 }
 
                 string Country = request.RemoteIpAddress;
-                
+
                 try
                 {
                     using var reader = new DatabaseReader("GeoLite2-Country.mmdb");

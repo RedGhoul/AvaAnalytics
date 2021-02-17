@@ -1,21 +1,20 @@
-﻿using Domain;
+﻿using Application.Repository;
+using Domain;
+using Hangfire;
+using Hangfire.MySql;
+using MediatR;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Hangfire;
-using System;
-using System.Transactions;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 using Persistence;
-using Application.Repository;
-using Microsoft.AspNetCore.Builder;
-using MediatR;
-using System.Reflection;
-using AutoMapper;
-using Microsoft.AspNetCore.HttpOverrides;
-using Hangfire.MySql;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Presentation.Repository;
+using System;
+using System.Reflection;
+using System.Transactions;
 
 namespace Application
 {

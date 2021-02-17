@@ -1,13 +1,6 @@
-﻿using Domain;
-using Hangfire;
-using Microsoft.EntityFrameworkCore;
+﻿using Hangfire;
 using Microsoft.Extensions.Logging;
-using Persistence;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using UAParser;
 
 namespace Presentation.HangFire
 {

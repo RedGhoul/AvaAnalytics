@@ -1,12 +1,10 @@
 ﻿using Application.Response;
 using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Queries
 {
-    public class GetScreenSizeStatsQuery: IRequest<GetScreenSizeStatsResponse>
+    public class GetScreenSizeStatsQuery : IRequest<GetScreenSizeStatsResponse>
     {
         public GetScreenSizeStatsQuery(int webSiteId)
         {

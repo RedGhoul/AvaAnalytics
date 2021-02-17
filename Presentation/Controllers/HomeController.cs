@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using SharpCounter.ViewModels;
-using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,7 +30,7 @@ namespace SharpCounter.Controllers
         }
 
         public IActionResult Index()
-        { 
+        {
             return View(_context.SiteContents.FirstOrDefault());
         }
 

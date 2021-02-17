@@ -42,7 +42,8 @@ namespace Presentation.HangFire
                 mySqlOptions => mySqlOptions
                     .CharSetBehavior(CharSetBehavior.NeverAppend));
 
-            Parallel.For(0, allSites.Count - 1, async (websiteIndex) => {
+            Parallel.For(0, allSites.Count - 1, async (websiteIndex) =>
+            {
                 using (var _ctx = new ApplicationDbContext(optionsBuilder.Options))
                 {
                     List<LocationStats> locationCount = await _ctx.Interactions.Where(

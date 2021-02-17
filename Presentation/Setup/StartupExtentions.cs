@@ -50,7 +50,7 @@ namespace Presentation
 
             }
 
-           
+
             UserSetting currentUserSetting = await content.UserSettings.Where(x => x.ApplicationUserId.Equals(user.Id)).FirstOrDefaultAsync();
 
             if (currentUserSetting == null)

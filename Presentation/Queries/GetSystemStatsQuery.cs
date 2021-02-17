@@ -1,12 +1,10 @@
 ﻿using Application.Response;
 using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Queries
 {
-    public class GetSystemStatsQuery: IRequest<GetSystemStatsResponse>
+    public class GetSystemStatsQuery : IRequest<GetSystemStatsResponse>
     {
         public GetSystemStatsQuery(int webSiteId)
         {

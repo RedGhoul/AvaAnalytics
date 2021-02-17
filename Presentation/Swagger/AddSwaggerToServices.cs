@@ -2,8 +2,6 @@
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Presentation.Swagger
 {
@@ -11,7 +9,8 @@ namespace Presentation.Swagger
     {
         public static IServiceCollection AddSwagger(this IServiceCollection services)
         {
-            services.AddSwaggerGen(options => {
+            services.AddSwaggerGen(options =>
+            {
 
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {

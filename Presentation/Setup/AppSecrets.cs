@@ -1,6 +1,6 @@
 ﻿
-using System;
 using Microsoft.Extensions.Configuration;
+using System;
 namespace Application
 {
     public static class AppSecrets
@@ -46,15 +46,15 @@ namespace Application
         public static string GetConnectionString(IConfiguration Configuration)
         {
             string AppDBConnectionString;
-            if (GetAppSettingsValue(Configuration,"Environment").Equals("Dev"))
+            if (GetAppSettingsValue(Configuration, "Environment").Equals("Dev"))
             {
-                AppDBConnectionString = GetConnectionString(Configuration,"AvaAnalytics_Local");
+                AppDBConnectionString = GetConnectionString(Configuration, "AvaAnalytics_Local");
             }
             else
             {
-                
+
                 AppDBConnectionString = GetConnectionString(Configuration, "AvaAnalytics_Prod");
-                
+
             }
 
             return AppDBConnectionString;

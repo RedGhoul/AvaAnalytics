@@ -1,12 +1,10 @@
 ﻿using Application.Response;
 using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Queries
 {
-    public class GetLocationStatsQuery: IRequest<GetLocationStatsResponse>
+    public class GetLocationStatsQuery : IRequest<GetLocationStatsResponse>
     {
         public GetLocationStatsQuery(int webSiteId)
         {

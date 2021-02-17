@@ -3,8 +3,6 @@ using Application.Repository;
 using Application.Response;
 using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,7 +19,7 @@ namespace Application.Handlers
         {
             DateTime curTime = TimeZoneInfo.ConvertTimeToUtc(request.CurrentEndDate);
             DateTime oldTime = TimeZoneInfo.ConvertTimeToUtc(request.CurrentStartDate);
-            return new GetInteractionByPathCountsStatsResponse() 
+            return new GetInteractionByPathCountsStatsResponse()
             { Data = await _statsRepo.GetInteractionByPathCounts(curTime, oldTime, request.WebSiteId) };
         }
     }

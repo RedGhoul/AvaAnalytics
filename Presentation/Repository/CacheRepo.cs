@@ -1,6 +1,5 @@
-﻿using System;
+﻿using Persistence;
 using System.Linq;
-using Persistence;
 
 namespace Presentation.Repository
 {
@@ -16,7 +15,7 @@ namespace Presentation.Repository
         public string GetStringAsync(string key)
         {
             var value = _context.Caches.Where(x => x.Key.Equals(key)).FirstOrDefault();
-            if(value != null)
+            if (value != null)
             {
                 return value.Value;
             }
@@ -25,7 +24,8 @@ namespace Presentation.Repository
 
         public void SetStringAsync(string key, string value)
         {
-            var newCaches = new Cache() {
+            var newCaches = new Cache()
+            {
                 Key = key,
                 Value = value
             };

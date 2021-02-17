@@ -1,9 +1,6 @@
 ﻿using Application.DTO;
 using Application.Queries;
 using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Mapper
 {

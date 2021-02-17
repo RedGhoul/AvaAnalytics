@@ -1,18 +1,15 @@
 ﻿using Application.DTO;
 using Application.Queries;
-using Application.Repository;
 using Application.Response;
 using AutoMapper;
 using Domain;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Persistence;
 using Presentation.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,7 +26,7 @@ namespace SharpCounter.Controllers
         private readonly IMapper _Mapper;
         private readonly UserManager<ApplicationUser> _UserManager;
         private readonly ApplicationDbContext _Context;
-        public StatsController(ILogger<StatsController> logger, IMediator mediator, 
+        public StatsController(ILogger<StatsController> logger, IMediator mediator,
             IMapper mapper, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
             _Logger = logger;
@@ -94,7 +91,7 @@ namespace SharpCounter.Controllers
                 UserSetting currentUserSetting = await _Context.UserSettings.Where(x => x.ApplicationUserId.Equals(curUser.Id)).FirstOrDefaultAsync();
                 query.TimeZone = currentUserSetting.CurrentTimeZone;
             }
-            
+
             GetPageViewStatsResponse response = await _Mediator.Send(query);
             return response.Data;
         }

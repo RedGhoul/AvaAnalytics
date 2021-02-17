@@ -62,7 +62,7 @@ namespace SharpCounter.Controllers
 
             for (int i = 0; i < vm.TimeZoneValues.Count; i++)
             {
-                if (!string.IsNullOrEmpty(currentUserSetting.CurrentTimeZone) && 
+                if (!string.IsNullOrEmpty(currentUserSetting.CurrentTimeZone) &&
                     vm.TimeZoneValues[i].Text.Equals(currentUserSetting.CurrentTimeZone))
                 {
                     vm.TimeZoneValues[i].Selected = true;
