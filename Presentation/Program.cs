@@ -24,25 +24,17 @@ namespace SharpCounter
             }
             catch (Exception e)
             {
-                
                 Console.WriteLine(e);
             }
 
-            using (SentrySdk.Init(AppSecrets.GetConnectionString(configuration, "Sentry_URL")))
-            {
-                Log.Logger = new LoggerConfiguration()
-                   .Enrich.FromLogContext()
-                    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri($"{AppSecrets.GetConnectionString(configuration, "Log_ElasticIndexBaseUrl")}"))
-                    {
-                        AutoRegisterTemplate = true,
-                        ModifyConnectionSettings = x => x.BasicAuthentication(AppSecrets.GetAppSettingsValue(configuration, "ELASTIC_USERNAME_Log"),
-                        AppSecrets.GetAppSettingsValue(configuration, "ELASTIC_PASSWORD_Log")),
-                        AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv7,
-                        IndexFormat = $"{AppSecrets.GetAppSettingsValue(configuration, "AppName")}" + "-{0:yyyy.MM}"
-                    })
-                   .CreateLogger();
+            string AppDBConnectionString = AppSecrets.GetConnectionString(configuration);
 
-                try
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                 .WriteTo.MySQL(AppDBConnectionString)
+                .CreateLogger();
+
+            try
                 {
                     Log.Information("Starting up");
                     CreateWebHostBuilder(args).Build().Run();
@@ -55,7 +47,6 @@ namespace SharpCounter
                 {
                     Log.CloseAndFlush();
                 }
-            }
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
