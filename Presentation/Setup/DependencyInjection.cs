@@ -57,18 +57,18 @@ namespace Application
                .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
-            services.AddHangfire(config =>
-                 config.UseStorage(new MySqlStorage(AppDBConnectionString, new MySqlStorageOptions
-                 {
-                     TransactionIsolationLevel = (System.Transactions.IsolationLevel?)IsolationLevel.Serializable,
-                     QueuePollInterval = TimeSpan.FromSeconds(15),
-                     JobExpirationCheckInterval = TimeSpan.FromMinutes(6),
-                     CountersAggregateInterval = TimeSpan.FromMinutes(6),
-                     PrepareSchemaIfNecessary = true,
-                     DashboardJobListLimit = 50000,
-                     TransactionTimeout = TimeSpan.FromMinutes(15),
-                     TablesPrefix = "Hangfire"
-                 })));
+            //services.AddHangfire(config =>
+            //     config.UseStorage(new MySqlStorage(AppDBConnectionString, new MySqlStorageOptions
+            //     {
+            //         TransactionIsolationLevel = (System.Transactions.IsolationLevel?)IsolationLevel.Serializable,
+            //         QueuePollInterval = TimeSpan.FromSeconds(15),
+            //         JobExpirationCheckInterval = TimeSpan.FromMinutes(6),
+            //         CountersAggregateInterval = TimeSpan.FromMinutes(6),
+            //         PrepareSchemaIfNecessary = true,
+            //         DashboardJobListLimit = 50000,
+            //         TransactionTimeout = TimeSpan.FromMinutes(15),
+            //         TablesPrefix = "Hangfire"
+            //     })));
 
             return services;
         }
