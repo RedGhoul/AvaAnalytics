@@ -1,57 +1,39 @@
 ﻿using Dapper;
 using Domain;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using MySqlConnector;
+using Npgsql;
+using Persistence;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Application.Repository
 {
     public class SessionRepo
     {
+        private readonly ApplicationDbContext _context;
+
         private readonly string connectionString;
-        public SessionRepo(IConfiguration configuration)
+        public SessionRepo(ApplicationDbContext context,IConfiguration configuration)
         {
             connectionString = AppSecrets.GetConnectionString(configuration);
+            _context = context;
         }
 
-        internal IDbConnection Connection => new MySqlConnection(connectionString);
+        internal IDbConnection Connection => new NpgsqlConnection(connectionString);
 
         public async Task Add(Session item)
         {
-            using IDbConnection dbConnection = Connection;
-            dbConnection.Open();
-            await dbConnection.ExecuteAsync(
-                @"Insert into Sessions
-                (SessionUId, LastSeen, CreatedAt, WebSiteId) VALUES
-                (@SessionUId, @LastSeen, @CreatedAt, @WebSiteId)", item);
+            _context.Sessions.Add(item);
+            await _context.SaveChangesAsync();
         }
         public async Task<Session> FindBySessionHash(string sessionHash)
         {
-            using IDbConnection dbConnection = Connection;
-            dbConnection.Open();
-            return await dbConnection.QueryFirstOrDefaultAsync<Session>(
-                    @"SELECT * FROM Sessions where SessionUId = @sessionHash",
-                     new { sessionHash });
-
-        }
-
-        public Task<IEnumerable<Session>> FindAll()
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public Session FindByID(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Remove(int id)
-        {
-            throw new NotImplementedException();
+            var Session = await _context.Sessions.Where(x => x.SessionUId.Equals(sessionHash)).FirstOrDefaultAsync();
+            return Session;
         }
 
     }

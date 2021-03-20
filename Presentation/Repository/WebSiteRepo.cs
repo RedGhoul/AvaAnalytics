@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using Domain;
 using Microsoft.Extensions.Configuration;
-using MySqlConnector;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -18,7 +18,7 @@ namespace Application.Repository
             connectionString = AppSecrets.GetConnectionString(configuration);
         }
 
-        internal IDbConnection Connection => new MySqlConnection(connectionString);
+        internal IDbConnection Connection => new NpgsqlConnection(connectionString);
 
 
         public async Task<ICollection<WebSites>> FindAll()

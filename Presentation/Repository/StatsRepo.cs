@@ -1,7 +1,9 @@
 ﻿using Application.DTO;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using MySqlConnector;
+using Npgsql;
+using Persistence;
 using Presentation.Helpers;
 using System;
 using System.Collections.Generic;
@@ -13,36 +15,48 @@ namespace Application.Repository
 {
     public class StatsRepo
     {
+        private readonly ApplicationDbContext _context;
+
         private readonly string connectionString;
-        public StatsRepo(IConfiguration configuration)
+        public StatsRepo(ApplicationDbContext context, IConfiguration configuration)
         {
+            _context = context;
             connectionString = Application.AppSecrets.GetConnectionString(configuration);
         }
 
-        internal IDbConnection Connection => new MySqlConnection(connectionString);
+        internal IDbConnection Connection => new NpgsqlConnection(connectionString);
 
         public async Task<List<BrowserStatsDTO>> GetBrowserStats(DateTime curTime, DateTime oldTime, int webSiteId)
         {
-            using IDbConnection dbConnection = Connection;
-            dbConnection.Open();
-            IEnumerable<BrowserStatsDTO> data = await dbConnection.QueryAsync<BrowserStatsDTO>(
-                @"SELECT Browser, Version, SUM(Count) as Count FROM BrowserStats where  
-                Date <= @curTime and Date >= @oldTime and WebSiteId = @Id GROUP By Browser, Version",
-                new { curTime, oldTime, Id = webSiteId });
-            return data.ToList();
+            var BrowserStats = await _context.BrowserStats.Where(
+                x => x.Date <= curTime && x.Date >= oldTime && x.WebSiteId == webSiteId
+                ).GroupBy(x => new { x.Browser, x.Version, x.Count }).Select(x => new BrowserStatsDTO()
+                {
+                    Browser = x.Key.Browser,
+                    Version = x.Key.Version,
+                    Count = x.Sum(p => p.Count)
+                }).ToListAsync();
+
+           
+            return BrowserStats;
         }
 
         public async Task<List<InteractionByPathCountsDTO>> GetInteractionByPathCounts(DateTime curTime, DateTime oldTime, int webSiteId)
         {
-            using IDbConnection dbConnection = Connection;
-            dbConnection.Open();
-            IEnumerable<InteractionByPathCountsDTO> data = await dbConnection.QueryAsync<InteractionByPathCountsDTO>(
-                @"SELECT Path, SUM(Total) as Total FROM InteractionByPathCounts where 
-                InteractionPathGroupStatsId in ( SELECT Id FROM InteractionPathGroupStats 
-                WHERE WebSiteId = @Id and Date <= @curTime and Date >= @oldTime) 
-                and WebSiteId = @Id group by Path",
-                  new { curTime, oldTime, Id = webSiteId });
-            return data.ToList();
+            var data = await (from i in _context.InteractionByPathCounts
+                        where
+                            (from ii in _context.InteractionPathGroupStats where 
+                                    ii.WebSiteId == webSiteId && 
+                                    ii.Date <= curTime && ii.Date >= oldTime select ii.Id)
+                                    .Contains(i.InteractionPathGroupStatsId)
+                            && i.WebSiteId == webSiteId
+                           group i by new { i.Path, i.Total }).Select(x => new InteractionByPathCountsDTO
+                           {
+                               Path = x.Key.Path,
+                               Total = x.Sum(y => y.Total)
+                           }).ToListAsync();
+           
+            return data;
         }
 
         public async Task<List<SystemStatsDTO>> GetSystemStats(DateTime curTime, DateTime oldTime, int webSiteId)

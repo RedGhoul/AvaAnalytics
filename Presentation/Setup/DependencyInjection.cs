@@ -1,7 +1,6 @@
 ﻿using Application.Repository;
 using Domain;
 using Hangfire;
-using Hangfire.MySql;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -10,11 +9,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Presentation.Repository;
 using System;
 using System.Reflection;
 using System.Transactions;
+using Hangfire.Storage;
+using Hangfire.PostgreSql;
 
 namespace Application
 {
@@ -43,13 +43,7 @@ namespace Application
             string AppDBConnectionString = AppSecrets.GetConnectionString(Configuration);
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseMySql(
-                AppDBConnectionString,
-                new MySqlServerVersion(new Version(8, 0, 21)),
-                mySqlOptions => mySqlOptions
-                    .CharSetBehavior(CharSetBehavior.NeverAppend))
-            .EnableSensitiveDataLogging()
-            .EnableDetailedErrors());
+                options.UseNpgsql(AppDBConnectionString));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                .AddDefaultTokenProviders()
@@ -58,17 +52,7 @@ namespace Application
 
 
             services.AddHangfire(config =>
-                 config.UseStorage(new MySqlStorage(AppDBConnectionString, new MySqlStorageOptions
-                 {
-                     TransactionIsolationLevel = (System.Transactions.IsolationLevel?)IsolationLevel.Serializable,
-                     QueuePollInterval = TimeSpan.FromSeconds(15),
-                     JobExpirationCheckInterval = TimeSpan.FromMinutes(6),
-                     CountersAggregateInterval = TimeSpan.FromMinutes(6),
-                     PrepareSchemaIfNecessary = true,
-                     DashboardJobListLimit = 50000,
-                     TransactionTimeout = TimeSpan.FromMinutes(15),
-                     TablesPrefix = "Hangfire"
-                 })));
+                config.UsePostgreSqlStorage(Configuration.GetConnectionString("HangfireConnection")));
 
             return services;
         }
