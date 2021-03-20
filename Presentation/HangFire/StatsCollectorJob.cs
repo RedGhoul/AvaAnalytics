@@ -38,7 +38,7 @@ namespace Presentation.HangFire
 
             optionsBuilder.UseNpgsql(_DbConnectionString);
 
-            Parallel.For(0, allSites.Count - 1, async (websiteIndex) =>
+            for (int websiteIndex = 0; websiteIndex < allSites.Count; websiteIndex++)
             {
                 using (var _ctx = new ApplicationDbContext(optionsBuilder.Options))
                 {
@@ -221,9 +221,7 @@ namespace Presentation.HangFire
                         await _ctx.SaveChangesAsync();
                     }
                 }
-            });
-
-            GC.Collect();
+            }
         }
     }
 }

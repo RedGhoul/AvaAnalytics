@@ -26,7 +26,7 @@ namespace Persistence
         public DbSet<Cache> Caches { get; set; }
         public DbSet<UserSetting> UserSettings { get; set; }
         public DbSet<TimeZoneValue> TimeZoneValues { get; set; }
-
+        public DbSet<SystemStats> SystemStats { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

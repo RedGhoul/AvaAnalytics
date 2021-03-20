@@ -52,7 +52,7 @@ namespace Application
 
 
             services.AddHangfire(config =>
-                config.UsePostgreSqlStorage(Configuration.GetConnectionString("HangfireConnection")));
+                config.UsePostgreSqlStorage(AppDBConnectionString));
 
             return services;
         }

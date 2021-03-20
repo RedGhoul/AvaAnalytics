@@ -50,18 +50,21 @@ namespace Presentation
 
             }
 
-
-            UserSetting currentUserSetting = await content.UserSettings.Where(x => x.ApplicationUserId.Equals(user.Id)).FirstOrDefaultAsync();
-
-            if (currentUserSetting == null)
+            if(user != null)
             {
-                content.UserSettings.Add(new UserSetting()
+                UserSetting currentUserSetting = await content.UserSettings.Where(x => x.ApplicationUserId.Equals(user.Id)).FirstOrDefaultAsync();
+
+                if (currentUserSetting == null)
                 {
-                    ApplicationUserId = user.Id,
-                    CurrentTimeZone = "Eastern Standard Time"
-                });
-                content.SaveChanges();
+                    content.UserSettings.Add(new UserSetting()
+                    {
+                        ApplicationUserId = user.Id,
+                        CurrentTimeZone = "Eastern Standard Time"
+                    });
+                    content.SaveChanges();
+                }
             }
+            
 
             return scope;
         }
