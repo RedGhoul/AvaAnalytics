@@ -11,17 +11,27 @@ namespace Application.Repository
 {
     public class InteractionRepo
     {
-        private readonly ApplicationDbContext _context;
-
-        public InteractionRepo(ApplicationDbContext context)
+        private readonly string connectionString;
+        public InteractionRepo(IConfiguration configuration)
         {
-            _context = context;
+            connectionString = AppSecrets.GetConnectionString(configuration);
         }
+
+        internal IDbConnection Connection => new NpgsqlConnection(connectionString);
 
         public async Task Add(Interaction item)
         {
-            _context.Interactions.Add(item);
-            await _context.SaveChangesAsync();
+            using IDbConnection dbConnection = Connection;
+            dbConnection.Open();
+            await dbConnection.ExecuteAsync(
+                 @"Insert into ""Interactions""
+                (""WebSiteId"", ""SessionId"", ""Path"", ""Title"",""Browser"",
+                 ""Location"", ""Language"", ""FirstVisit"", ""Referrer"", ""CreatedAt"",
+                 ""ScreenWidth"", ""ScreenHeight"",""DevicePixelRatio"") 
+                VALUES
+                (@WebSiteId, @SessionId, @Path, @Title, @Browser, @Location,
+                 @Language, @FirstVisit, @Referrer, @CreatedAt, @ScreenWidth,
+                 @ScreenHeight,@DevicePixelRatio)", item);
         }
     }
 }
