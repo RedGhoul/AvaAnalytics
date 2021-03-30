@@ -19,7 +19,7 @@ namespace Presentation.Swagger
                     Description = "Simple Clean Analytics",
                     Contact = new OpenApiContact
                     {
-                        Name = "Avaneesa",
+                        Name = "Ava",
                         Email = string.Empty,
                     },
                     License = new OpenApiLicense
