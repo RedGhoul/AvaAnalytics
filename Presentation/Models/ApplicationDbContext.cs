@@ -44,7 +44,7 @@ namespace Persistence
             modelBuilder.Entity<BrowserStats>()
                 .HasOne(w => w.WebSite)
                 .WithMany(w => w.BrowserStats)
-                .HasForeignKey(w => w.WebSiteId)
+                .HasForeignKey(w => w.WebSiteId).OnDelete(DeleteBehavior.ClientCascade)
                 .IsRequired();
 
             modelBuilder.Entity<BrowserStats>()
@@ -56,7 +56,7 @@ namespace Persistence
             modelBuilder.Entity<Interaction>()
                 .HasOne(w => w.WebSite)
                 .WithMany(w => w.Interactions)
-                .HasForeignKey(w => w.WebSiteId)
+                .HasForeignKey(w => w.WebSiteId).OnDelete(DeleteBehavior.ClientCascade)
                 .IsRequired();
 
             modelBuilder.Entity<Interaction>()
@@ -81,16 +81,9 @@ namespace Persistence
                 .HasIndex(b => b.DevicePixelRatio);
 
             modelBuilder.Entity<InteractionByPathCounts>()
-                .HasOne(w => w.WebSite)
-                .WithMany(w => w.InteractionByPathCounts)
-                .HasForeignKey(w => w.WebSiteId)
-                .IsRequired();
-
-            modelBuilder.Entity<InteractionByPathCounts>()
                 .HasOne(w => w.InteractionPathGroupStats)
                 .WithMany(w => w.InteractionByPathCounts)
-                .HasForeignKey(w => w.InteractionPathGroupStatsId)
-                .IsRequired();
+                .HasForeignKey(w => w.InteractionPathGroupStatsId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
 
             modelBuilder.Entity<InteractionByPathCounts>()
                 .HasIndex(x => x.Path);
@@ -102,7 +95,7 @@ namespace Persistence
             modelBuilder.Entity<InteractionPathGroupStats>()
                 .HasOne(w => w.WebSite)
                 .WithMany(w => w.InteractionPathGroupStats)
-                .HasForeignKey(w => w.WebSiteId)
+                .HasForeignKey(w => w.WebSiteId).OnDelete(DeleteBehavior.ClientCascade)
                 .IsRequired();
 
             modelBuilder.Entity<InteractionPathGroupStats>()
@@ -111,13 +104,13 @@ namespace Persistence
             modelBuilder.Entity<LocationStats>()
                 .HasOne(w => w.WebSite)
                 .WithMany(w => w.LocationStats)
-                .HasForeignKey(w => w.WebSiteId)
+                .HasForeignKey(w => w.WebSiteId).OnDelete(DeleteBehavior.ClientCascade)
                 .IsRequired();
 
             modelBuilder.Entity<Session>()
                 .HasOne(w => w.WebSite)
                 .WithMany(w => w.Sessions)
-                .HasForeignKey(w => w.WebSiteId)
+                .HasForeignKey(w => w.WebSiteId).OnDelete(DeleteBehavior.ClientCascade)
                 .IsRequired();
 
             modelBuilder.Entity<Session>()
@@ -132,7 +125,7 @@ namespace Persistence
             modelBuilder.Entity<SystemStats>()
                 .HasOne(w => w.WebSite)
                 .WithMany(w => w.SystemStats)
-                .HasForeignKey(w => w.WebSiteId)
+                .HasForeignKey(w => w.WebSiteId).OnDelete(DeleteBehavior.ClientCascade)
                 .IsRequired();
 
             modelBuilder.Entity<SystemStats>()
@@ -144,7 +137,7 @@ namespace Persistence
             modelBuilder.Entity<ScreenSizeStats>()
                 .HasOne(w => w.WebSite)
                 .WithMany(w => w.ScreenSizeStats)
-                .HasForeignKey(w => w.WebSiteId)
+                .HasForeignKey(w => w.WebSiteId).OnDelete(DeleteBehavior.ClientCascade)
                 .IsRequired();
 
             modelBuilder.Entity<ScreenSizeStats>()
@@ -153,7 +146,7 @@ namespace Persistence
             modelBuilder.Entity<PageViewStats>()
                 .HasOne(w => w.WebSite)
                 .WithMany(w => w.PageViewStats)
-                .HasForeignKey(w => w.WebSiteId)
+                .HasForeignKey(w => w.WebSiteId).OnDelete(DeleteBehavior.ClientCascade)
                 .IsRequired();
 
             modelBuilder.Entity<PageViewStats>()

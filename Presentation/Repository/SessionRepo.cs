@@ -2,7 +2,6 @@
 using Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Npgsql;
 using Persistence;
 using System;
 using System.Collections.Generic;
@@ -16,14 +15,10 @@ namespace Application.Repository
     {
         private readonly ApplicationDbContext _context;
 
-        private readonly string connectionString;
         public SessionRepo(ApplicationDbContext context,IConfiguration configuration)
         {
-            connectionString = AppSecrets.GetConnectionString(configuration);
             _context = context;
         }
-
-        internal IDbConnection Connection => new NpgsqlConnection(connectionString);
 
         public async Task Add(Session item)
         {

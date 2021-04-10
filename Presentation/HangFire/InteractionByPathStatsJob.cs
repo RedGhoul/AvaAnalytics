@@ -54,7 +54,6 @@ namespace Presentation.HangFire
                 {
                     InteractionByPathCounts InteractionByPathCounts = new InteractionByPathCounts
                     {
-                        WebSiteId = allSites[websiteIndex],
                         Path = pathCount[pathCountIndex].Path,
                         Date = DateTime.UtcNow,
                         Total = pathCount[pathCountIndex].Total,

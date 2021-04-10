@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using Domain;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -18,14 +18,11 @@ namespace Application.Repository
             connectionString = AppSecrets.GetConnectionString(configuration);
         }
 
-        internal IDbConnection Connection => new NpgsqlConnection(connectionString);
-
 
         public async Task<ICollection<WebSites>> FindAll()
         {
-            using IDbConnection dbConnection = Connection;
-            dbConnection.Open();
-            IEnumerable<WebSites> result = await dbConnection.QueryAsync<WebSites>(@"SELECT * FROM ""WebSites""");
+            using IDbConnection db = new SqlConnection(connectionString);
+            IEnumerable<WebSites> result = await db.QueryAsync<WebSites>(@"SELECT * FROM WebSites");
             return result.ToList();
         }
 
@@ -36,11 +33,9 @@ namespace Application.Repository
 
         public async Task<WebSites> FindByAPIKey(string key)
         {
-            using IDbConnection dbConnection = Connection;
-            dbConnection.Open();
-            return await dbConnection.QueryFirstOrDefaultAsync<WebSites>(
-                    @"SELECT * FROM ""WebSites"" Where ""APIKey"" = @key",
-                    new { key });
+            using IDbConnection db = new SqlConnection(connectionString);
+            return await db.QueryFirstOrDefaultAsync<WebSites>(
+                    @"SELECT * FROM WebSites Where APIKey = @key", new { key });
         }
 
 

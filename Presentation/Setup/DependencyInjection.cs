@@ -14,7 +14,6 @@ using System;
 using System.Reflection;
 using System.Transactions;
 using Hangfire.Storage;
-using Hangfire.PostgreSql;
 
 namespace Application
 {
@@ -43,7 +42,7 @@ namespace Application
             string AppDBConnectionString = AppSecrets.GetConnectionString(Configuration);
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(AppDBConnectionString));
+                options.UseSqlServer(AppDBConnectionString));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                .AddDefaultTokenProviders()
@@ -52,7 +51,7 @@ namespace Application
 
 
             services.AddHangfire(config =>
-                config.UsePostgreSqlStorage(AppDBConnectionString));
+                config.UseSqlServerStorage(AppDBConnectionString));
 
             return services;
         }

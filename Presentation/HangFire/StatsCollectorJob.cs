@@ -20,7 +20,6 @@ namespace Presentation.HangFire
         public StatsCollectorJob(ApplicationDbContext ctx, IConfiguration config)
         {
             _ctx = ctx;
-            _DbConnectionString = AppSecrets.GetConnectionString(config);
         }
 
         public async Task Run(IJobCancellationToken token)
@@ -36,7 +35,7 @@ namespace Presentation.HangFire
             List<int> allSites = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
-            optionsBuilder.UseNpgsql(_DbConnectionString);
+            optionsBuilder.UseSqlServer(_DbConnectionString);
 
             for (int websiteIndex = 0; websiteIndex < allSites.Count; websiteIndex++)
             {
@@ -119,7 +118,6 @@ namespace Presentation.HangFire
                     {
                         InteractionByPathCounts InteractionByPathCounts = new InteractionByPathCounts
                         {
-                            WebSiteId = allSites[websiteIndex],
                             Path = pathCount[pathCountIndex].Path,
                             Date = currentTime,
                             Total = pathCount[pathCountIndex].Total,

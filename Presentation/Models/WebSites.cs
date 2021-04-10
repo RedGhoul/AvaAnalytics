@@ -21,7 +21,6 @@ namespace Domain
         public ICollection<Interaction> Interactions { get; set; }
         public ICollection<Session> Sessions { get; set; }
         public ICollection<InteractionPathGroupStats> InteractionPathGroupStats { get; set; }
-        public ICollection<InteractionByPathCounts> InteractionByPathCounts { get; set; }
         public ICollection<BrowserStats> BrowserStats { get; set; }
         public ICollection<LocationStats> LocationStats { get; set; }
         public ICollection<SystemStats> SystemStats { get; set; }
