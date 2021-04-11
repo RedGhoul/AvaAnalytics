@@ -17,9 +17,10 @@ namespace Presentation.HangFire
         private readonly ApplicationDbContext _ctx;
         private readonly string _DbConnectionString;
 
-        public StatsCollectorJob(ApplicationDbContext ctx, IConfiguration config)
+        public StatsCollectorJob(ApplicationDbContext ctx, IConfiguration configuration)
         {
             _ctx = ctx;
+            _DbConnectionString = AppSecrets.GetConnectionString(configuration);
         }
 
         public async Task Run(IJobCancellationToken token)
