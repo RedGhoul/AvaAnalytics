@@ -20,6 +20,7 @@ namespace Application.Repository
         public async Task Add(Interaction item)
         {
             await _context.Interactions.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -25,10 +25,10 @@ namespace Application
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddMediatR(Assembly.GetExecutingAssembly());
 
-            services.AddSingleton<WebSiteRepo, WebSiteRepo>();
-            services.AddSingleton<InteractionRepo, InteractionRepo>();
-            services.AddSingleton<SessionRepo, SessionRepo>();
-            services.AddSingleton<StatsRepo, StatsRepo>();
+            services.AddTransient<WebSiteRepo, WebSiteRepo>();
+            services.AddTransient<InteractionRepo, InteractionRepo>();
+            services.AddTransient<SessionRepo, SessionRepo>();
+            services.AddTransient<StatsRepo, StatsRepo>();
             services.AddTransient<CacheRepo, CacheRepo>();
             services.Configure<ForwardedHeadersOptions>(options =>
             {
