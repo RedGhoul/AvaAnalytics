@@ -13,7 +13,9 @@ namespace Presentation
         {
             app.UseHangfireServer(new BackgroundJobServerOptions()
             {
-                SchedulePollingInterval = TimeSpan.FromSeconds(5),
+                SchedulePollingInterval = TimeSpan.FromMinutes(1),
+                HeartbeatInterval = TimeSpan.FromSeconds(20),
+                ServerCheckInterval = TimeSpan.FromSeconds(20),
                 WorkerCount = Environment.ProcessorCount,
                 ServerName = "Jobs"
             });

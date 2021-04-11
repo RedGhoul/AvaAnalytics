@@ -14,6 +14,7 @@ using System;
 using System.Reflection;
 using System.Transactions;
 using Hangfire.Storage;
+using Hangfire.SqlServer;
 
 namespace Application
 {
@@ -50,8 +51,18 @@ namespace Application
                .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
-            services.AddHangfire(config =>
-                config.UseSqlServerStorage(AppDBConnectionString));
+            services.AddHangfire(configuration => configuration
+                                       .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                                       .UseSimpleAssemblyNameTypeSerializer()
+                                       .UseRecommendedSerializerSettings()
+                                       .UseSqlServerStorage(AppDBConnectionString, new SqlServerStorageOptions
+                                       {
+                                           CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                                           SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                                           QueuePollInterval = TimeSpan.Zero,
+                                           UseRecommendedIsolationLevel = true,
+                                           DisableGlobalLocks = true
+                                       }));
 
             return services;
         }

@@ -30,7 +30,6 @@ namespace Presentation
             services.AddSwagger();
             services.AddResponseCompression();
 
-            services.AddHangfireServer();
 
         }
 
