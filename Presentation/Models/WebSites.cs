@@ -15,6 +15,7 @@ namespace Domain
         public string Name { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public bool DemoSite { get; set; } = false;
         public string OwnerId { get; set; }
         public ApplicationUser Owner { get; set; }
         public ICollection<PageViewStats> PageViewStats { get; set; }

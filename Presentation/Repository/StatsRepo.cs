@@ -19,7 +19,7 @@ namespace Application.Repository
             connectionString = AppSecrets.GetConnectionString(configuration);
         }
 
-      
+
         public async Task<List<BrowserStatsDTO>> GetBrowserStats(DateTime curTime, DateTime oldTime, int webSiteId)
         {
             using IDbConnection db = new SqlConnection(connectionString);
@@ -31,14 +31,16 @@ namespace Application.Repository
 
         public async Task<List<InteractionByPathCountsDTO>> GetInteractionByPathCounts(DateTime curTime, DateTime oldTime, int webSiteId)
         {
+
             using IDbConnection db = new SqlConnection(connectionString);
             IEnumerable<InteractionByPathCountsDTO> data = await db.QueryAsync<InteractionByPathCountsDTO>(
                 @"SELECT Path, SUM(Total) as Total FROM InteractionByPathCounts where 
                 InteractionPathGroupStatsId in ( SELECT Id FROM InteractionPathGroupStats 
                 WHERE WebSiteId = @Id and Date <= @curTime and Date >= @oldTime) 
-                and WebSiteId = @Id group by Path",
+                group by Path",
                   new { curTime, oldTime, Id = webSiteId });
             return data.ToList();
+
         }
         public async Task<List<SystemStatsDTO>> GetSystemStats(DateTime curTime, DateTime oldTime, int webSiteId)
         {

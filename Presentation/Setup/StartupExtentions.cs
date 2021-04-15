@@ -15,17 +15,17 @@ namespace Presentation
     {
         public static async Task UseStartupMethods(this IApplicationBuilder app)
         {
-            await CreateRoles(app);
+            await AddBaseData(app);
             HangFireJobScheduler.ScheduleRecurringJobs();
         }
 
-        private static async Task<IServiceScope> CreateRoles(IApplicationBuilder app)
+        private static async Task<IServiceScope> AddBaseData(IApplicationBuilder app)
         {
             IServiceScope scope = app.ApplicationServices.CreateScope();
             RoleManager<IdentityRole> RoleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             UserManager<ApplicationUser> UserManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-            ApplicationDbContext content = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            ApplicationDbContext context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
             IdentityResult roleResult;
 
@@ -52,17 +52,28 @@ namespace Presentation
 
             if(user != null)
             {
-                UserSetting currentUserSetting = await content.UserSettings.Where(x => x.ApplicationUserId.Equals(user.Id)).FirstOrDefaultAsync();
+                UserSetting currentUserSetting = await context.UserSettings.Where(x => x.ApplicationUserId.Equals(user.Id)).FirstOrDefaultAsync();
 
                 if (currentUserSetting == null)
                 {
-                    content.UserSettings.Add(new UserSetting()
+                    context.UserSettings.Add(new UserSetting()
                     {
                         ApplicationUserId = user.Id,
                         CurrentTimeZone = "Eastern Standard Time"
                     });
-                    content.SaveChanges();
+                    context.SaveChanges();
                 }
+            }
+
+            if(context.WebSites.FirstOrDefault(x => x.DemoSite) == null)
+            {
+                if(context.WebSites.FirstOrDefault(x => x.Name.Contains("Ava Analytics")) != null)
+                {
+                    var website = context.WebSites.FirstOrDefault(x => x.Name.Contains("Ava Analytics"));
+                    website.DemoSite = true;
+                    context.SaveChanges();
+                }
+
             }
             
 

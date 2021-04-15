@@ -21,7 +21,7 @@ namespace SharpCounter.Controllers
         {
 
             WebSites webSites = await _context.WebSites
-                .FirstOrDefaultAsync(m => m.Id == 1);
+                .FirstOrDefaultAsync(m => m.DemoSite == true);
             if (webSites == null)
             {
                 return NotFound();
