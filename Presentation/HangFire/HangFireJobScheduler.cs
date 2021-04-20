@@ -8,10 +8,10 @@ namespace Presentation.HangFire
         public static void ScheduleRecurringJobs()
         {
 
-            RecurringJob.RemoveIfExists(nameof(StatsCollectorJob));
-            RecurringJob.AddOrUpdate<StatsCollectorJob>(nameof(StatsCollectorJob),
-                job => job.Run(JobCancellationToken.Null),
-                "*/5 * * * *", TimeZoneInfo.Local);
+            //RecurringJob.RemoveIfExists(nameof(StatsCollectorJob));
+            //RecurringJob.AddOrUpdate<StatsCollectorJob>(nameof(StatsCollectorJob),
+            //    job => job.Run(JobCancellationToken.Null),
+            //    "*/5 * * * *", TimeZoneInfo.Local);
 
         }
     }

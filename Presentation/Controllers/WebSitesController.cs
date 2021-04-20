@@ -97,6 +97,7 @@ namespace SharpCounter.Controllers
             foreach (var item in webSites)
             {
                 var LocationStats = await _statsRepo.GetLocationStats(startDate, endDate, item.Id);
+
                 var PageViewStats = await _statsRepo.GetNonZeroPageViewCountStats(startDate, endDate, currentUserSetting.CurrentTimeZone ?? "Eastern Standard Time", item.Id);
 
 

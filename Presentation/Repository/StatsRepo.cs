@@ -94,8 +94,8 @@ namespace Application.Repository
         {
             using IDbConnection db = new SqlConnection(connectionString);
             IEnumerable<PageViewStatsDTO> data = await db.QueryAsync<PageViewStatsDTO>(
-                @"SELECT Count, CreatedAt FROM PageViewStats where CreatedAt <= @curTime and 
-                CreatedAt >= @oldTime and WebSiteId = @Id and Count != 0 order by CreatedAt DESC LIMIT 5",
+                @"SELECT TOP(5) Count, CreatedAt FROM PageViewStats where CreatedAt <= @curTime and 
+                CreatedAt >= @oldTime and WebSiteId = @Id and Count != 0 order by CreatedAt DESC",
                 new { curTime, oldTime, Id = webSiteId });
 
             List<PageViewStatsDTO> listOfDtos = DateTimeDTOHelper.SetTimeZone(data, timeZoneName);
