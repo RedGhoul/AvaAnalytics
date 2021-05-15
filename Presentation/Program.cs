@@ -29,9 +29,9 @@ namespace SharpCounter
 
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
-                 .WriteTo.MySQL(AppDBConnectionString)
+                .WriteTo.MySQL(AppDBConnectionString, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error)
                 .CreateLogger();
-
+            
             try
             {
                 Log.Information("Starting up");
