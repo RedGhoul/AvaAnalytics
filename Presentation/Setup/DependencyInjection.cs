@@ -45,7 +45,7 @@ namespace Application
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySql(
                 AppDBConnectionString,
-                new MySqlServerVersion(new Version(8, 0, 21)),
+                new MySqlServerVersion(new Version(8, 0, 25)),
                 mySqlOptions => mySqlOptions
                     .CharSetBehavior(CharSetBehavior.NeverAppend))
             .EnableSensitiveDataLogging()
@@ -60,13 +60,13 @@ namespace Application
             services.AddHangfire(config =>
                  config.UseStorage(new MySqlStorage(AppDBConnectionString, new MySqlStorageOptions
                  {
-                     TransactionIsolationLevel = (System.Transactions.IsolationLevel?)IsolationLevel.Serializable,
-                     QueuePollInterval = TimeSpan.FromSeconds(15),
-                     JobExpirationCheckInterval = TimeSpan.FromMinutes(6),
-                     CountersAggregateInterval = TimeSpan.FromMinutes(6),
+                     TransactionIsolationLevel = IsolationLevel.ReadCommitted,
+                     QueuePollInterval = TimeSpan.FromSeconds(5),
+                     JobExpirationCheckInterval = TimeSpan.FromMinutes(1),
+                     CountersAggregateInterval = TimeSpan.FromMinutes(1),
                      PrepareSchemaIfNecessary = true,
                      DashboardJobListLimit = 50000,
-                     TransactionTimeout = TimeSpan.FromMinutes(15),
+                     TransactionTimeout = TimeSpan.FromMinutes(30),
                      TablesPrefix = "Hangfire"
                  })));
 
