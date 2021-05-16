@@ -141,15 +141,19 @@ namespace Presentation.HangFire
                             x.CreatedAt >= fiveMinsAgo)
                             .Select(x => x.Id).ToListAsync();
 
-                        PageViewStats pageViewStats = new PageViewStats()
+                        if(InteractionCount.Count > 0)
                         {
-                            Count = InteractionCount.Count,
-                            CreatedAt = currentTime,
-                            WebSiteId = allSites[curSiteIndex]
-                        };
+                            PageViewStats pageViewStats = new PageViewStats()
+                            {
+                                Count = InteractionCount.Count,
+                                CreatedAt = currentTime,
+                                WebSiteId = allSites[curSiteIndex]
+                            };
 
-                        _ctx.Add(pageViewStats);
-                        await _ctx.SaveChangesAsync();
+                            _ctx.Add(pageViewStats);
+                            await _ctx.SaveChangesAsync();
+                        }
+
                     }
 
 
