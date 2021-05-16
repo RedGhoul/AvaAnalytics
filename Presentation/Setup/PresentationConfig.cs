@@ -68,9 +68,6 @@ namespace Presentation
             app.UseStaticFiles();
 
             app.UseRouting();
-
-
-
         }
     }
 }
