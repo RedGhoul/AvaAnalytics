@@ -59,5 +59,20 @@ namespace Application
 
             return AppDBConnectionString;
         }
+
+        public static string GetHangfireConnectionString(IConfiguration configuration)
+        {
+            string AppDBConnectionString;
+            if (configuration.GetValue<string>("Environment").Equals("Dev"))
+            {
+                AppDBConnectionString = GetConnectionString(configuration, "AvaAnalytics_Prod");
+            }
+            else
+            {
+                AppDBConnectionString = GetConnectionString(configuration, "AvaAnalytics_Prod_Hangfire");
+            }
+
+            return AppDBConnectionString;
+        }
     }
 }

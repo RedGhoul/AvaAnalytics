@@ -41,6 +41,7 @@ namespace Application
         public static IServiceCollection AddPersistance(this IServiceCollection services, IConfiguration Configuration)
         {
             string AppDBConnectionString = AppSecrets.GetConnectionString(Configuration);
+            string AppHangfireConnectionString = AppSecrets.GetHangfireConnectionString(Configuration);
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySql(
@@ -58,7 +59,7 @@ namespace Application
 
 
             services.AddHangfire(config =>
-                 config.UseStorage(new MySqlStorage(AppDBConnectionString, new MySqlStorageOptions
+                 config.UseStorage(new MySqlStorage(AppHangfireConnectionString, new MySqlStorageOptions
                  {
                      TransactionIsolationLevel = IsolationLevel.ReadCommitted,
                      QueuePollInterval = TimeSpan.FromSeconds(5),
@@ -67,7 +68,7 @@ namespace Application
                      PrepareSchemaIfNecessary = true,
                      DashboardJobListLimit = 50000,
                      TransactionTimeout = TimeSpan.FromMinutes(30),
-                     TablesPrefix = "Hangfire"
+                     TablesPrefix = "Hangfire_avaanalytics_"
                  })));
 
             return services;
