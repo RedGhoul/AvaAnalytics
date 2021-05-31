@@ -15,7 +15,7 @@ namespace Presentation
     {
         public static async Task UseStartupMethods(this IApplicationBuilder app)
         {
-            await CreateRoles(app);
+            //await CreateRoles(app);
             HangFireJobScheduler.ScheduleRecurringJobs();
         }
 
