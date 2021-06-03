@@ -1,9 +1,8 @@
 ﻿using Dapper;
 using Domain;
 using Microsoft.Extensions.Configuration;
-using MySqlConnector;
 using System.Data;
-
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace Application.Repository
@@ -16,7 +15,7 @@ namespace Application.Repository
             connectionString = AppSecrets.GetConnectionString(configuration);
         }
 
-        internal IDbConnection Connection => new MySqlConnection(connectionString);
+        internal IDbConnection Connection => new SqlConnection(connectionString);
 
         public async Task Add(Interaction item)
         {

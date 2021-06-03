@@ -48,20 +48,21 @@ namespace Presentation
                     await UserManager.AddToRoleAsync(user, "Admin");
                 }
 
-            }
+                UserSetting currentUserSetting = await content.UserSettings.Where(x => x.ApplicationUserId.Equals(user.Id)).FirstOrDefaultAsync();
 
-
-            UserSetting currentUserSetting = await content.UserSettings.Where(x => x.ApplicationUserId.Equals(user.Id)).FirstOrDefaultAsync();
-
-            if (currentUserSetting == null)
-            {
-                content.UserSettings.Add(new UserSetting()
+                if (currentUserSetting == null)
                 {
-                    ApplicationUserId = user.Id,
-                    CurrentTimeZone = "Eastern Standard Time"
-                });
-                content.SaveChanges();
+                    content.UserSettings.Add(new UserSetting()
+                    {
+                        ApplicationUserId = user.Id,
+                        CurrentTimeZone = "Eastern Standard Time"
+                    });
+                    content.SaveChanges();
+                }
             }
+
+
+            
 
             return scope;
         }

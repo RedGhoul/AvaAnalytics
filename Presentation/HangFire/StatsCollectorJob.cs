@@ -4,7 +4,6 @@ using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Persistence;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,10 +36,7 @@ namespace Presentation.HangFire
             List<int> allSites = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
-            optionsBuilder.UseMySql(_DbConnectionString,
-                new MySqlServerVersion(new Version(8, 0, 21)),
-                mySqlOptions => mySqlOptions
-                    .CharSetBehavior(CharSetBehavior.NeverAppend));
+            optionsBuilder.UseSqlServer(_DbConnectionString);
 
             Parallel.For(0, allSites.Count - 1, async (websiteIndex) =>
             {

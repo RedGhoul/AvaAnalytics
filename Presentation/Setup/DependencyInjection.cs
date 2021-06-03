@@ -1,7 +1,7 @@
 ﻿using Application.Repository;
 using Domain;
 using Hangfire;
-using Hangfire.MySql;
+using Hangfire.SqlServer;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Presentation.Repository;
 using System;
 using System.Reflection;
@@ -43,13 +42,8 @@ namespace Application
             string AppDBConnectionString = AppSecrets.GetConnectionString(Configuration);
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseMySql(
-                AppDBConnectionString,
-                new MySqlServerVersion(new Version(8, 0, 25)),
-                mySqlOptions => mySqlOptions
-                    .CharSetBehavior(CharSetBehavior.NeverAppend))
-            .EnableSensitiveDataLogging()
-            .EnableDetailedErrors());
+                options.UseSqlServer(
+                AppDBConnectionString));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                .AddDefaultTokenProviders()
@@ -57,18 +51,18 @@ namespace Application
                .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
-            services.AddHangfire(config =>
-                 config.UseStorage(new MySqlStorage(AppDBConnectionString, new MySqlStorageOptions
-                 {
-                     TransactionIsolationLevel = IsolationLevel.ReadCommitted,
-                     QueuePollInterval = TimeSpan.FromSeconds(5),
-                     JobExpirationCheckInterval = TimeSpan.FromMinutes(1),
-                     CountersAggregateInterval = TimeSpan.FromMinutes(1),
-                     PrepareSchemaIfNecessary = true,
-                     DashboardJobListLimit = 50000,
-                     TransactionTimeout = TimeSpan.FromMinutes(30),
-                     TablesPrefix = "Hangfire_avaanalytics_"
-                 })));
+            services.AddHangfire(configuration => configuration
+                             .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                             .UseSimpleAssemblyNameTypeSerializer()
+                             .UseRecommendedSerializerSettings()
+                             .UseSqlServerStorage(AppDBConnectionString, new SqlServerStorageOptions
+                             {
+                                 CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                                 SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                                 QueuePollInterval = TimeSpan.Zero,
+                                 UseRecommendedIsolationLevel = true,
+                                 DisableGlobalLocks = true
+                             }));
 
             return services;
         }

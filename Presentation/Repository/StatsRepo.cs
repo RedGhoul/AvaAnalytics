@@ -1,11 +1,11 @@
 ﻿using Application.DTO;
 using Dapper;
 using Microsoft.Extensions.Configuration;
-using MySqlConnector;
 using Presentation.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,18 +19,15 @@ namespace Application.Repository
             connectionString = Application.AppSecrets.GetConnectionString(configuration);
         }
 
-        internal IDbConnection Connection => new MySqlConnection(connectionString);
+        internal IDbConnection Connection => new SqlConnection(connectionString);
 
         public async Task<List<BrowserStatsDTO>> GetBrowserStats(DateTime curTime, DateTime oldTime, int webSiteId)
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
             IEnumerable<BrowserStatsDTO> data = await dbConnection.QueryAsync<BrowserStatsDTO>(
-                @"
-                    SELECT Browser, Version, SUM(Count) as Count FROM avaanalytics.BrowserStats where  
-                                    Date <= @curTime  and Date >= @oldTime  and WebSiteId = @Id GROUP By Browser, Version
-                    ",
-                new { curTime, oldTime, Id = webSiteId });
+                @"GetBrowserStats",
+                new { curTime, oldTime, Id = webSiteId }, commandType: CommandType.StoredProcedure);
             return data.ToList();
         }
 
@@ -39,7 +36,7 @@ namespace Application.Repository
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
             IEnumerable<InteractionByPathCountsDTO> data = await dbConnection.QueryAsync<InteractionByPathCountsDTO>(
-                @"SELECT Path, SUM(Total) as Total FROM avaanalytics.InteractionByPathCounts where 
+                @"SELECT Path, SUM(Total) as Total FROM InteractionByPathCounts where 
                 InteractionPathGroupStatsId in ( SELECT Id FROM InteractionPathGroupStats 
                 WHERE WebSiteId = @Id and Date <= @curTime and Date >= @oldTime) 
                 and WebSiteId = @Id group by Path",
@@ -53,7 +50,7 @@ namespace Application.Repository
             dbConnection.Open();
             IEnumerable<SystemStatsDTO> data = await dbConnection.QueryAsync<SystemStatsDTO>(
                 @"SELECT Platform, Version, SUM(Count) as Count 
-                FROM avaanalytics.SystemStats where Day <= @curTime and 
+                FROM SystemStats where Day <= @curTime and 
                 Day >= @oldTime and WebSiteId = @Id 
                 GROUP By Platform, Version",
                 new { curTime, oldTime, Id = webSiteId });
@@ -67,7 +64,7 @@ namespace Application.Repository
             IEnumerable<ScreenSizeStatsDTO> data = await dbConnection.QueryAsync<ScreenSizeStatsDTO>(
                 @"SELECT SUM(NumberOfPhones) as NumberOfPhones, SUM(LargePhonesSmallTablets) as LargePhonesSmallTablets,
                 SUM(TabletsSmallLaptops) as TabletsSmallLaptops,SUM(ComputerMonitors) ComputerMonitors,
-                SUM(ComputerMonitors4K) as ComputerMonitors4K FROM avaanalytics.ScreenSizeStats where Date <= @curTime and 
+                SUM(ComputerMonitors4K) as ComputerMonitors4K FROM ScreenSizeStats where Date <= @curTime and 
                 Date >= @oldTime and WebSiteId = @Id",
                 new { curTime, oldTime, Id = webSiteId });
             return data.ToList();
@@ -79,7 +76,7 @@ namespace Application.Repository
             dbConnection.Open();
             IEnumerable<LocationStatsDTO> data = await dbConnection.QueryAsync<LocationStatsDTO>(
                 @"SELECT Location, SUM(Count) as Count
-                FROM avaanalytics.LocationStats where Date <= @curTime and 
+                FROM LocationStats where Date <= @curTime and 
                 Date >= @oldTime and WebSiteId = @Id group by Location",
                 new { curTime, oldTime, Id = webSiteId });
 
@@ -91,7 +88,7 @@ namespace Application.Repository
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
             IEnumerable<PageViewStatsDTO> data = await dbConnection.QueryAsync<PageViewStatsDTO>(
-                @"SELECT Count, CreatedAt FROM avaanalytics.PageViewStats where CreatedAt <= @curTime and 
+                @"SELECT Count, CreatedAt FROM PageViewStats where CreatedAt <= @curTime and 
                 CreatedAt >= @oldTime and WebSiteId = @Id and Count > 0 order by CreatedAt ASC",
                 new { curTime, oldTime, Id = webSiteId });
 
@@ -104,7 +101,7 @@ namespace Application.Repository
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
             IEnumerable<PageViewStatsDTO> data = await dbConnection.QueryAsync<PageViewStatsDTO>(
-                @"SELECT Count, CreatedAt FROM avaanalytics.PageViewStats where CreatedAt <= @curTime and 
+                @"SELECT Count, CreatedAt FROM PageViewStats where CreatedAt <= @curTime and 
                 CreatedAt >= @oldTime and WebSiteId = @Id and Count > 0 order by CreatedAt DESC LIMIT 5",
                 new { curTime, oldTime, Id = webSiteId });
 

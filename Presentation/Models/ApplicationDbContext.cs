@@ -37,13 +37,13 @@ namespace Persistence
 
             modelBuilder.Entity<WebSites>()
                 .HasOne(w => w.Owner)
-                .WithMany(w => w.Websites)
+                .WithMany(w => w.Websites).OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(w => w.OwnerId)
                 .IsRequired();
 
             modelBuilder.Entity<BrowserStats>()
                 .HasOne(w => w.WebSite)
-                .WithMany(w => w.BrowserStats)
+                .WithMany(w => w.BrowserStats).OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(w => w.WebSiteId)
                 .IsRequired();
 
@@ -55,7 +55,7 @@ namespace Persistence
 
             modelBuilder.Entity<Interaction>()
                 .HasOne(w => w.WebSite)
-                .WithMany(w => w.Interactions)
+                .WithMany(w => w.Interactions).OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(w => w.WebSiteId)
                 .IsRequired();
 
@@ -82,13 +82,13 @@ namespace Persistence
 
             modelBuilder.Entity<InteractionByPathCounts>()
                 .HasOne(w => w.WebSite)
-                .WithMany(w => w.InteractionByPathCounts)
+                .WithMany(w => w.InteractionByPathCounts).OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(w => w.WebSiteId)
                 .IsRequired();
 
             modelBuilder.Entity<InteractionByPathCounts>()
                 .HasOne(w => w.InteractionPathGroupStats)
-                .WithMany(w => w.InteractionByPathCounts)
+                .WithMany(w => w.InteractionByPathCounts).OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(w => w.InteractionPathGroupStatsId)
                 .IsRequired();
 
@@ -101,7 +101,7 @@ namespace Persistence
 
             modelBuilder.Entity<InteractionPathGroupStats>()
                 .HasOne(w => w.WebSite)
-                .WithMany(w => w.InteractionPathGroupStats)
+                .WithMany(w => w.InteractionPathGroupStats).OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(w => w.WebSiteId)
                 .IsRequired();
 
@@ -110,13 +110,13 @@ namespace Persistence
 
             modelBuilder.Entity<LocationStats>()
                 .HasOne(w => w.WebSite)
-                .WithMany(w => w.LocationStats)
+                .WithMany(w => w.LocationStats).OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(w => w.WebSiteId)
                 .IsRequired();
 
             modelBuilder.Entity<Session>()
                 .HasOne(w => w.WebSite)
-                .WithMany(w => w.Sessions)
+                .WithMany(w => w.Sessions).OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(w => w.WebSiteId)
                 .IsRequired();
 
@@ -131,7 +131,7 @@ namespace Persistence
 
             modelBuilder.Entity<SystemStats>()
                 .HasOne(w => w.WebSite)
-                .WithMany(w => w.SystemStats)
+                .WithMany(w => w.SystemStats).OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(w => w.WebSiteId)
                 .IsRequired();
 
@@ -143,7 +143,7 @@ namespace Persistence
 
             modelBuilder.Entity<ScreenSizeStats>()
                 .HasOne(w => w.WebSite)
-                .WithMany(w => w.ScreenSizeStats)
+                .WithMany(w => w.ScreenSizeStats).OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(w => w.WebSiteId)
                 .IsRequired();
 
@@ -152,7 +152,7 @@ namespace Persistence
 
             modelBuilder.Entity<PageViewStats>()
                 .HasOne(w => w.WebSite)
-                .WithMany(w => w.PageViewStats)
+                .WithMany(w => w.PageViewStats).OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(w => w.WebSiteId)
                 .IsRequired();
 

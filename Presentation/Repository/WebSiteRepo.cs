@@ -1,10 +1,10 @@
 ﻿using Dapper;
 using Domain;
 using Microsoft.Extensions.Configuration;
-using MySqlConnector;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,7 +18,7 @@ namespace Application.Repository
             connectionString = AppSecrets.GetConnectionString(configuration);
         }
 
-        internal IDbConnection Connection => new MySqlConnection(connectionString);
+        internal IDbConnection Connection => new SqlConnection(connectionString);
 
 
         public async Task<ICollection<WebSites>> FindAll()
