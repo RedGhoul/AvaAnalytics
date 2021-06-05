@@ -5,6 +5,6 @@ namespace Application.Response
 {
     public class GetScreenSizeStatsResponse
     {
-        public List<ScreenSizeStatsDTO> Data { get; set; }
+        public ScreenSizeStatsDTO Data { get; set; }
     }
 }

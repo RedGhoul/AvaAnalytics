@@ -42,93 +42,7 @@ namespace Presentation.HangFire
             {
                 using (var _ctx = new ApplicationDbContext(optionsBuilder.Options))
                 {
-                    List<LocationStats> locationCount = await _ctx.Interactions.Where(
-                        x => x.WebSiteId == allSites[websiteIndex] &&
-                        x.CreatedAt <= currentTime &&
-                        x.CreatedAt > fiveMinsAgo)
-                        .GroupBy(x => x.Location)
-                        .Select(d => new LocationStats
-                        {
-                            Location = d.Key,
-                            Count = d.Count()
-                        }).ToListAsync();
-
-                    for (int locCountIndex = 0; locCountIndex < locationCount.Count; locCountIndex++)
-                    {
-                        LocationStats InteractionCounts = new LocationStats
-                        {
-                            WebSiteId = allSites[websiteIndex],
-                            Location = locationCount[locCountIndex].Location,
-                            Date = currentTime,
-                            Count = locationCount[locCountIndex].Count
-                        };
-                        _ctx.Add(InteractionCounts);
-                        await _ctx.SaveChangesAsync();
-                    }
-
-                    List<BrowserStats> getFirstTime = await _ctx.Interactions.Where(
-                       x => x.WebSiteId == allSites[websiteIndex] &&
-                       x.CreatedAt <= currentTime &&
-                       x.CreatedAt > fiveMinsAgo)
-                       .GroupBy(x => x.Browser)
-                       .Select(d => new BrowserStats
-                       {
-                           Browser = d.Key,
-                           Count = d.Count()
-                       }).ToListAsync();
-
-                    for (int j = 0; j < getFirstTime.Count; j++)
-                    {
-                        Parser uaParser = Parser.GetDefault();
-                        ClientInfo c = uaParser.Parse(getFirstTime[j].Browser);
-                        BrowserStats browserStats = new BrowserStats
-                        {
-                            Browser = c.UA.Family,
-                            Version = c.UA.Major,
-                            Count = getFirstTime[j].Count,
-                            Date = currentTime,
-                            WebSiteId = allSites[websiteIndex]
-                        };
-                        _ctx.Add(browserStats);
-                        await _ctx.SaveChangesAsync();
-                    }
-
-                    List<InteractionByPathCounts> pathCount = await _ctx.Interactions.Where(
-                        x => x.WebSiteId == allSites[websiteIndex] &&
-                        x.CreatedAt <= currentTime &&
-                        x.CreatedAt > fiveMinsAgo)
-                        .GroupBy(x => x.Path)
-                        .Select(d => new InteractionByPathCounts
-                        {
-                            Path = d.Key,
-                            Total = d.Count()
-                        }).ToListAsync();
-
-                    InteractionPathGroupStats interactionPathGroupStats = new InteractionPathGroupStats
-                    {
-                        Date = currentTime,
-                        WebSiteId = allSites[websiteIndex],
-                        TotalRoutes = pathCount.Count
-                    };
-
-                    _ctx.Add(interactionPathGroupStats);
-
-                    await _ctx.SaveChangesAsync();
-
-                    for (int pathCountIndex = 0; pathCountIndex < pathCount.Count; pathCountIndex++)
-                    {
-                        InteractionByPathCounts InteractionByPathCounts = new InteractionByPathCounts
-                        {
-                            WebSiteId = allSites[websiteIndex],
-                            Path = pathCount[pathCountIndex].Path,
-                            Date = currentTime,
-                            Total = pathCount[pathCountIndex].Total,
-                            InteractionPathGroupStatsId = interactionPathGroupStats.Id
-                        };
-                        _ctx.Add(InteractionByPathCounts);
-                        await _ctx.SaveChangesAsync();
-                    }
-
+                    var traffic = false;
                     for (int curSiteIndex = 0; curSiteIndex < allSites.Count; curSiteIndex++)
                     {
                         List<int> InteractionCount = await _ctx.Interactions.Where(
@@ -137,8 +51,9 @@ namespace Presentation.HangFire
                             x.CreatedAt >= fiveMinsAgo)
                             .Select(x => x.Id).ToListAsync();
 
-                        if(InteractionCount.Count > 0)
+                        if (InteractionCount.Count > 0)
                         {
+                            traffic = true;
                             PageViewStats pageViewStats = new PageViewStats()
                             {
                                 Count = InteractionCount.Count,
@@ -151,79 +66,170 @@ namespace Presentation.HangFire
                         }
 
                     }
-
-
-                    int sizePhones = _ctx.Interactions.Where(
-                        x => x.WebSiteId == allSites[websiteIndex] &&
-                        x.CreatedAt <= currentTime && x.CreatedAt > fiveMinsAgo &&
-                        x.ScreenWidth != 0 && x.ScreenWidth <= 384).Count();
-
-                    int sizeLargePhones = _ctx.Interactions.Where(
-                        x => x.WebSiteId == allSites[websiteIndex] &&
-                        x.CreatedAt <= currentTime && x.CreatedAt > fiveMinsAgo &&
-                        x.ScreenWidth != 0 && x.ScreenWidth <= 1024 && x.ScreenWidth > 384)
-                        .Count();
-
-                    int sizeTablets = _ctx.Interactions.Where(
-                        x => x.WebSiteId == allSites[websiteIndex] &&
-                        x.CreatedAt <= currentTime && x.CreatedAt > fiveMinsAgo &&
-                        x.ScreenWidth != 0 && x.ScreenWidth <= 1440 && x.ScreenWidth > 1024)
-                        .Count();
-
-                    int sizeDesktop = _ctx.Interactions.Where(
-                        x => x.WebSiteId == allSites[websiteIndex] &&
-                        x.CreatedAt <= currentTime && x.CreatedAt > fiveMinsAgo &&
-                        x.ScreenWidth != 0 && x.ScreenWidth <= 1920 && x.ScreenWidth > 1440)
-                        .Count();
-
-                    int sizeDesktopHD = _ctx.Interactions.Where(
-                        x => x.WebSiteId == allSites[websiteIndex] &&
-                        x.CreatedAt <= currentTime && x.CreatedAt > fiveMinsAgo &&
-                        x.ScreenWidth != 0 && x.ScreenWidth > 1920)
-                        .Count();
-
-
-                    ScreenSizeStats screenSizeStats = new ScreenSizeStats
+                    if (traffic)
                     {
-                        NumberOfPhones = sizePhones,
-                        LargePhonesSmallTablets = sizeLargePhones,
-                        TabletsSmallLaptops = sizeTablets,
-                        ComputerMonitors = sizeDesktop,
-                        ComputerMonitors4K = sizeDesktopHD,
-                        WebSiteId = allSites[websiteIndex],
-                        Date = currentTime
-                    };
+                        List<LocationStats> locationCount = await _ctx.Interactions.Where(
+                       x => x.WebSiteId == allSites[websiteIndex] &&
+                       x.CreatedAt <= currentTime &&
+                       x.CreatedAt >= fiveMinsAgo)
+                       .GroupBy(x => new { x.Location })
+                       .Select(d => new LocationStats
+                       {
+                           Location = d.Key.Location,
+                           Count = d.Count()
+                       }).ToListAsync();
 
-                    _ctx.Add(screenSizeStats);
-                    await _ctx.SaveChangesAsync();
-
-
-                    List<SystemStats> browserInfoFromInteractionArgs = await _ctx.Interactions.Where(
-                        x => x.WebSiteId == allSites[websiteIndex] &&
-                        x.CreatedAt <= currentTime &&
-                        x.CreatedAt > fiveMinsAgo)
-                        .GroupBy(x => x.Browser)
-                        .Select(d => new SystemStats
+                        for (int locCountIndex = 0; locCountIndex < locationCount.Count; locCountIndex++)
                         {
-                            Version = d.Key,
-                            Count = d.Count()
-                        }).ToListAsync();
+                            LocationStats InteractionCounts = new LocationStats
+                            {
+                                WebSiteId = allSites[websiteIndex],
+                                Location = locationCount[locCountIndex].Location,
+                                Date = currentTime,
+                                Count = locationCount[locCountIndex].Count
+                            };
+                            _ctx.Add(InteractionCounts);
+                            await _ctx.SaveChangesAsync();
+                        }
 
-                    for (int ArgsIndex = 0; ArgsIndex < browserInfoFromInteractionArgs.Count; ArgsIndex++)
-                    {
-                        Parser uaParser = Parser.GetDefault();
-                        ClientInfo c = uaParser.Parse(browserInfoFromInteractionArgs[ArgsIndex].Version);
-                        SystemStats SystemStats = new SystemStats
+                        List<BrowserStats> getFirstTime = await _ctx.Interactions.Where(
+                           x => x.WebSiteId == allSites[websiteIndex] &&
+                           x.CreatedAt <= currentTime &&
+                           x.CreatedAt >= fiveMinsAgo)
+                           .GroupBy(x => x.Browser)
+                           .Select(d => new BrowserStats
+                           {
+                               Browser = d.Key,
+                               Count = d.Count()
+                           }).ToListAsync();
+
+                        for (int j = 0; j < getFirstTime.Count; j++)
                         {
-                            Platform = c.OS.Family,
-                            Version = c.OS.Major,
-                            Count = browserInfoFromInteractionArgs[ArgsIndex].Count,
-                            Day = currentTime,
-                            WebSiteId = allSites[websiteIndex]
+                            Parser uaParser = Parser.GetDefault();
+                            ClientInfo c = uaParser.Parse(getFirstTime[j].Browser);
+                            BrowserStats browserStats = new BrowserStats
+                            {
+                                Browser = c.UA.Family,
+                                Version = c.UA.Major,
+                                Count = getFirstTime[j].Count,
+                                Date = currentTime,
+                                WebSiteId = allSites[websiteIndex]
+                            };
+                            _ctx.Add(browserStats);
+                            await _ctx.SaveChangesAsync();
+                        }
+
+                        List<InteractionByPathCounts> pathCount = await _ctx.Interactions.Where(
+                            x => x.WebSiteId == allSites[websiteIndex] &&
+                            x.CreatedAt <= currentTime &&
+                            x.CreatedAt >= fiveMinsAgo)
+                            .GroupBy(x => x.Path)
+                            .Select(d => new InteractionByPathCounts
+                            {
+                                Path = d.Key,
+                                Total = d.Count()
+                            }).ToListAsync();
+
+                        InteractionPathGroupStats interactionPathGroupStats = new InteractionPathGroupStats
+                        {
+                            Date = currentTime,
+                            WebSiteId = allSites[websiteIndex],
+                            TotalRoutes = pathCount.Count
                         };
-                        _ctx.Add(SystemStats);
+
+                        _ctx.Add(interactionPathGroupStats);
+
                         await _ctx.SaveChangesAsync();
+
+                        for (int pathCountIndex = 0; pathCountIndex < pathCount.Count; pathCountIndex++)
+                        {
+                            InteractionByPathCounts InteractionByPathCounts = new InteractionByPathCounts
+                            {
+                                WebSiteId = allSites[websiteIndex],
+                                Path = pathCount[pathCountIndex].Path,
+                                Date = currentTime,
+                                Total = pathCount[pathCountIndex].Total,
+                                InteractionPathGroupStatsId = interactionPathGroupStats.Id
+                            };
+                            _ctx.Add(InteractionByPathCounts);
+                            await _ctx.SaveChangesAsync();
+                        }
+
+
+
+                        int sizePhones = _ctx.Interactions.Where(
+                            x => x.WebSiteId == allSites[websiteIndex] &&
+                            x.CreatedAt <= currentTime && x.CreatedAt > fiveMinsAgo &&
+                            x.ScreenWidth != 0 && x.ScreenWidth <= 384).Count();
+
+                        int sizeLargePhones = _ctx.Interactions.Where(
+                            x => x.WebSiteId == allSites[websiteIndex] &&
+                            x.CreatedAt <= currentTime && x.CreatedAt >= fiveMinsAgo &&
+                            x.ScreenWidth != 0 && x.ScreenWidth <= 1024 && x.ScreenWidth > 384)
+                            .Count();
+
+                        int sizeTablets = _ctx.Interactions.Where(
+                            x => x.WebSiteId == allSites[websiteIndex] &&
+                            x.CreatedAt <= currentTime && x.CreatedAt >= fiveMinsAgo &&
+                            x.ScreenWidth != 0 && x.ScreenWidth <= 1440 && x.ScreenWidth > 1024)
+                            .Count();
+
+                        int sizeDesktop = _ctx.Interactions.Where(
+                            x => x.WebSiteId == allSites[websiteIndex] &&
+                            x.CreatedAt <= currentTime && x.CreatedAt >= fiveMinsAgo &&
+                            x.ScreenWidth != 0 && x.ScreenWidth <= 1920 && x.ScreenWidth > 1440)
+                            .Count();
+
+                        int sizeDesktopHD = _ctx.Interactions.Where(
+                            x => x.WebSiteId == allSites[websiteIndex] &&
+                            x.CreatedAt <= currentTime && x.CreatedAt >= fiveMinsAgo &&
+                            x.ScreenWidth != 0 && x.ScreenWidth > 1920)
+                            .Count();
+
+
+                        ScreenSizeStats screenSizeStats = new ScreenSizeStats
+                        {
+                            NumberOfPhones = sizePhones,
+                            LargePhonesSmallTablets = sizeLargePhones,
+                            TabletsSmallLaptops = sizeTablets,
+                            ComputerMonitors = sizeDesktop,
+                            ComputerMonitors4K = sizeDesktopHD,
+                            WebSiteId = allSites[websiteIndex],
+                            Date = currentTime
+                        };
+
+                        _ctx.Add(screenSizeStats);
+                        await _ctx.SaveChangesAsync();
+
+
+                        List<SystemStats> browserInfoFromInteractionArgs = await _ctx.Interactions.Where(
+                            x => x.WebSiteId == allSites[websiteIndex] &&
+                            x.CreatedAt <= currentTime &&
+                            x.CreatedAt >= fiveMinsAgo)
+                            .GroupBy(x => x.Browser)
+                            .Select(d => new SystemStats
+                            {
+                                Version = d.Key,
+                                Count = d.Count()
+                            }).ToListAsync();
+
+                        for (int ArgsIndex = 0; ArgsIndex < browserInfoFromInteractionArgs.Count; ArgsIndex++)
+                        {
+                            Parser uaParser = Parser.GetDefault();
+                            ClientInfo c = uaParser.Parse(browserInfoFromInteractionArgs[ArgsIndex].Version);
+                            SystemStats SystemStats = new SystemStats
+                            {
+                                Platform = c.OS.Family,
+                                Version = c.OS.Major,
+                                Count = browserInfoFromInteractionArgs[ArgsIndex].Count,
+                                Day = currentTime,
+                                WebSiteId = allSites[websiteIndex]
+                            };
+                            _ctx.Add(SystemStats);
+                            await _ctx.SaveChangesAsync();
+                        }
                     }
+                   
                 }
             });
 

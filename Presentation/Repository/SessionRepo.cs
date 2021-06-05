@@ -1,42 +1,36 @@
 ﻿using Dapper;
 using Domain;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
+using Persistence;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Application.Repository
 {
     public class SessionRepo
     {
-        private readonly string connectionString;
-        public SessionRepo(IConfiguration configuration)
-        {
-            connectionString = AppSecrets.GetConnectionString(configuration);
-        }
+        private readonly ApplicationDbContext _context;
 
-        internal IDbConnection Connection => new NpgsqlConnection(connectionString);
+        public SessionRepo(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         public async Task Add(Session item)
         {
-            using IDbConnection dbConnection = Connection;
-            dbConnection.Open();
-            await dbConnection.ExecuteAsync(
-                @"Insert into Sessions
-                (SessionUId, LastSeen, CreatedAt, WebSiteId) VALUES
-                (@SessionUId, @LastSeen, @CreatedAt, @WebSiteId)", item);
+            await _context.Sessions.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
+
         public async Task<Session> FindBySessionHash(string sessionHash)
         {
-            using IDbConnection dbConnection = Connection;
-            dbConnection.Open();
-            return await dbConnection.QueryFirstOrDefaultAsync<Session>(
-                    @"SELECT * FROM Sessions where SessionUId = @sessionHash",
-                     new { sessionHash });
-
+            return await _context.Sessions.Where(x => x.SessionUId == sessionHash).FirstOrDefaultAsync();
         }
 
         public Task<IEnumerable<Session>> FindAll()

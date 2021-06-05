@@ -66,7 +66,7 @@ namespace SharpCounter.Controllers
 
         // GET: api/Stats/ScreenSizeStats/5
         [HttpPost("ScreenSizeStats/{id}")]
-        public async Task<List<ScreenSizeStatsDTO>> GetScreenSizeStats(int id, DateRangeDTO dateRange)
+        public async Task<ScreenSizeStatsDTO> GetScreenSizeStats(int id, DateRangeDTO dateRange)
         {
             GetScreenSizeStatsQuery query = _Mapper.Map(dateRange, new GetScreenSizeStatsQuery(id));
             GetScreenSizeStatsResponse response = await _Mediator.Send(query);
