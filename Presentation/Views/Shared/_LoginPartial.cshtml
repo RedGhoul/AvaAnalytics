@@ -14,10 +14,13 @@
             </li>
             @if (User.IsInRole("Admin")){
                 <li class="nav-item">
-                    <a class="nav-link h5" a asp-controller="SiteContents" asp-action="Index">Site Contents</a>
+                    <a class="nav-link h5"  asp-controller="SiteContents" asp-action="Index">Site Contents</a>
                 </li>
                  <li class="nav-item">
-                     <a class="nav-link h5" a asp-controller="TimeZoneValues" asp-action="Index">TimeZoneValues</a>
+                     <a class="nav-link h5"  asp-controller="TimeZoneValues" asp-action="Index">TimeZoneValues</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link h5" href="/hangfire">HangFire</a>
                 </li>
             }
 
