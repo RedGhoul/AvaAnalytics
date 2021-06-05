@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Domain;
 using Microsoft.Extensions.Configuration;
+using Npgsql;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace Application.Repository
             connectionString = AppSecrets.GetConnectionString(configuration);
         }
 
-        internal IDbConnection Connection => new SqlConnection(connectionString);
+        internal IDbConnection Connection => new NpgsqlConnection(connectionString);
 
         public async Task Add(Interaction item)
         {

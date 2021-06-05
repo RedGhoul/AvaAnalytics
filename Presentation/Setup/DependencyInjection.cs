@@ -1,6 +1,7 @@
 ﻿using Application.Repository;
 using Domain;
 using Hangfire;
+using Hangfire.PostgreSql;
 using Hangfire.SqlServer;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -37,32 +38,23 @@ namespace Application
             return services;
         }
 
-        public static IServiceCollection AddPersistance(this IServiceCollection services, IConfiguration Configuration)
+        public static IServiceCollection UseDataStores(this IServiceCollection services, IConfiguration Configuration)
         {
             string AppDBConnectionString = AppSecrets.GetConnectionString(Configuration);
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                AppDBConnectionString));
+                         options.UseNpgsql(AppDBConnectionString));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
                .AddDefaultTokenProviders()
                .AddDefaultUI()
                .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
-            services.AddHangfire(configuration => configuration
-                             .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                             .UseSimpleAssemblyNameTypeSerializer()
-                             .UseRecommendedSerializerSettings()
-                             .UseSqlServerStorage(AppDBConnectionString, new SqlServerStorageOptions
-                             {
-                                 CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
-                                 SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-                                 QueuePollInterval = TimeSpan.Zero,
-                                 UseRecommendedIsolationLevel = true,
-                                 DisableGlobalLocks = true
-                             }));
+            services.AddHangfire(config =>
+                config.UsePostgreSqlStorage(AppDBConnectionString));
+
 
             return services;
         }

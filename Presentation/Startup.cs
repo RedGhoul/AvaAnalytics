@@ -20,7 +20,7 @@ namespace Presentation
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddPersistance(Configuration);
+            services.UseDataStores(Configuration);
 
             services.AddApplication();
 

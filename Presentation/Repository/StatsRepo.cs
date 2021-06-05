@@ -1,6 +1,7 @@
 ﻿using Application.DTO;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using Npgsql;
 using Presentation.Helpers;
 using System;
 using System.Collections.Generic;
@@ -16,17 +17,18 @@ namespace Application.Repository
         private readonly string connectionString;
         public StatsRepo(IConfiguration configuration)
         {
-            connectionString = Application.AppSecrets.GetConnectionString(configuration);
+            connectionString = AppSecrets.GetConnectionString(configuration);
         }
 
-        internal IDbConnection Connection => new SqlConnection(connectionString);
+        internal IDbConnection Connection => new NpgsqlConnection(connectionString);
 
         public async Task<List<BrowserStatsDTO>> GetBrowserStats(DateTime curTime, DateTime oldTime, int webSiteId)
         {
             using IDbConnection dbConnection = Connection;
             dbConnection.Open();
             IEnumerable<BrowserStatsDTO> data = await dbConnection.QueryAsync<BrowserStatsDTO>(
-                @"GetBrowserStats",
+                @"SELECT Browser, Version, SUM(Count) as Count FROM BrowserStats where  
+                            Date <= @curTime and Date >= @oldTime and WebSiteId = @Id GROUP By Browser, Version",
                 new { curTime, oldTime, Id = webSiteId }, commandType: CommandType.StoredProcedure);
             return data.ToList();
         }
