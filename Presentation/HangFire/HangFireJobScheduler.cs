@@ -11,7 +11,7 @@ namespace Presentation.HangFire
             RecurringJob.RemoveIfExists(nameof(StatsCollectorJob));
             RecurringJob.AddOrUpdate<StatsCollectorJob>(nameof(StatsCollectorJob),
                 job => job.Run(JobCancellationToken.Null),
-                "*/5 * * * *", TimeZoneInfo.Local);
+                "*/5 * * * *", TimeZoneInfo.Utc);
 
         }
     }

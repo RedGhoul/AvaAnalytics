@@ -36,7 +36,7 @@ namespace Presentation.HangFire
             List<int> allSites = await _ctx.WebSites.Select(x => x.Id).ToListAsync();
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
-            optionsBuilder.UseSqlServer(_DbConnectionString);
+            optionsBuilder.UseNpgsql(_DbConnectionString);
 
             Parallel.For(0, allSites.Count - 1, async (websiteIndex) =>
             {
