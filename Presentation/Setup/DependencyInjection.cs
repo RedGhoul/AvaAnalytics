@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence;
+using Presentation;
 using Presentation.Repository;
 using System;
 using System.Reflection;
@@ -22,13 +23,13 @@ namespace Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
-            services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddAutoMapper(typeof(Startup).GetTypeInfo().Assembly);
+            services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
 
-            services.AddSingleton<WebSiteRepo, WebSiteRepo>();
-            services.AddSingleton<InteractionRepo, InteractionRepo>();
-            services.AddSingleton<SessionRepo, SessionRepo>();
-            services.AddSingleton<StatsRepo, StatsRepo>();
+            services.AddTransient<WebSiteRepo, WebSiteRepo>();
+            services.AddTransient<InteractionRepo, InteractionRepo>();
+            services.AddTransient<SessionRepo, SessionRepo>();
+            services.AddTransient<StatsRepo, StatsRepo>();
             services.AddTransient<CacheRepo, CacheRepo>();
             services.Configure<ForwardedHeadersOptions>(options =>
             {

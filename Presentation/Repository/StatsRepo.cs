@@ -67,16 +67,16 @@ namespace Application.Repository
                  }).ToListAsync();
         }
 
-        public ScreenSizeStatsDTO GetScreenSizeStats(DateTime curTime, DateTime oldTime, int webSiteId)
+        public async Task<ScreenSizeStatsDTO> GetScreenSizeStatsAsync(DateTime curTime, DateTime oldTime, int webSiteId)
         {
             var baseValues = _context.ScreenSizeStats.Where(x => x.WebSiteId == webSiteId && x.Date <= curTime && x.Date >= oldTime);
             return new ScreenSizeStatsDTO
             {
-                NumberOfPhones = baseValues.Sum(x => x.NumberOfPhones),
-                LargePhonesSmallTablets = baseValues.Sum(x => x.LargePhonesSmallTablets),
-                TabletsSmallLaptops = baseValues.Sum(x => x.TabletsSmallLaptops),
-                ComputerMonitors = baseValues.Sum(x => x.ComputerMonitors),
-                ComputerMonitors4K = baseValues.Sum(x => x.ComputerMonitors4K)
+                NumberOfPhones = await baseValues.SumAsync(x => x.NumberOfPhones),
+                LargePhonesSmallTablets = await baseValues.SumAsync(x => x.LargePhonesSmallTablets),
+                TabletsSmallLaptops = await baseValues.SumAsync(x => x.TabletsSmallLaptops),
+                ComputerMonitors = await baseValues.SumAsync(x => x.ComputerMonitors),
+                ComputerMonitors4K = await baseValues.SumAsync(x => x.ComputerMonitors4K)
             };
 
         }

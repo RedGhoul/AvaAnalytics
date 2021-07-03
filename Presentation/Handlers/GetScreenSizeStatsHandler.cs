@@ -16,12 +16,12 @@ namespace Application.Handlers
             _statsRepo = statsRepo;
         }
 
-        public Task<GetScreenSizeStatsResponse> Handle(GetScreenSizeStatsQuery request, CancellationToken cancellationToken)
+        public async Task<GetScreenSizeStatsResponse> Handle(GetScreenSizeStatsQuery request, CancellationToken cancellationToken)
         {
             DateTime curTime = TimeZoneInfo.ConvertTimeToUtc(request.CurrentEndDate);
             DateTime oldTime = TimeZoneInfo.ConvertTimeToUtc(request.CurrentStartDate);
-            return Task.FromResult(new GetScreenSizeStatsResponse()
-            { Data = _statsRepo.GetScreenSizeStats(curTime, oldTime, request.WebSiteId) });
+            return new GetScreenSizeStatsResponse()
+            { Data = await _statsRepo.GetScreenSizeStatsAsync(curTime, oldTime, request.WebSiteId) };
         }
 
     }

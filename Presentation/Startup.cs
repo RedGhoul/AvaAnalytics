@@ -19,10 +19,8 @@ namespace Presentation
 
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.UseDataStores(Configuration);
-
             services.AddApplication();
+            services.UseDataStores(Configuration);
 
             services.AddControllersWithViews();
 

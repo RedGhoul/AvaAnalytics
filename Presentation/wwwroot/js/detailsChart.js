@@ -48,7 +48,8 @@
             state.LocationStats_NotFoundText.hidden = true;
         },
         Display_Error_Message: function (Data, Element, Error_Msg) {
-            if (Data === null || Data.length === 0) {
+           
+            if (Data === null || (Data.length === 0 && typeof Data != 'object')) {
                 Element.innerHTML = Error_Msg;
                 Element.hidden = false;
             }
@@ -56,7 +57,7 @@
             for (var i = 0; i < Data.length; i++) {
                 sum = sum + Data[i];
             }
-            if (sum === 0) {
+            if (sum === 0 && typeof Data != 'object') {
                 Element.innerHTML = Error_Msg;
                 Element.hidden = false;
             }
@@ -166,13 +167,14 @@
                     'computerMonitors4K': 'Monitors 4K Plus'
                 }
                 var GData = [];
-                for (var key in data[0]) {
+                for (var key in data) {
                     for (var label in GLabels) {
                         if (hashName[key] === GLabels[label]) {
-                            GData.push(data[0][key])
+                            GData.push(data[key])
                         }
                     }
                 }
+                
                 return {
                     GLabels: GLabels,
                     GData: GData
